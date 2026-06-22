@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>旅の司令塔 — 東北旅</title>
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="旅の司令塔" />
+<meta name="theme-color" content="#15213B" />
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAD9UlEQVR4nO3dvXLTQBiGUTmTW6CgYYaGmp6elmulpU9PTZMZGopcBFTJOME/krXS7r57zgXYa+vJl5UiO4epEe8+fvlbew3c7unx4VB7DdM0TdUWIeBstQLf9UlFPKY94978iUTMsa3j3uzBhcwlW4Vd/EGFzBKlw74r+WBiZqnSzRT56RAyJZSY1qsntJgppURLq4IWM6WtbeqmES9k9nDLFmTxhBYze7mltUVBi5m9LW1udtBippYl7RW9Dg21zQradKa2uQ1eDVrMtGJOixeDFjOtudakPTRRzgZtOtOqS22eDFrMtO5co7YcRPkvaNOZXpxq1YQmyqugTWd687ZZE5oogibKS9C2G/TquF0TmiiCJsrdNNlu0L/nhk1oogiaKIImysH+mSQmNFEETRRBE0XQRBE0UQRNFEETRdBEETRRBE0UQRPlvvYCTvnx4U/tJTDT19/vay/hleYmtJj70trxairo1t4c5mnpuDUTdEtvCsu1cvyaCRpKEDRRBE0UQRNF0EQRNFEETRRBE6WZoFu7J4BlWjl+zQQ9Te28KSzT0nFrKuhpauvN4brWjtcwXwVW4l6Dmgev9/XvpZugW7n5ZWQ9/EA0t+WANQRNFEETRdBEETRRBE0UQRNF0EQRNFEETZRu/vS91h73Qqx5ji0fe+5zJDChiSJoogiaKIImiqCJImiiCJoogiaKoIkiaKIImiiCJoqgiSJoogiaKIImiqCJImiidP8RLN9KWl7PH9UyoYkiaKIImiiCJoqgiSJoogiaKIImiqCJImiiCJoogiZK9zcnzdX79yv3vv69mNBEETRRBE0UQRNF0EQRNFEETRRBE0XQRBE0UQRNFEETRdBEETRRBE0UQRNF0EQRNFEETRRBE0XQRBE0UQRNFEETRdBEETRRBE0UQRNF0EQRNFEETRRBE0XQRBE0UQRNlGH+xwpjMKGJImiiCJoogibK3dPjw6H2IqCEp8eHgwlNFEETRdBEedk/j/YHll8/v9dewuY+ff5Wewm7eT4XHHJCjxDzNI3zOo8NF/RoB3m01/sStMt39Oq43eEmNNmGC3qkE6VpGu/1vgp6lG3HKAd5hNf5ttn7WgupbYSDPaL/thyjTGn6d6rV4fbQZDsZtClN6841enZCi5pWXWrTloMoF4M2pWnNtSavTmhR04o5Lc7acoia2uY2aA9NlNlBm9LUsqS9RRNa1OxtaXOLtxyiZi+3tLYqztE+h8g+1gzNVSeFpjWlrW1q9VUOUVNKiZaKxmgLwi1KDsWi16FNa5Yq3cxmAZrWXLLV8Nt8ogqbY1v/Ft91iyDuMe25Fa225xV3tlrnU82cxAm8b61cEPgHsPgDGgDyCOEAAAAASUVORK5CYII=" />
+<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAYAAAA9zQYyAAAD9UlEQVR4nO3dvXLTQBiGUTmTW6CgYYaGmp6elmulpU9PTZMZGopcBFTJOME/krXS7r57zgXYa+vJl5UiO4epEe8+fvlbew3c7unx4VB7DdM0TdUWIeBstQLf9UlFPKY94978iUTMsa3j3uzBhcwlW4Vd/EGFzBKlw74r+WBiZqnSzRT56RAyJZSY1qsntJgppURLq4IWM6WtbeqmES9k9nDLFmTxhBYze7mltUVBi5m9LW1udtBippYl7RW9Dg21zQradKa2uQ1eDVrMtGJOixeDFjOtudakPTRRzgZtOtOqS22eDFrMtO5co7YcRPkvaNOZXpxq1YQmyqugTWd687ZZE5oogibKS9C2G/TquF0TmiiCJsrdNNlu0L/nhk1oogiaKIImysH+mSQmNFEETRRBE0XQRBE0UQRNFEETRdBEETRRBE0UQRPlvvYCTvnx4U/tJTDT19/vay/hleYmtJj70trxairo1t4c5mnpuDUTdEtvCsu1cvyaCRpKEDRRBE0UQRNF0EQRNFEETRRBE6WZoFu7J4BlWjl+zQQ9Te28KSzT0nFrKuhpauvN4brWjtcwXwVW4l6Dmgev9/XvpZugW7n5ZWQ9/EA0t+WANQRNFEETRdBEETRRBE0UQRNF0EQRNFEETZRu/vS91h73Qqx5ji0fe+5zJDChiSJoogiaKIImiqCJImiiCJoogiaKoIkiaKIImiiCJoqgiSJoogiaKIImiqCJImiidP8RLN9KWl7PH9UyoYkiaKIImiiCJoqgiSJoogiaKIImiqCJImiiCJoogiZK9zcnzdX79yv3vv69mNBEETRRBE0UQRNF0EQRNFEETRRBE0XQRBE0UQRNFEETRdBEETRRBE0UQRNF0EQRNFEETRRBE0XQRBE0UQRNFEETRdBEETRRBE0UQRNF0EQRNFEETRRBE0XQRBE0UQRNlGH+xwpjMKGJImiiCJoogibK3dPjw6H2IqCEp8eHgwlNFEETRdBEedk/j/YHll8/v9dewuY+ff5Wewm7eT4XHHJCjxDzNI3zOo8NF/RoB3m01/sStMt39Oq43eEmNNmGC3qkE6VpGu/1vgp6lG3HKAd5hNf5ttn7WgupbYSDPaL/thyjTGn6d6rV4fbQZDsZtClN6841enZCi5pWXWrTloMoF4M2pWnNtSavTmhR04o5Lc7acoia2uY2aA9NlNlBm9LUsqS9RRNa1OxtaXOLtxyiZi+3tLYqztE+h8g+1gzNVSeFpjWlrW1q9VUOUVNKiZaKxmgLwi1KDsWi16FNa5Yq3cxmAZrWXLLV8Nt8ogqbY1v/Ft91iyDuMe25Fa225xV3tlrnU82cxAm8b61cEPgHsPgDGgDyCOEAAAAASUVORK5CYII=" />
+<link rel="manifest" href="data:application/json;base64,eyJuYW1lIjogIuaXheOBruWPuOS7pOWhlCIsICJzaG9ydF9uYW1lIjogIuaXheOBruWPuOS7pOWhlCIsICJkaXNwbGF5IjogInN0YW5kYWxvbmUiLCAiYmFja2dyb3VuZF9jb2xvciI6ICIjMTUyMTNCIiwgInRoZW1lX2NvbG9yIjogIiMxNTIxM0IiLCAib3JpZW50YXRpb24iOiAicG9ydHJhaXQiLCAiaWNvbnMiOiBbeyJzcmMiOiAiZGF0YTppbWFnZS9wbmc7YmFzZTY0LGlWQk9SdzBLR2dvQUFBQU5TVWhFVWdBQUFMUUFBQUMwQ0FZQUFBQTl6UVl5QUFBRDlVbEVRVlI0bk8zZHZYTFRRQmlHVVRtVFc2Q2dZWWFHbXA2ZWxtdWxwVTlQVFpNWkdvcGNCRlRKT01FL2tyWFM3cjU3emdYWWErdkpsNVVpTzRlcEVlOCtmdmxiZXczYzd1bng0VkI3RGRNMFRkVVdJZUJzdFFMZjlVbEZQS1k5NDk3OGlVVE1zYTNqM3V6Qmhjd2xXNFZkL0VHRnpCS2x3NzRyK1dCaVpxblN6UlQ1NlJBeUpaU1kxcXNudEpncHBVUkxxNElXTTZXdGJlcW1FUzlrOW5ETEZtVHhoQll6ZTdtbHRVVkJpNW05TFcxdWR0QmlwcFlsN1JXOURnMjF6UXJhZEthMnVRMWVEVnJNdEdKT2l4ZURGak90dWRha1BUUlJ6Z1p0T3RPcVMyMmVERnJNdE81Y283WWNSUGt2YU5PWlhweHExWVFteXF1Z1RXZDY4N1paRTVvb2dpYktTOUMyRy9UcXVGMFRtaWlDSnNyZE5ObHUwTC9uaGsxb29naWFLSUlteXNIK21TUW1ORkVFVFJSQkUwWFFSQkUwVVFSTkZFRVRSZEJFRVRSUkJFMFVRUlBsdnZZQ1R2bng0VS90SlREVDE5L3ZheS9obGVZbXRKajcwdHJ4YWlybzF0NGM1bW5wdURVVGRFdHZDc3UxY3Z5YUNScEtFRFJSQkUwVVFSTkYwRVFSTkZFRVRSUkJFNldab0Z1N0o0QmxXamwrelFROVRlMjhLU3pUMG5Gckt1aHBhdXZONGJyV2p0Y3dYd1ZXNGw2RG1nZXY5L1h2cFp1Z1c3bjVaV1E5L0VBMHQrV0FOUVJORkVFVFJkQkVFVFJSQkUwVVFSTkYwRVFSTkZFRVRaUnUvdlM5MWg3M1FxeDVqaTBmZSs1ekpEQ2hpU0pvb2dpYUtJSW1pcUNKSW1paUNKb29naWFLb0lraWFLSUltaWlDSm9xZ2lTSm9vZ2lhS0lJbWlxQ0pJbWlpZFA4UkxOOUtXbDdQSDlVeW9Za2lhS0lJbWlpQ0pvcWdpU0pvb2dpYUtJSW1pcUNKSW1paUNKb29naVpLOXpjbnpkWDc5eXYzdnY2OW1OQkVFVFJSQkUwVVFSTkYwRVFSTkZFRVRSUkJFMFhRUkJFMFVRUk5GRUVUUmRCRUVUUlJCRTBVUVJORjBFUVJORkVFVFJSQkUwWFFSQkUwVVFSTkZFRVRSZEJFRVRSUkJFMFVRUk5GMEVRUk5GRUVUUlJCRTBYUVJCRTBVUVJObEdIK3h3cGpNS0dKSW1paUNKb29naWJLM2RQanc2SDJJcUNFcDhlSGd3bE5GRUVUUmRCRWVkay9qL1lIbGw4L3Y5ZGV3dVkrZmY1V2V3bTdlVDRYSEhKQ2p4RHpOSTN6T284TkYvUm9CM20wMS9zU3RNdDM5T3E0M2VFbU5ObUdDM3FrRTZWcEd1LzF2Z3A2bEczSEtBZDVoTmY1dHRuN1dndXBiWVNEUGFML3RoeWpUR242ZDZyVjRmYlFaRHNadENsTjY4NDFlblpDaTVwV1hXclRsb01vRjRNMnBXbk50U2F2VG1oUjA0bzVMYzdhY29pYTJ1WTJhQTlObE5sQm05TFVzcVM5UlJOYTFPeHRhWE9MdHh5aVppKzN0TFlxenRFK2g4ZysxZ3pOVlNlRnBqV2xyVzFxOVZVT1VWTktpWmFLeG1nTHdpMUtEc1dpMTZGTmE1WXEzY3htQVpyV1hMTFY4TnQ4b2dxYlkxdi9GdDkxaXlEdU1lMjVGYTIyNXhWM3Rscm5VODJjeEFtOGI2MWNFUGdIc1BnREdnRHlDT0VBQUFBQVNVVk9SSzVDWUlJPSIsICJzaXplcyI6ICIxODB4MTgwIiwgInR5cGUiOiAiaW1hZ2UvcG5nIiwgInB1cnBvc2UiOiAiYW55IG1hc2thYmxlIn1dfQ==" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Roboto+Mono:wght@500;600;700&display=swap" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.min.js"></script>
+<style>
+  :root{--ink:#15213B;--inkSoft:#5A6B86;--paper:#EFF1EC;--panel:#FBFBF8;--rule:#D3D8CE;
+        --shu:#CF3F22;--shuSoft:#F6E5DF;--chip:#E6EAE0;--amber:#C98A2B;--amberSoft:#F5EAD4;--grn:#2E7D6B;--line:#2C3E6B}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;height:100%}
+  body{font-family:'Noto Sans JP',system-ui,sans-serif;background:#DADED3;color:var(--ink);display:flex;justify-content:center;overflow:hidden}
+  .mono{font-family:'Roboto Mono',monospace;font-variant-numeric:tabular-nums}
+  #app{width:100%;max-width:430px;height:100vh;background:var(--paper);display:flex;flex-direction:column;box-shadow:0 0 40px rgba(21,33,59,.15);position:relative;overflow:hidden}
+  #top{flex:0 0 auto;background:var(--ink);color:var(--paper);padding:12px 18px;cursor:pointer}
+  #top .ey{font-size:10px;letter-spacing:3px;color:#9FB0CC}
+  #top .r{display:flex;justify-content:space-between;align-items:baseline;margin-top:3px}
+  #top h1{margin:0;font-size:18px;font-weight:700}
+  #top .sub{font-size:11px;color:#9FB0CC}
+  #daytabs{flex:0 0 auto;display:flex;gap:2px;padding:6px 10px;background:var(--panel);border-bottom:1px solid var(--rule);overflow-x:auto}
+  #daytabs::-webkit-scrollbar{display:none}
+  .dtab{flex:1 0 auto;background:transparent;border:none;cursor:pointer;padding:3px 12px 6px;border-bottom:3px solid transparent}
+  .dtab.on{border-bottom-color:var(--shu)}
+  .dtab .d{font-size:10px;font-weight:600;color:var(--inkSoft)} .dtab.on .d{color:var(--ink)}
+  .dtab .l{font-size:13px;color:var(--inkSoft)} .dtab.on .l{font-weight:700;color:var(--ink)}
+  .dtab .dt{font-size:9px;color:var(--inkSoft)}
+  #views{position:relative;flex:1 1 auto;min-height:0}
+  .view{position:absolute;inset:0;display:none}
+  .view.scroll{overflow-y:auto;padding:14px 16px 20px}
+  #nav{flex:0 0 auto;display:flex;background:var(--panel);border-top:1px solid var(--rule);padding-bottom:env(safe-area-inset-bottom)}
+  .nb{flex:1;background:transparent;border:none;cursor:pointer;padding:8px 0 10px;display:flex;flex-direction:column;align-items:center;gap:2px}
+  .nb .ic{font-size:18px;filter:grayscale(.4);opacity:.7}
+  .nb.on .ic{filter:none;opacity:1}
+  .nb .lb{font-size:10px;font-weight:500;color:var(--inkSoft)} .nb.on .lb{font-weight:700;color:var(--ink)}
+  .trow{display:flex;gap:9px}
+  .ttime{width:44px;flex:0 0 44px;text-align:right;padding-top:1px}
+  .ttime .s{font-size:15px;font-weight:600;color:var(--ink)} .ttime .s.cf{color:var(--shu)}
+  .ttime .e{font-size:9.5px;color:var(--inkSoft)}
+  .tnode{width:16px;flex:0 0 16px;display:flex;flex-direction:column;align-items:center}
+  .tdot{width:13px;height:13px;border-radius:50%;background:var(--panel);margin-top:3px;z-index:1}
+  .tbar{width:3px;flex:1;background:var(--line);opacity:.45;margin:1px 0}
+  .tcard{flex:1;margin-bottom:11px;background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:9px 11px;cursor:pointer}
+  .tcard:active{background:#fff}
+  .tcard.cf{border-color:var(--shu)}
+  .tcard .h{display:flex;align-items:center;gap:7px}
+  .tcard .ti{font-size:14.5px;font-weight:700;flex:1}
+  .tcard .ed{font-size:12px;color:var(--inkSoft)}
+  .tcard .ar{font-size:12px;color:var(--inkSoft);margin-top:3px}
+  .tcard .mm{font-size:11.5px;color:var(--inkSoft);margin-top:4px}
+  .chips{display:flex;gap:6px;flex-wrap:wrap}
+  .chip{font-size:11px;font-weight:600;padding:3px 8px;border-radius:7px}
+  .sbtn{background:var(--chip);border:none;border-radius:8px;min-width:30px;height:28px;padding:0 8px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;font-weight:700;color:var(--ink)}
+  .durrow{display:flex;align-items:center;gap:5px}
+  .btn{border:none;cursor:pointer;font-family:inherit;font-weight:700;border-radius:10px;display:inline-flex;align-items:center;justify-content:center;gap:5px}
+  .btn:active{transform:scale(.96)}
+  .btn.p{background:var(--ink);color:#fff} .btn.s{background:var(--chip);color:var(--ink)} .btn.shu{background:var(--shu);color:#fff}
+  .note{font-size:11px;color:var(--inkSoft);line-height:1.6;margin-top:12px}
+  #v-map{display:flex;flex-direction:column}
+  #map{flex:1 1 auto;min-height:0;background:#cfd6cd}
+  #map,#map *{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+  .pin{width:30px;height:30px;border-radius:50% 50% 50% 0;background:var(--panel);border:3px solid var(--c,#2C3E6B);transform:rotate(-45deg);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+  .pin span{transform:rotate(45deg);font-size:14px}
+  .photopin{width:46px;height:46px;border-radius:10px;border:3px solid var(--shu);overflow:hidden;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.35)}
+  .photopin img{width:100%;height:100%;object-fit:cover;display:block}
+  .leaflet-popup-content{margin:9px 12px;font-family:'Noto Sans JP',sans-serif}
+  .pop b{font-size:13px}.pop .t{font-size:11px;color:var(--inkSoft)}.pop img{width:140px;border-radius:6px;margin-top:6px;display:block}
+  #mappanel{flex:0 0 auto;height:36%;background:var(--panel);border-top:1px solid var(--rule);border-radius:16px 16px 0 0;margin-top:-14px;z-index:500;display:flex;flex-direction:column;box-shadow:0 -6px 20px rgba(21,33,59,.08)}
+  #mhandle{width:38px;height:4px;background:var(--rule);border-radius:9px;margin:8px auto 4px}
+  #mbar{display:flex;gap:7px;padding:2px 14px 9px;border-bottom:1px solid var(--rule);align-items:center}
+  #mlist{flex:1;overflow-y:auto;padding:9px 14px 16px}
+  .row{display:flex;align-items:center;gap:10px;padding:8px;border-radius:10px;cursor:pointer}
+  .row:active{background:var(--chip)}
+  .dot{width:11px;height:11px;border-radius:3px;flex:0 0 auto}
+  .row .nm{font-size:13.5px;font-weight:600;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .row .tm{font-size:11px;color:var(--inkSoft)}
+  .strip{display:flex;gap:8px;overflow-x:auto;padding:2px 0 6px}
+  .ph{flex:0 0 auto;width:74px}
+  .ph .im{width:74px;height:74px;border-radius:10px;object-fit:cover;border:1px solid var(--rule);background:var(--chip);display:block;cursor:pointer}
+  .ph .cap{font-size:9.5px;margin-top:3px;text-align:center}.ph .cap.ok{color:var(--grn)}.ph .cap.no{color:var(--shu);text-decoration:underline;cursor:pointer}
+  .sec{font-size:11px;font-weight:700;color:var(--inkSoft);margin:4px 0 8px;letter-spacing:.5px}
+  .empty{font-size:12px;color:var(--inkSoft);padding:12px 4px;line-height:1.6}
+  .sheet{position:absolute;left:0;right:0;bottom:0;background:var(--panel);border-radius:18px 18px 0 0;box-shadow:0 -8px 30px rgba(21,33,59,.25);padding:14px 18px calc(16px + env(safe-area-inset-bottom));transform:translateY(120%);transition:transform .25s;z-index:1000;max-height:90%;overflow-y:auto}
+  .sheet.on{transform:translateY(0)}
+  .sheet h3{margin:2px 0 10px;font-size:15px}
+  label{display:block;font-size:11px;color:var(--inkSoft);font-weight:700;margin:9px 0 4px}
+  input,select,textarea{width:100%;font-family:inherit;font-size:13px;color:var(--ink);border:1px solid var(--rule);border-radius:9px;padding:9px;background:#fff}
+  textarea{resize:vertical;min-height:46px}
+  .ckline{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink);font-weight:600;margin:12px 0 2px}
+  .ckline input{width:auto}
+  .edrow{display:flex;gap:9px}.edrow>div{flex:1}
+  .edbtns{display:flex;gap:8px;margin-top:14px}
+  #placebar{position:absolute;left:14px;right:14px;top:60px;background:var(--shu);color:#fff;z-index:600;border-radius:12px;padding:10px 14px;font-size:12.5px;font-weight:700;display:none;align-items:center;justify-content:space-between;box-shadow:0 4px 14px rgba(207,63,34,.4)}
+  #placebar.on{display:flex}
+  #placebar button{background:rgba(255,255,255,.25);color:#fff;border:none;border-radius:8px;padding:5px 10px;font-weight:700;cursor:pointer}
+  .pkitem{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:10px 12px;margin-bottom:7px;cursor:pointer}
+  .pkck{width:20px;height:20px;border-radius:6px;border:2px solid var(--rule);flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff}
+  .pkitem .nm{font-size:13.5px;flex:1}
+  .pkdone{opacity:.5}.pkdone .nm{text-decoration:line-through}.pkdone .pkck{background:var(--grn);border-color:var(--grn)}
+  .barwrap{height:9px;background:var(--chip);border-radius:99px;overflow:hidden}
+  .seg{height:100%;border-radius:99px}
+  .bk{background:var(--ink);color:var(--paper);border-radius:16px;padding:16px 18px}
+  .catrow{cursor:pointer;border-radius:10px;padding:6px;margin:0 -6px}
+  .catrow:active{background:var(--chip)}
+  #toast{position:absolute;left:50%;bottom:120px;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:12px;font-weight:600;padding:8px 14px;border-radius:99px;opacity:0;transition:opacity .2s;z-index:1200;pointer-events:none;white-space:nowrap}
+  #toast.on{opacity:1}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="top" onclick="openTripEd()">
+    <div class="ey" id="topEy"></div>
+    <div class="r"><h1 id="topTitle"></h1><span class="sub"><span id="topSub"></span> ✎</span></div>
+  </div>
+  <div id="daytabs"></div>
+  <div id="views">
+    <div id="v-timeline" class="view scroll"></div>
+    <div id="v-map" class="view">
+      <div id="map"></div>
+      <div id="placebar"><span id="placetxt">地図をタップして配置</span><button onclick="cancelPlace()">やめる</button></div>
+      <div id="mappanel">
+        <div id="mhandle"></div>
+        <div id="mbar">
+          <span style="flex:1;font-size:11px;color:var(--inkSoft)">地図を<b>長押し</b>でピン＆予定追加 📍</span>
+          <button class="btn s" style="font-size:12px;padding:8px 12px" onclick="addMapSpot()">＋ スポット</button>
+          <button class="btn s" style="font-size:12px;padding:8px 12px" onclick="document.getElementById('file').click()">＋ 写真</button>
+          <input id="file" type="file" accept="image/*" multiple style="display:none" onchange="onFiles(event)" />
+        </div>
+        <div id="mlist"></div>
+      </div>
+    </div>
+    <div id="v-todo" class="view scroll"></div>
+    <div id="v-budget" class="view scroll"></div>
+    <div id="v-today" class="view scroll"></div>
+    <div id="v-md" class="view scroll"></div>
+  </div>
+
+  <!-- 予定編集 -->
+  <div id="itemEd" class="sheet">
+    <h3 id="ieTitle">予定を編集</h3>
+    <label>名前（タイトル）</label><input id="ieName" oninput="itemEdChange('title',this.value)" />
+    <div class="edrow">
+      <div><label>種別（路線の色）</label><select id="ieKind" onchange="itemEdChange('kind',this.value)"></select></div>
+      <div><label>アイコン</label><input id="ieIcon" oninput="itemEdChange('icon',this.value)" /></div>
+    </div>
+    <div class="ckline"><input type="checkbox" id="ieFixed" onchange="itemSetFixed(this.checked)" /><span>時刻を固定する（電車・予約など）</span></div>
+    <label id="ieTimeLbl">時刻（この時刻以降）</label><input id="ieTime" placeholder="10:30" oninput="itemSetTime(this.value)" />
+    <label>滞在（分）</label>
+    <div class="durrow"><button class="sbtn" onclick="itemDurStep(-15)">−15</button><button class="sbtn" onclick="itemDurStep(-1)">−1</button><span id="ieDur" class="mono" style="flex:1;text-align:center;font-weight:600"></span><button class="sbtn" onclick="itemDurStep(1)">＋1</button><button class="sbtn" onclick="itemDurStep(15)">＋15</button></div>
+    <label>場所・エリア</label><input id="ieArea" oninput="itemEdChange('area',this.value)" />
+    <label>メモ</label><textarea id="ieMemo" oninput="itemEdChange('memo',this.value)"></textarea>
+    <div class="edrow">
+      <div><label>費用 安め(¥)</label><input id="ieCLo" type="number" inputmode="numeric" oninput="itemEdChange('cLo',Math.max(0,+this.value||0))" /></div>
+      <div><label>費用 高め(¥)</label><input id="ieCHi" type="number" inputmode="numeric" oninput="itemEdChange('cHi',Math.max(0,+this.value||0))" /></div>
+    </div>
+    <label>費用カテゴリ</label><select id="ieCat" onchange="itemEdChange('cat',this.value)"></select>
+    <div class="edbtns">
+      <button class="btn s" style="flex:0 0 auto;padding:11px 14px;color:var(--shu)" onclick="itemDelete()">削除</button>
+      <button class="btn s" style="flex:1;padding:11px 0" onclick="cancelItemEd()">キャンセル</button>
+      <button class="btn p" style="flex:1;padding:11px 0" onclick="closeItemEd()">完了</button>
+    </div>
+  </div>
+
+  <!-- 旅タイトル編集 -->
+  <div id="tripEd" class="sheet">
+    <h3>旅の情報を編集</h3>
+    <label>旅の名前（上の小見出し）</label><input id="trName" oninput="tripChange('name',this.value)" />
+    <label>タイトル</label><input id="trTitle" oninput="tripChange('title',this.value)" />
+    <div class="edrow">
+      <div><label>開始日</label><input id="trStart" type="date" onchange="tripSetStart(this.value)" /></div>
+      <div><label>終了日</label><input id="trEnd" type="date" onchange="tripSetEnd(this.value)" /></div>
+    </div>
+    <div id="trCalc" style="font-size:12px;color:var(--inkSoft);margin-top:6px;font-weight:600"></div>
+    <div id="trWarn"></div>
+    <label style="margin-top:12px">各日のタイトル</label><div id="trDays"></div>
+    <div class="edbtns"><button class="btn p" style="flex:1;padding:11px 0" onclick="closeTrip()">完了</button></div>
+  </div>
+
+  <!-- お土産編集 -->
+  <div id="souvEd" class="sheet">
+    <h3>お土産を編集</h3>
+    <label>名前</label><input id="svEdName" oninput="souvEdChange('name',this.value)" />
+    <label>買う場所（旅程の予定）</label><select id="svEdSpot" onchange="souvEdChange('spotId',this.value)"></select>
+    <div class="edrow">
+      <div><label>金額(¥)</label><input id="svEdPrice" type="number" inputmode="numeric" oninput="souvEdChange('price',Math.max(0,+this.value||0))" /></div>
+      <div><label>渡す相手</label><input id="svEdTo" placeholder="自分・母・職場…" oninput="souvEdChange('to',this.value)" /></div>
+    </div>
+    <label>メモ</label><textarea id="svEdMemo" oninput="souvEdChange('memo',this.value)"></textarea>
+    <div class="ckline"><input type="checkbox" id="svEdBought" onchange="souvSetBought(this.checked)" /><span>買った（予算の土産費に反映）</span></div>
+    <div class="edbtns">
+      <button class="btn s" style="flex:0 0 auto;padding:11px 14px;color:var(--shu)" onclick="souvDelete()">削除</button>
+      <button class="btn s" style="flex:1;padding:11px 0" onclick="cancelSouvEd()">キャンセル</button>
+      <button class="btn p" style="flex:1;padding:11px 0" onclick="closeSouvEd()">完了</button>
+    </div>
+  </div>
+
+  <!-- 費用カテゴリ → 該当予定ピッカー -->
+  <div id="pick" class="sheet">
+    <h3 id="pkTitle">予定</h3>
+    <div id="pkList"></div>
+    <button class="btn p" style="width:100%;padding:11px 0;margin-top:8px" onclick="closePick()">閉じる</button>
+  </div>
+
+  <div id="nav"></div>
+  <div id="toast"></div>
+</div>
+
+<script>
+const CAT={交通:'#2C3E6B',宿泊:'#CF3F22',飲食:'#C98A2B',観光:'#2E7D6B',土産:'#8A5FB0',その他:'#7A8699'};
+const EMO={交通:'🚃',宿泊:'🏨',飲食:'🍜',観光:'⛩️',土産:'🛍️',その他:'📍'};
+const KIND={move:{c:'#2C3E6B',ja:'移動'},stay:{c:'#CF3F22',ja:'宿・温泉'},sight:{c:'#2E7D6B',ja:'神社・絶景'},food:{c:'#C98A2B',ja:'グルメ'},shop:{c:'#7A8699',ja:'買い物'},play:{c:'#8A5FB0',ja:'祭り・公園'}};
+const mm=s=>{const[h,n]=s.split(':').map(Number);return h*60+n};
+const fmt=x=>String(Math.floor(x/60)).padStart(2,'0')+':'+String(((x%60)+60)%60).padStart(2,'0');
+const parseT=v=>{const t=(v||'').match(/^(\d{1,2}):(\d{2})$/);return t?(+t[1])*60+(+t[2]):null;};
+const yen=n=>'¥'+(n||0).toLocaleString('ja-JP');
+const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const uid=()=>Math.random().toString(36).slice(2,9);
+const BUDGET_LO=130000;
+const TRIP0={name:'東北 温泉＆グルメ一人旅 / 司令塔',title:'本厚木発・新青森帰り',start:'2026-08-04'};
+const WD=['日','月','火','水','木','金','土'];
+const ymd=s=>{const[y,m,d]=(s||'2026-08-04').split('-').map(Number);return new Date(y,m-1,d);};
+const addDays=(dt,n)=>{const x=new Date(dt);x.setDate(x.getDate()+n);return x;};
+function dDate(i){const dt=addDays(ymd(state.trip.start),i);return `${dt.getMonth()+1}/${dt.getDate()} ${WD[dt.getDay()]}`;}
+function dDateShort(i){const dt=addDays(ymd(state.trip.start),i);return `${dt.getMonth()+1}/${dt.getDate()}`;}
+function tripSub(){const n=state.itin.length;return `${dDateShort(0)}〜${dDateShort(n-1)} · ${n-1}泊${n}日`;}
+
+const SEED_DAYS=[
+ {n:1,label:'庄内',date:'8/4 火',items:[
+  {id:'d1a',t:mm('04:30'),dur:90,icon:'🚌',kind:'move',fixed:true,title:'本厚木 発（リムジンバス）',area:'→ 羽田',cLo:1600,cHi:1600,cat:'交通'},
+  {id:'d1b',t:mm('07:15'),dur:60,icon:'✈️',kind:'move',fixed:true,title:'ANA 羽田 → 庄内',area:'08:15着',resv:'✅予約済',memo:'運休すると連絡バスも運休→当日確認',cLo:13700,cHi:13700,cat:'交通'},
+  {id:'d1c',t:mm('08:25'),dur:30,icon:'🚌',kind:'move',fixed:true,title:'庄内空港 → 鶴岡（連絡バス）',area:'08:55着',memo:'手荷物受取を待って発車',cLo:1000,cHi:1000,cat:'交通'},
+  {id:'d1d',t:mm('09:40'),dur:39,icon:'🚌',kind:'move',fixed:true,title:'鶴岡 → 羽黒随神門',area:'10:19着',memo:'始発で確実に座れる',cLo:900,cHi:900,cat:'交通'},
+  {id:'d1e',at:mm('10:20'),dur:70,icon:'⛩️',kind:'sight',title:'羽黒山 参拝',area:'石段2,446段・国宝五重塔',memo:'🐴午歳御縁年！生胡麻豆腐×4を授与所で',lat:38.7047,lng:139.9677,cLo:0,cHi:0,cat:'観光'},
+  {id:'d1f',at:mm('11:30'),dur:30,icon:'🍡',kind:'food',title:'二の坂茶屋',area:'石段中間・力餅＆甘酒',lat:38.7043,lng:139.9721,cLo:500,cHi:800,cat:'飲食'},
+  {id:'d1g',t:mm('13:00'),dur:54,icon:'🚌',kind:'move',fixed:true,title:'羽黒山頂 → 鶴岡',area:'13:54着',memo:'三神合祭殿を参拝してから乗車',cLo:900,cHi:900,cat:'交通'},
+  {id:'d1h',at:mm('13:55'),dur:30,icon:'🧳',kind:'shop',title:'鶴岡駅 キャリー回収・お土産',area:'エスモール',memo:'だだちゃ豆・古鏡・地酒',cLo:0,cHi:0,cat:'土産'},
+  {id:'d1i',t:mm('14:43'),dur:31,icon:'🚃',kind:'move',fixed:true,title:'鶴岡 → あつみ温泉（羽越本線）',area:'15:14着',cLo:530,cHi:530,cat:'交通'},
+  {id:'d1j',at:mm('15:14'),dur:0,icon:'🏨',kind:'stay',title:'あつみ温泉 萬国屋',area:'露天付き客室・1泊2食',resv:'✅予約済 ☎0570-008-598',memo:'送迎連絡済・CO 09:30',phone:'0570008598',lat:38.6149,lng:139.6072,cLo:18000,cHi:25000,cat:'宿泊'},
+ ]},
+ {n:2,label:'秋田',date:'8/5 水',items:[
+  {id:'d2a',at:mm('07:00'),dur:45,icon:'⛩️',kind:'sight',title:'温泉神社さんぽ',area:'浴衣＋下駄・足湯',lat:38.616,lng:139.6075,cLo:0,cHi:0,cat:'観光'},
+  {id:'d2b',at:mm('08:00'),dur:45,icon:'🍽️',kind:'food',title:'宿で朝食',area:'萬国屋',cLo:0,cHi:0,cat:'飲食'},
+  {id:'d2c',t:mm('09:51'),dur:93,icon:'🚃',kind:'move',fixed:true,title:'あつみ温泉 → 羽後本荘',area:'特急いなほ1号・11:24着',cLo:3450,cHi:3450,cat:'交通'},
+  {id:'d2d',at:mm('11:30'),dur:15,icon:'🧳',kind:'shop',title:'本荘グランドホテル 荷物預け',area:'羽後本荘',lat:39.3923,lng:140.0491,cLo:0,cHi:0,cat:'その他'},
+  {id:'d2e',t:mm('12:42'),dur:50,icon:'🚃',kind:'move',fixed:true,title:'羽後本荘 → 秋田',area:'13:32着',cLo:810,cHi:810,cat:'交通'},
+  {id:'d2f',t:mm('13:40'),dur:10,icon:'🚌',kind:'move',fixed:true,title:'秋田駅 → 三吉神社（バス）',area:'13:50着',memo:'乗継8分！フリーパス購入は後回しに',cLo:400,cHi:400,cat:'交通'},
+  {id:'d2g',at:mm('13:50'),dur:40,icon:'⛩️',kind:'sight',title:'太平山三吉神社 参拝',area:'勝利成功の守護神・673年創建',lat:39.7261,lng:140.1444,cLo:0,cHi:0,cat:'観光'},
+  {id:'d2h',at:mm('14:45'),dur:75,icon:'🛍️',kind:'shop',title:'秋田駅 お土産',area:'六花・佐藤養助・あきたの',memo:'🔴ちいかわ・稲庭うどん・いぶりがっこ一本漬け',lat:39.7169,lng:140.1297,cLo:0,cHi:0,cat:'土産'},
+  {id:'d2i',at:mm('16:15'),dur:75,icon:'🍗',kind:'food',title:'秋田比内地鶏や',area:'トピコ3F・究極の親子丼',memo:'地酒枠はここ・竿燈前なのでほどほどに',lat:39.7169,lng:140.1297,cLo:2000,cHi:3000,cat:'飲食'},
+  {id:'d2j',at:mm('17:30'),dur:90,icon:'🪷',kind:'play',title:'千秋公園 蓮鑑賞',area:'見頃ど真ん中',memo:'19時〜ライトアップ',lat:39.7217,lng:140.1244,cLo:0,cHi:0,cat:'観光'},
+  {id:'d2k',at:mm('19:15'),dur:60,icon:'🏮',kind:'play',title:'竿燈まつり',area:'竿燈大通り・出店つまみ',memo:'⚠️20:15に切り上げて20:48発に！',lat:39.7184,lng:140.1132,cLo:500,cHi:1000,cat:'飲食'},
+  {id:'d2l',t:mm('20:48'),dur:45,icon:'🚃',kind:'move',fixed:true,title:'秋田 → 羽後本荘',area:'21:33着',cLo:810,cHi:810,cat:'交通'},
+  {id:'d2m',at:mm('21:40'),dur:0,icon:'🏨',kind:'stay',title:'本荘グランドホテル',area:'素泊まり',resv:'✅予約済',lat:39.3923,lng:140.0491,cLo:8100,cHi:8100,cat:'宿泊'},
+ ]},
+ {n:3,label:'白神',date:'8/6 木',items:[
+  {id:'d3a',t:mm('06:51'),dur:45,icon:'🚃',kind:'move',fixed:true,title:'羽後本荘 → 秋田',area:'07:36着',cLo:580,cHi:580,cat:'交通'},
+  {id:'d3b',t:mm('08:19'),dur:125,icon:'🚃',kind:'move',fixed:true,title:'リゾートしらかみ1号 → 十二湖',area:'10:24着',resv:'🔴指定席×3は事前確保',memo:'日本海の絶景車窓🌊（フリーパス¥4,040込）',cLo:4880,cHi:4880,cat:'交通'},
+  {id:'d3c',t:mm('10:32'),dur:15,icon:'🚌',kind:'move',fixed:true,title:'十二湖駅 → 奥十二湖（弘南バス）',area:'10:47着',memo:'夏季ダイヤ要確認',cLo:460,cHi:460,cat:'交通'},
+  {id:'d3d',at:mm('10:47'),dur:8,icon:'🧳',kind:'shop',title:'キョロロで荷物預け',area:'奥十二湖',cLo:300,cHi:500,cat:'その他'},
+  {id:'d3e',at:mm('10:55'),dur:95,icon:'🌲',kind:'sight',title:'青池・ブナ自然林トレイル',area:'白神山地',memo:'神秘のコバルトブルー',lat:40.5605,lng:139.9848,cLo:0,cHi:0,cat:'観光'},
+  {id:'d3f',t:mm('12:35'),dur:15,icon:'🚌',kind:'move',fixed:true,title:'奥十二湖 → 十二湖駅',area:'12:50着',cLo:0,cHi:0,cat:'交通'},
+  {id:'d3g',t:mm('13:03'),dur:14,icon:'🚃',kind:'move',fixed:true,title:'リゾートしらかみ3号 → ウェスパ椿山',area:'13:17着',cLo:840,cHi:840,cat:'交通'},
+  {id:'d3h',at:mm('13:20'),dur:0,icon:'🌊',kind:'stay',title:'黄金崎不老ふ死温泉',area:'波打ち際のひょうたん露天',resv:'✅予約済 ☎0173-74-3500',memo:'🌅夕日の海辺露天・湯あみ着持参',phone:'0173743500',lat:40.6148,lng:139.8627,cLo:12570,cHi:12570,cat:'宿泊'},
+ ]},
+ {n:4,label:'青森',date:'8/7 金',items:[
+  {id:'d4a',at:mm('05:00'),dur:60,icon:'🌅',kind:'sight',title:'朝の海辺露天',area:'朝日と日本海・最後の一風呂',lat:40.6148,lng:139.8627,cLo:0,cHi:0,cat:'観光'},
+  {id:'d4b',at:mm('07:00'),dur:45,icon:'🍽️',kind:'food',title:'海鮮朝食',area:'網元直営',cLo:0,cHi:0,cat:'飲食'},
+  {id:'d4c',t:mm('10:38'),dur:176,icon:'🚃',kind:'move',fixed:true,title:'リゾートしらかみ1号 → 青森',area:'13:34着',memo:'千畳敷を徐行で車窓絶景🌊',cLo:840,cHi:840,cat:'交通'},
+  {id:'d4d',at:mm('13:34'),dur:20,icon:'🍎',kind:'shop',title:'みちのくりんご店',area:'青森駅前・徒歩1分',memo:'🔴一升瓶のりんごジュース！',lat:40.8288,lng:140.7358,cLo:0,cHi:0,cat:'土産'},
+  {id:'d4e',at:mm('14:04'),dur:45,icon:'🛍️',kind:'shop',title:'新青森 あおもり旬味館',area:'お土産＆駅弁',memo:'シードル試飲・ヒバ雑貨',lat:40.8276,lng:140.6935,cLo:0,cHi:0,cat:'土産'},
+  {id:'d4f',at:mm('14:50'),dur:0,icon:'🍱',kind:'food',title:'駅弁を購入',area:'うにホタテ弁当',cLo:1500,cHi:2000,cat:'飲食'},
+  {id:'d4g',t:mm('15:17'),dur:170,icon:'🚅',kind:'move',fixed:true,title:'はやぶさ60号 → 大宮',area:'18:07着',resv:'🔴えきねっと要予約',memo:'車内で駅弁🍱',cLo:17000,cHi:17000,cat:'交通'},
+  {id:'d4h',t:mm('18:19'),dur:30,icon:'🚃',kind:'move',fixed:true,title:'大宮 → 新宿（湘南新宿ライン）',area:'🟢グリーン車',cLo:750,cHi:1500,cat:'交通'},
+  {id:'d4i',t:mm('19:40'),dur:49,icon:'🚃',kind:'move',fixed:true,title:'小田急ホームウェイ → 本厚木',area:'20:29着',resv:'🔴特急券は事前購入',cLo:660,cHi:1280,cat:'交通'},
+  {id:'d4j',at:mm('20:29'),dur:0,icon:'🏠',kind:'stay',title:'本厚木 着',area:'おつかれさま！',cLo:0,cHi:0,cat:'その他'},
+ ]},
+];
+const PACK_BASE={持ち物:['着替え','パジャマ','ハンドタオル','ボディタオル','髭剃り','歯ブラシ','歯磨き粉','マウスウォッシュ','モバイルバッテリー','ACアダプター','コンセント','タブレット','FireTV','ポータブルスピーカー','イヤホン','水筒','薬','化粧水','香水','シャンプー・リンス','日焼け止め','自撮り棒','折りたたみ傘','アレジオン','目薬','リップクリーム','手提げカバン','保冷バッグ','ハンディファン','日傘','爪研ぎ','肉球'],買うもの:['お茶2L','スポーツドリンク','野菜ジュース','枝豆','カップスープ','チョコ']};
+
+const GEOFIX={d1e:[38.7047,139.9677],d1f:[38.7043,139.9721],d1j:[38.6149,139.6072],d2a:[38.616,139.6075],d2d:[39.3923,140.0491],d2m:[39.3923,140.0491],d2g:[39.7261,140.1444],d2h:[39.7169,140.1297],d2i:[39.7169,140.1297],d2j:[39.7217,140.1244],d2k:[39.7184,140.1132],d3e:[40.5605,139.9848],d3h:[40.6148,139.8627],d4a:[40.6148,139.8627],d4d:[40.8288,140.7358],d4e:[40.8276,140.6935]};
+let state={view:'timeline',day:0,now:mm('10:30'),trip:Object.assign({},TRIP0),itin:[],photos:[],packing:[],souv:[],todoTab:'pack',svId:null,svNew:false,edId:null,edDay:0,edSnap:null,edNew:false,placePhoto:null,pkConfirm:false};
+let map=null,layer=null,mapInit=false;
+
+const LS={get(k){try{const v=localStorage.getItem(k);return v==null?null:{key:k,value:v};}catch(e){return null;}},set(k,v){try{localStorage.setItem(k,v);return true;}catch(e){return false;}}};
+async function saveState(){try{if(LS)await LS.set('tohoku:v5',JSON.stringify({trip:state.trip,itin:state.itin,packing:state.packing,souv:state.souv}));}catch(e){toast('保存できなかった');}}
+async function savePhotos(){try{if(LS)await LS.set('tohoku:ph5',JSON.stringify(state.photos));}catch(e){toast('写真の保存に失敗（容量？）');}}
+async function loadAll(){
+  try{if(LS){const r=await LS.get('tohoku:v5');if(r&&r.value){const d=JSON.parse(r.value);if(d.trip)state.trip=Object.assign({},TRIP0,d.trip);state.itin=d.itin||[];state.packing=d.packing||[];state.souv=d.souv||[];}}}catch(e){}
+  try{if(LS){const p=await LS.get('tohoku:ph5');if(p&&p.value)state.photos=JSON.parse(p.value)||[];}}catch(e){}
+  if(!state.itin.length)seedItin();
+  if(!state.packing.length)seedPacking();
+  if(!state.souv.length)seedSouv();
+  await applyGeoFix();
+}
+async function applyGeoFix(){try{if(!LS)return;const f=await LS.get('tohoku:geofix2');if(f&&f.value)return;let ch=false;Object.keys(GEOFIX).forEach(id=>{const r=findItem(id);if(r){r.item.lat=GEOFIX[id][0];r.item.lng=GEOFIX[id][1];ch=true;}});await LS.set('tohoku:geofix2','1');if(ch)await saveState();}catch(e){}}
+function seedItin(){state.itin=SEED_DAYS.map(d=>({n:d.n,label:d.label,date:d.date,items:d.items.map(it=>Object.assign({},it))}));}
+function seedPacking(){state.packing=[];Object.keys(PACK_BASE).forEach(g=>PACK_BASE[g].forEach(nm=>state.packing.push({id:uid(),name:nm,grp:g,done:false})));}
+
+function schedule(items){const out=[];let cur=null;for(const it of items){const dur=it.dur||0;let start,watch=false;if(it.fixed){start=it.t;watch=true;}else{const flow=cur==null?(it.t??it.at??0):cur;if(it.at!=null){start=Math.max(flow,it.at);watch=true;}else start=flow;}const buf=watch&&cur!=null?start-cur:null;out.push(Object.assign({},it,{start,end:start+dur,buffer:buf,conflict:buf!=null&&buf<0}));cur=start+dur;}return out;}
+const sched=i=>schedule(state.itin[i].items);
+function normalize(i){const items=state.itin[i].items,prov=schedule(items),nom={};items.forEach((it,idx)=>{nom[it.id]=it.fixed?it.t:(it.at!=null?it.at:prov[idx].start);});state.itin[i].items=items.map((it,idx)=>[it,nom[it.id],idx]).sort((a,b)=>(a[1]-b[1])||(a[2]-b[2])).map(x=>x[0]);}
+function findItem(id){for(let i=0;i<state.itin.length;i++)for(const it of state.itin[i].items)if(it.id===id)return{item:it,day:i};return null;}
+
+function renderTop(){document.getElementById('topEy').textContent=state.trip.name;document.getElementById('topTitle').textContent=state.trip.title;document.getElementById('topSub').textContent=tripSub();}
+function renderNav(){const items=[['timeline','🕐','旅程'],['map','🗺️','地図'],['todo','✅','ToDo'],['budget','💰','予算'],['today','🧭','進行'],['md','📄','書出']];document.getElementById('nav').innerHTML=items.map(([k,ic,lb])=>`<button class="nb ${state.view===k?'on':''}" onclick="showView('${k}')"><span class="ic">${ic}</span><span class="lb">${lb}</span></button>`).join('');}
+function renderDayTabs(){const show=state.view==='timeline'||state.view==='today';const el=document.getElementById('daytabs');el.style.display=show?'flex':'none';if(!show)return;el.innerHTML=state.itin.map((d,i)=>{const cf=sched(i).some(x=>x.conflict);return `<button class="dtab ${i===state.day?'on':''}" onclick="setDay(${i})"><div class="d mono">DAY ${d.n}${cf?' ⚠️':''}</div><div class="l">${d.label}</div><div class="dt mono">${dDate(i)}</div></button>`;}).join('');}
+function setDay(i){state.day=i;const s=sched(i);state.now=s[0]?s[0].start:mm('09:00');renderDayTabs();renderView();}
+function showView(v){state.view=v;document.querySelectorAll('.view').forEach(el=>el.style.display='none');document.getElementById('v-'+v).style.display=(v==='map')?'flex':'block';renderNav();renderDayTabs();if(v==='map')ensureMap();else renderView();}
+function renderView(){({timeline:renderTimeline,todo:renderTodo,budget:renderBudget,today:renderToday,md:renderMD,map:renderMapList}[state.view]||(()=>{}))();}
+
+/* 旅程 */
+function renderTimeline(){
+  const s=sched(state.day),conf=s.filter(x=>x.conflict).length;
+  let h=`<div style="font-size:11.5px;color:var(--inkSoft);line-height:1.5;margin-bottom:10px">カードをタップで編集（固定の電車もOK）。滞在を変えると後ろが連鎖でズレるよ</div>`;
+  h+=`<button class="btn s" style="width:100%;padding:10px 0;font-size:12.5px;margin-bottom:12px" onclick="addItem()">＋ 予定を差し込む</button>`;
+  if(conf)h+=`<div style="display:flex;gap:8px;align-items:center;background:var(--shuSoft);color:var(--shu);border-radius:10px;padding:9px 12px;margin-bottom:12px;font-size:12.5px;font-weight:600">⚠️ ${conf}件の乗り継ぎが間に合わなくなってるよ！</div>`;
+  s.forEach((it,idx)=>{
+    const last=idx===s.length-1,kc=it.conflict?'var(--shu)':(KIND[it.kind]?KIND[it.kind].c:'#2C3E6B');
+    const chips=[];if(it.resv)chips.push(`<span class="chip" style="background:var(--shuSoft);color:var(--shu)">${esc(it.resv)}</span>`);if(it.buffer!=null)chips.push(bufChip(it.buffer,it.fixed));if(it.cLo||it.cHi)chips.push(`<span class="chip" style="background:var(--chip);color:var(--inkSoft)">${it.cLo===it.cHi?yen(it.cLo):yen(it.cLo)+'〜'+yen(it.cHi)}</span>`);if(it.lat!=null)chips.push(`<span class="chip" style="background:var(--chip);color:var(--inkSoft)">📍地図</span>`);{const sv=state.souv.filter(x=>x.spotId===it.id&&!x.bought).length;if(sv)chips.push(`<span class="chip" style="background:var(--amberSoft);color:var(--amber)">🎁${sv}</span>`);}
+    h+=`<div class="trow"><div class="ttime"><div class="s mono ${it.conflict?'cf':''}">${fmt(it.start)}</div>${it.dur>0?`<div class="e mono">〜${fmt(it.end)}</div>`:''}</div>
+      <div class="tnode"><div class="tdot" style="border:3px solid ${kc}"></div>${last?'':'<div class="tbar"></div>'}</div>
+      <div class="tcard ${it.conflict?'cf':''}" onclick="openItemEd(${state.day},'${it.id}')"><div class="h"><span style="font-size:16px">${it.icon||'📍'}</span><span class="ti">${esc(it.title)}</span><span class="ed">${it.fixed?'🔒':'✎'}</span></div>
+      ${it.area?`<div class="ar">${esc(it.area)}</div>`:''}${it.memo?`<div class="mm">${esc(it.memo)}</div>`:''}
+      ${chips.length?`<div class="chips" style="margin-top:7px">${chips.join('')}</div>`:''}</div></div>`;
+  });
+  document.getElementById('v-timeline').innerHTML=h;
+}
+function bufChip(b,fx){if(b<0)return `<span class="chip" style="background:var(--shuSoft);color:var(--shu)">⚠️ ${-b}分オーバー</span>`;if(b<=10)return `<span class="chip" style="background:var(--amberSoft);color:var(--amber)">${fx?'乗継':'空き'} ${b}分 ギリ</span>`;return `<span class="chip" style="background:var(--chip);color:var(--inkSoft)">${fx?'乗継':'空き'} ${b}分 余裕</span>`;}
+
+function makeItem(extra){const s=sched(state.day),lastEnd=s.length?s[s.length-1].end:mm('09:00');return Object.assign({id:uid(),icon:'📍',kind:'sight',title:'新しい予定',area:'',memo:'',dur:60,at:lastEnd,cLo:0,cHi:0,cat:'観光'},extra||{});}
+function addItem(){const it=makeItem();state.itin[state.day].items.push(it);normalize(state.day);saveState();renderTimeline();renderDayTabs();openItemEd(state.day,it.id,true);toast('項目を追加した');}
+function openItemEd(day,id,isNew){const f=findItem(id);if(!f)return;state.edId=id;state.edDay=f.day;state.edNew=!!isNew;state.edSnap=JSON.parse(JSON.stringify(f.item));const it=f.item;
+  document.getElementById('ieName').value=it.title||'';
+  document.getElementById('ieKind').innerHTML=Object.keys(KIND).map(k=>`<option value="${k}" ${k===it.kind?'selected':''}>${KIND[k].ja}</option>`).join('');
+  document.getElementById('ieIcon').value=it.icon||'';
+  document.getElementById('ieFixed').checked=!!it.fixed;
+  document.getElementById('ieTime').value=it.fixed?(it.t!=null?fmt(it.t):''):(it.at!=null?fmt(it.at):'');
+  document.getElementById('ieTimeLbl').textContent=it.fixed?'時刻（固定）':'時刻（この時刻以降）';
+  document.getElementById('ieDur').textContent=(it.dur||0)+'分';
+  document.getElementById('ieArea').value=it.area||'';
+  document.getElementById('ieMemo').value=it.memo||'';
+  document.getElementById('ieCLo').value=it.cLo||0;
+  document.getElementById('ieCHi').value=it.cHi||0;
+  document.getElementById('ieCat').innerHTML=Object.keys(CAT).map(c=>`<option ${c===it.cat?'selected':''}>${c}</option>`).join('');
+  document.getElementById('itemEd').classList.add('on');
+}
+function curItem(){const f=findItem(state.edId);return f?f.item:null;}
+function afterEdit(){normalize(state.edDay);saveState();renderTimeline();renderDayTabs();if(mapInit)drawMap();renderMapList();}
+function itemEdChange(k,v){const it=curItem();if(!it)return;it[k]=v;afterEdit();}
+function itemSetFixed(b){const it=curItem();if(!it)return;if(b){it.fixed=true;if(it.t==null)it.t=(it.at!=null?it.at:mm('09:00'));it.at=undefined;}else{it.fixed=false;if(it.at==null)it.at=it.t;it.t=undefined;}document.getElementById('ieTime').value=it.fixed?(it.t!=null?fmt(it.t):''):(it.at!=null?fmt(it.at):'');document.getElementById('ieTimeLbl').textContent=it.fixed?'時刻（固定）':'時刻（この時刻以降）';afterEdit();}
+function itemSetTime(v){const it=curItem();if(!it)return;const t=parseT(v);if(it.fixed){if(t!=null)it.t=t;}else{it.at=(t!=null?t:undefined);}afterEdit();}
+function itemDurStep(d){const it=curItem();if(!it)return;it.dur=Math.max(0,(it.dur||0)+d);document.getElementById('ieDur').textContent=it.dur+'分';afterEdit();}
+function itemDelete(){const f=findItem(state.edId);if(!f)return;state.itin[f.day].items=state.itin[f.day].items.filter(x=>x.id!==state.edId);normalize(f.day);saveState();closeItemEd();renderTimeline();renderDayTabs();if(mapInit)drawMap();renderMapList();toast('削除した');}
+function cancelItemEd(){const f=findItem(state.edId);
+  if(state.edNew){if(f){state.itin[f.day].items=state.itin[f.day].items.filter(x=>x.id!==state.edId);normalize(f.day);}toast('追加を取り消した');}
+  else if(f&&state.edSnap){const it=f.item;Object.keys(it).forEach(k=>delete it[k]);Object.assign(it,state.edSnap);normalize(f.day);toast('変更を取り消した');}
+  saveState();closeItemEd();renderTimeline();renderDayTabs();if(mapInit)drawMap();renderMapList();}
+function closeItemEd(){document.getElementById('itemEd').classList.remove('on');state.edId=null;state.edSnap=null;state.edNew=false;}
+
+/* 旅タイトル */
+function iso(dt){return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;}
+function daysBetween(a,b){return Math.round((ymd(b)-ymd(a))/86400000);}
+function refreshTripEd(){
+  document.getElementById('trStart').value=state.trip.start;
+  document.getElementById('trEnd').value=iso(addDays(ymd(state.trip.start),state.itin.length-1));
+  renderTripCalc();
+  document.getElementById('trWarn').innerHTML='';
+  document.getElementById('trDays').innerHTML=state.itin.map((d,i)=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span class="mono" style="font-size:11px;color:var(--inkSoft);width:42px">DAY${i+1}</span><input value="${esc(d.label)}" oninput="dayLabelChange(${i},this.value)" /></div>`).join('');
+}
+function openTripEd(){document.getElementById('trName').value=state.trip.name;document.getElementById('trTitle').value=state.trip.title;state.pendingDc=null;refreshTripEd();document.getElementById('tripEd').classList.add('on');}
+function renderTripCalc(){const n=state.itin.length;document.getElementById('trCalc').textContent=`${dDateShort(0)}〜${dDateShort(n-1)} ・ ${n-1}泊${n}日（自動）`;}
+function tripChange(k,v){state.trip[k]=v;renderTop();saveState();}
+function tripSetStart(v){if(!v)return;state.trip.start=v;renderTop();renderDayTabs();refreshTripEd();saveState();}
+function tripSetEnd(v){if(!v)return;let dc=daysBetween(state.trip.start,v)+1;if(dc<1){toast('終了日は開始日以降にしてね');refreshTripEd();return;}reconcileDays(dc);}
+function renumberDays(){state.itin.forEach((d,i)=>d.n=i+1);}
+function afterStructural(msg){if(state.day>=state.itin.length)state.day=state.itin.length-1;renderTop();renderDayTabs();refreshTripEd();renderView();saveState();if(msg)toast(msg);}
+function reconcileDays(dc){
+  const cur=state.itin.length;
+  if(dc===cur){afterStructural();return;}
+  if(dc>cur){for(let i=cur;i<dc;i++)state.itin.push({n:i+1,label:'',items:[]});renumberDays();afterStructural(`${dc-1}泊${dc}日に延長（空の日を追加）`);return;}
+  const removed=state.itin.slice(dc),cnt=removed.reduce((a,d)=>a+d.items.length,0);
+  if(cnt===0){state.itin=state.itin.slice(0,dc);renumberDays();afterStructural(`${dc-1}泊${dc}日に短縮`);return;}
+  state.pendingDc=dc;
+  document.getElementById('trWarn').innerHTML=`<div style="background:var(--shuSoft);border-radius:10px;padding:10px;margin-top:8px"><div style="font-size:12px;color:var(--shu);font-weight:600">DAY${dc+1}以降に予定が ${cnt}件 あるよ。どうする？</div><div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><button class="btn p" style="flex:1;padding:8px 0;font-size:11.5px" onclick="shrinkMerge()">最終日にまとめる</button><button class="btn shu" style="flex:1;padding:8px 0;font-size:11.5px" onclick="shrinkDelete()">削除する</button><button class="btn s" style="flex:0 0 auto;padding:8px 12px;font-size:11.5px" onclick="cancelShrink()">やめる</button></div></div>`;
+}
+function shrinkMerge(){const dc=state.pendingDc;if(dc==null)return;const t=state.itin[dc-1];state.itin.slice(dc).forEach(d=>d.items.forEach(it=>t.items.push(it)));state.itin=state.itin.slice(0,dc);renumberDays();normalize(dc-1);state.pendingDc=null;afterStructural('最終日にまとめて短縮した');}
+function shrinkDelete(){const dc=state.pendingDc;if(dc==null)return;state.itin=state.itin.slice(0,dc);renumberDays();state.pendingDc=null;afterStructural('短縮（以降の予定を削除）');}
+function cancelShrink(){state.pendingDc=null;refreshTripEd();}
+function dayLabelChange(i,v){state.itin[i].label=v;renderDayTabs();saveState();}
+function tripChange(k,v){state.trip[k]=v;renderTop();saveState();}
+function closeTrip(){document.getElementById('tripEd').classList.remove('on');}
+
+/* 持ち物 */
+function packHtml(){
+  const total=state.packing.length,done=state.packing.filter(p=>p.done).length,left=total-done;
+  let h=`<div class="bk"><div class="mono" style="font-size:10.5px;letter-spacing:2px;color:#9FB0CC">持ち物チェック（消し込み式）</div><div style="display:flex;align-items:baseline;gap:8px;margin-top:2px"><div class="mono" style="font-size:30px;font-weight:700">残り ${left}</div><div style="font-size:12px;color:#9FB0CC">/ 全${total}</div></div><div style="margin-top:10px"><div class="barwrap" style="background:rgba(255,255,255,.15)"><div class="seg" style="width:${total?done/total*100:0}%;background:#7FD1A8"></div></div></div></div>`;
+  h+=`<div style="display:flex;gap:7px;margin:14px 0 6px"><input id="pkAdd" placeholder="追加するものを入力" style="flex:1" onkeydown="if(event.key==='Enter')addPackInline()"><button class="btn p" style="flex:0 0 auto;padding:0 16px" onclick="addPackInline()">追加</button></div>`;
+  if(state.pkConfirm)h+=`<div style="display:flex;gap:7px;align-items:center;background:var(--shuSoft);border-radius:10px;padding:8px 10px;margin-bottom:8px"><span style="flex:1;font-size:12px;color:var(--shu);font-weight:600">テンプレに戻す？（今の状態は消えるよ）</span><button class="btn shu" style="padding:6px 12px;font-size:12px" onclick="resetPackDo()">はい</button><button class="btn s" style="padding:6px 12px;font-size:12px" onclick="state.pkConfirm=false;renderTodo()">やめる</button></div>`;
+  else h+=`<div style="margin-bottom:8px"><button class="btn s" style="width:100%;padding:8px 0;font-size:11.5px" onclick="state.pkConfirm=true;renderTodo()">全リセット（テンプレ読み直し）</button></div>`;
+  if(total&&left===0)h+=`<div style="text-align:center;padding:24px 0"><div style="font-size:38px">🎉</div><div style="font-size:16px;font-weight:700;margin-top:6px">忘れ物なし！</div><div style="font-size:12px;color:var(--inkSoft);margin-top:3px">準備かんりょう。いってらっしゃい〜</div></div>`;
+  ['持ち物','買うもの','その他'].forEach(g=>{const active=state.packing.filter(p=>p.grp===g&&!p.done);if(!active.length)return;h+=`<div class="sec" style="margin-top:14px">${g}（残り${active.length}）</div>`;active.forEach(p=>{h+=`<div class="pkitem" onclick="togglePack('${p.id}')"><div class="pkck"></div><div class="nm">${esc(p.name)}</div></div>`;});});
+  const di=state.packing.filter(p=>p.done);if(di.length){h+=`<div class="sec" style="margin-top:18px">済み（${di.length}）— タップで戻す</div>`;di.forEach(p=>{h+=`<div class="pkitem pkdone" onclick="togglePack('${p.id}')"><div class="pkck">✓</div><div class="nm">${esc(p.name)}</div></div>`;});}
+  h+=`<div class="note">タップで「済み」に。全部消えたら忘れ物なし！</div>`;
+  return h;
+}
+function togglePack(id){const p=state.packing.find(x=>x.id===id);if(p){p.done=!p.done;saveState();renderTodo();}}
+function addPackInline(){const el=document.getElementById('pkAdd');const v=(el&&el.value||'').trim();if(!v)return;state.packing.push({id:uid(),name:v,grp:'持ち物',done:false});saveState();renderTodo();const n=document.getElementById('pkAdd');if(n)n.focus();}
+function resetPackDo(){state.pkConfirm=false;seedPacking();saveState();renderTodo();toast('テンプレを読み直した');}
+
+/* お土産 */
+function seedSouv(){state.souv=[
+  {name:'だだちゃ豆',spotId:'d1h',price:1200,to:'自分'},
+  {name:'古鏡（菓子）',spotId:'d1h',price:1000,to:'実家'},
+  {name:'地酒',spotId:'d1h',price:2000,to:'自分'},
+  {name:'稲庭うどん（佐藤養助）',spotId:'d2h',price:1500,to:'実家'},
+  {name:'いぶりがっこ一本漬け',spotId:'d2h',price:800,to:'自分'},
+  {name:'ちいかわグッズ',spotId:'d2h',price:2000,to:'自分',memo:'🔴マスト'},
+  {name:'金萬',spotId:'d2h',price:800,to:'職場'},
+  {name:'一升瓶りんごジュース',spotId:'d4d',price:2500,to:'職場',memo:'🔴ネタみやげ'},
+  {name:'シードル',spotId:'d4e',price:1800,to:'自分',memo:'試飲して選ぶ'},
+  {name:'ヒバ雑貨',spotId:'d4e',price:1500,to:'自分'},
+].map(s=>Object.assign({id:uid(),bought:false,memo:'',price:0,to:''},s));}
+function buyingSpots(){const r=[];state.itin.forEach((d,i)=>{const sc=schedule(d.items);d.items.forEach(it=>{if(it.cat==='土産'||it.kind==='shop'||it.lat!=null){const s=sc.find(x=>x.id===it.id);r.push({id:it.id,day:i,start:s?s.start:0,label:`D${i+1} ${s?fmt(s.start)+' ':''}${it.title}`});}});});r.sort((a,b)=>a.day-b.day||a.start-b.start);return r;}
+function spotLabel(id){const f=findItem(id);if(!f)return '買う場所 未定（予定が削除された）';const sc=schedule(state.itin[f.day].items),s=sc.find(x=>x.id===id);return `D${f.day+1} ${s?fmt(s.start)+' ':''}${f.item.icon||''} ${f.item.title}`;}
+function souvHtml(id){const list=state.souv.filter(s=>s.spotId===id&&!s.bought);if(!list.length)return '';return `<div style="margin-top:10px;background:var(--amberSoft);color:var(--amber);border-radius:8px;padding:8px 10px;font-size:12px;font-weight:600">🎁 ここで買う：${list.map(s=>esc(s.name)).join('、')}</div>`;}
+function souvRow(s){const pr=s.price?` <span class="mono" style="font-size:11px;color:var(--inkSoft)">${yen(s.price)}</span>`:'';const to=s.to?` <span style="font-size:11px;color:var(--inkSoft)">→${esc(s.to)}</span>`:'';return `<div class="pkitem ${s.bought?'pkdone':''}"><div class="pkck" onclick="event.stopPropagation();toggleSouv('${s.id}')">${s.bought?'✓':''}</div><div class="nm" onclick="openSouvEd('${s.id}')">${esc(s.name)}${pr}${to}${s.memo?` <span style="font-size:11px;color:var(--inkSoft)">${esc(s.memo)}</span>`:''}</div></div>`;}
+function souvListHtml(){
+  const total=state.souv.length,bought=state.souv.filter(s=>s.bought).length;
+  const spent=state.souv.filter(s=>s.bought).reduce((a,s)=>a+(s.price||0),0),planned=state.souv.reduce((a,s)=>a+(s.price||0),0);
+  let h=`<div class="bk"><div class="mono" style="font-size:10.5px;letter-spacing:2px;color:#9FB0CC">お土産</div><div style="display:flex;align-items:baseline;gap:8px;margin-top:2px"><div class="mono" style="font-size:26px;font-weight:700">買った ${bought}<span style="font-size:13px;color:#9FB0CC"> / ${total}</span></div></div><div class="mono" style="font-size:12px;color:#9FB0CC;margin-top:3px">使った ${yen(spent)} ／ 予定 ${yen(planned)}</div><div style="margin-top:10px"><div class="barwrap" style="background:rgba(255,255,255,.15)"><div class="seg" style="width:${total?bought/total*100:0}%;background:#7FD1A8"></div></div></div></div>`;
+  h+=`<button class="btn s" style="width:100%;padding:10px 0;font-size:12.5px;margin:14px 0 8px" onclick="addSouv()">＋ お土産を追加</button>`;
+  const groups={};state.souv.forEach(s=>{(groups[s.spotId||'']=groups[s.spotId||'']||[]).push(s);});
+  const opts=buyingSpots(),order=opts.map(o=>o.id).filter(id=>groups[id]);Object.keys(groups).forEach(k=>{if(k&&order.indexOf(k)<0)order.push(k);});
+  order.forEach(k=>{h+=`<div class="sec" style="margin-top:14px">${esc(spotLabel(k))}</div>`;groups[k].forEach(s=>h+=souvRow(s));});
+  if(groups['']){h+=`<div class="sec" style="margin-top:14px">買う場所 未定</div>`;groups[''].forEach(s=>h+=souvRow(s));}
+  if(!total)h+=`<div class="empty">「＋お土産を追加」で登録。買う場所・金額・渡す相手を設定できるよ。</div>`;
+  h+=`<div class="note">チェックで「買った」に。買ったぶんは予算の<b>土産費に自動反映</b>。進行タブでその場所に着くと「ここで買う」が出るよ。</div>`;
+  return h;
+}
+function addSouv(){const s={id:uid(),name:'新しいお土産',spotId:'',price:0,to:'',memo:'',bought:false};state.souv.push(s);saveState();openSouvEd(s.id,true);}
+function toggleSouv(id){const s=state.souv.find(x=>x.id===id);if(s){s.bought=!s.bought;saveState();renderTodo();}}
+function delSouv(id){state.souv=state.souv.filter(x=>x.id!==id);saveState();renderTodo();}
+function curSouv(){return state.souv.find(s=>s.id===state.svId);}
+function openSouvEd(id,isNew){const s=state.souv.find(x=>x.id===id);if(!s)return;state.svId=id;state.svNew=!!isNew;state.svSnap=JSON.parse(JSON.stringify(s));
+  document.getElementById('svEdName').value=s.name||'';
+  document.getElementById('svEdSpot').innerHTML='<option value="">買う場所 未定</option>'+buyingSpots().map(o=>`<option value="${o.id}" ${o.id===s.spotId?'selected':''}>${esc(o.label)}</option>`).join('');
+  document.getElementById('svEdPrice').value=s.price||0;
+  document.getElementById('svEdTo').value=s.to||'';
+  document.getElementById('svEdMemo').value=s.memo||'';
+  document.getElementById('svEdBought').checked=!!s.bought;
+  document.getElementById('souvEd').classList.add('on');renderTodo();}
+function souvEdChange(k,v){const s=curSouv();if(!s)return;s[k]=v;saveState();renderTodo();}
+function souvSetBought(b){const s=curSouv();if(!s)return;s.bought=b;saveState();renderTodo();}
+function souvDelete(){if(state.svId)delSouv(state.svId);closeSouvEd();}
+function cancelSouvEd(){const s=curSouv();
+  if(state.svNew){if(s)state.souv=state.souv.filter(x=>x.id!==state.svId);toast('追加を取り消した');}
+  else if(s&&state.svSnap){Object.keys(s).forEach(k=>delete s[k]);Object.assign(s,state.svSnap);toast('変更を取り消した');}
+  saveState();closeSouvEd();renderTodo();}
+function closeSouvEd(){document.getElementById('souvEd').classList.remove('on');state.svId=null;state.svNew=false;state.svSnap=null;}
+function renderTodo(){const seg=`<div style="display:flex;gap:6px;margin-bottom:12px"><button class="btn ${state.todoTab!=='souv'?'p':'s'}" style="flex:1;padding:9px 0;font-size:13px" onclick="setTodoTab('pack')">🎒 持ち物</button><button class="btn ${state.todoTab==='souv'?'p':'s'}" style="flex:1;padding:9px 0;font-size:13px" onclick="setTodoTab('souv')">🎁 お土産</button></div>`;document.getElementById('v-todo').innerHTML=seg+(state.todoTab==='souv'?souvListHtml():packHtml());}
+function setTodoTab(t){state.todoTab=t;renderTodo();}
+
+/* 予算 */
+function renderBudget(){
+  const all=state.itin.flatMap(d=>d.items),catLo={},catHi={},dayLo=state.itin.map(()=>0),dayHi=state.itin.map(()=>0);let tLo=0,tHi=0;
+  all.forEach(it=>{catLo[it.cat]=(catLo[it.cat]||0)+(it.cLo||0);catHi[it.cat]=(catHi[it.cat]||0)+(it.cHi||0);tLo+=it.cLo||0;tHi+=it.cHi||0;});
+  state.itin.forEach((d,i)=>d.items.forEach(it=>{dayLo[i]+=it.cLo||0;dayHi[i]+=it.cHi||0;}));
+  state.souv.forEach(s=>{const lo=s.bought?(s.price||0):0,hi=(s.price||0);catLo['土産']=(catLo['土産']||0)+lo;catHi['土産']=(catHi['土産']||0)+hi;tLo+=lo;tHi+=hi;const f=s.spotId?findItem(s.spotId):null;if(f){dayLo[f.day]+=lo;dayHi[f.day]+=hi;}});
+  const cats=Object.keys(CAT).filter(c=>catHi[c]),maxHi=Math.max(...cats.map(c=>catHi[c]),1),maxDay=Math.max(...dayHi,1),remLo=BUDGET_LO-tHi;
+  let h=`<div class="bk"><div class="mono" style="font-size:10.5px;letter-spacing:2px;color:#9FB0CC">旅の総額（安め〜高め）</div><div class="mono" style="font-size:25px;font-weight:700;margin-top:2px">${yen(tLo)} 〜 ${yen(tHi)}</div><div style="margin-top:12px"><div class="barwrap" style="background:rgba(255,255,255,.15)"><div class="seg" style="width:${Math.min(100,tLo/BUDGET_LO*100)}%;background:#7FD1A8"></div></div><div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11.5px"><span style="color:#9FB0CC">予算 ${yen(BUDGET_LO)}</span><span class="mono" style="color:${remLo>=0?'#7FD1A8':'#ffb4a2'};font-weight:700">${remLo>=0?'残り '+yen(remLo):'超過 '+yen(-remLo)}</span></div></div></div>`;
+  h+=`<div class="sec" style="margin-top:18px">分類べつ — タップで該当の予定を編集</div>`;
+  cats.forEach(c=>{const lo=catLo[c],hi=catHi[c];h+=`<div class="catrow" onclick="${c==='土産'?'goSouv()':"openPick('"+c+"')"}"><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px"><span style="display:inline-flex;align-items:center;gap:6px;font-weight:600"><span class="dot" style="background:${CAT[c]}"></span>${c}費 <span style="color:var(--inkSoft);font-weight:400">›</span></span><span class="mono" style="font-weight:600">${lo===hi?yen(lo):yen(lo)+'〜'+yen(hi)}</span></div><div class="barwrap"><div class="seg" style="display:inline-block;width:${lo/maxHi*100}%;background:${CAT[c]}"></div><div class="seg" style="display:inline-block;width:${(hi-lo)/maxHi*100}%;background:${CAT[c]};opacity:.35"></div></div></div>`;});
+  h+=`<div class="sec" style="margin-top:20px">日べつ</div>`;
+  dayHi.forEach((hi,i)=>{const lo=dayLo[i];h+=`<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px"><span class="mono" style="font-size:11.5px;color:${i===state.day?'var(--shu)':'var(--inkSoft)'};font-weight:700;width:70px">DAY${i+1} ${state.itin[i].label}</span><div style="flex:1" class="barwrap"><div class="seg" style="display:inline-block;width:${lo/maxDay*100}%;background:${i===state.day?'var(--shu)':'var(--line)'}"></div><div class="seg" style="display:inline-block;width:${(hi-lo)/maxDay*100}%;background:${i===state.day?'var(--shu)':'var(--line)'};opacity:.35"></div></div><span class="mono" style="font-size:10.5px;width:74px;text-align:right">${lo===hi?yen(lo):(lo/1000).toFixed(0)+'〜'+(hi/1000).toFixed(0)+'k'}</span></div>`;});
+  h+=`<div class="note">予定カードの費用・費用カテゴリ、ToDoのお土産（買った＝確定／全部＝上限）を自動集計。土産費をタップするとお土産リストへ。</div>`;
+  document.getElementById('v-budget').innerHTML=h;
+}
+function goSouv(){state.todoTab='souv';showView('todo');}
+function openPick(cat){const list=[];state.itin.forEach((d,i)=>d.items.forEach(it=>{if(it.cat===cat)list.push({day:i,it});}));document.getElementById('pkTitle').textContent=cat+'費の予定（タップで編集）';let h='';if(!list.length)h='<div class="empty">この分類の予定はまだ無いよ</div>';list.forEach(({day,it})=>{const c=it.cLo===it.cHi?yen(it.cLo):yen(it.cLo)+'〜'+yen(it.cHi);h+=`<div class="row" onclick="editFromPick(${day},'${it.id}')"><span class="dot" style="background:${CAT[it.cat]}"></span><span class="nm">${it.icon||'📍'} ${esc(it.title)}</span><span class="tm mono">D${day+1}・${c}</span></div>`;});document.getElementById('pkList').innerHTML=h;document.getElementById('pick').classList.add('on');}
+function closePick(){document.getElementById('pick').classList.remove('on');}
+function editFromPick(day,id){closePick();state.day=day;showView('timeline');setTimeout(()=>openItemEd(day,id),60);}
+
+/* 今日 */
+function renderToday(){
+  const d=state.itin[state.day],s=sched(state.day),now=state.now;
+  const up=s.filter(i=>i.start>=now),past=s.filter(i=>i.start<now),next=up[0],rest=up.slice(1),cur=past.length?past[past.length-1]:null;
+  let h=`<div style="display:flex;align-items:center;justify-content:space-between;background:var(--ink);color:var(--paper);border-radius:14px;padding:12px 14px"><div><div class="mono" style="font-size:10px;letter-spacing:2px;color:#9FB0CC">DAY ${d.n} · ${dDate(state.day)} · いま</div><div class="mono" style="font-size:30px;font-weight:700;line-height:1.1">${fmt(now)}</div></div><div style="display:flex;gap:8px"><button class="btn" style="background:rgba(255,255,255,.12);width:38px;height:38px;font-size:18px;color:#fff" onclick="bump(-15)">‹</button><button class="btn" style="background:rgba(255,255,255,.12);width:38px;height:38px;font-size:18px;color:#fff" onclick="bump(15)">›</button></div></div><div style="font-size:10.5px;color:var(--inkSoft);text-align:center;margin-top:6px">← デモ：時刻を動かすと「次の予定」が変わる →</div>`;
+  if(cur)h+=`<div style="font-size:12px;color:var(--inkSoft);margin-top:14px">いま：${cur.icon||''} ${esc(cur.title)}</div>`;
+  if(next){h+=`<div style="margin-top:8px;background:var(--panel);border:2px solid var(--shu);border-radius:16px;overflow:hidden"><div style="background:var(--shu);color:#fff;font-size:11px;font-weight:700;letter-spacing:1px;padding:5px 14px">次の予定</div><div style="padding:14px 16px 16px"><div style="display:flex;align-items:baseline;gap:10px"><span class="mono" style="font-size:26px;font-weight:700">${fmt(next.start)}</span><span style="font-size:22px">${next.icon||''}</span></div><div style="font-size:18px;font-weight:700;margin-top:6px">${esc(next.title)}</div>${next.area?`<div style="font-size:13px;color:var(--inkSoft);margin-top:3px">${esc(next.area)}</div>`:''}${next.memo?`<div style="font-size:12.5px;color:var(--inkSoft);margin-top:6px">${esc(next.memo)}</div>`:''}${next.resv?`<div style="display:inline-block;margin-top:9px;background:var(--shuSoft);color:var(--shu);font-size:12px;font-weight:600;padding:4px 10px;border-radius:8px">${esc(next.resv)}</div>`:''}${souvHtml(next.id)}${(next.lat!=null||next.phone)?`<div style="display:flex;gap:8px;margin-top:13px">${next.lat!=null?`<a class="btn p" style="flex:1;padding:10px 0;font-size:13px;text-decoration:none" href="https://www.google.com/maps/search/?api=1&query=${next.lat},${next.lng}" target="_blank" rel="noreferrer">📍 地図で開く</a>`:''}${next.phone?`<a class="btn s" style="flex:0 0 auto;padding:10px 16px;font-size:13px;text-decoration:none" href="tel:${next.phone}">📞 電話</a>`:''}</div>`:''}</div></div>`;}
+  else h+=`<div style="text-align:center;color:var(--inkSoft);padding:30px 0"><div style="font-size:30px">🌙</div><div style="font-size:14px;font-weight:600;color:var(--ink);margin-top:6px">本日の予定は完了！</div></div>`;
+  if(rest.length){h+=`<div class="sec" style="margin-top:18px">このあと</div>`;rest.forEach(it=>{h+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--rule)"><span class="mono" style="font-size:13px;color:var(--inkSoft);width:42px">${fmt(it.start)}</span><span style="font-size:15px">${it.icon||''}</span><span style="font-size:13.5px;flex:1">${esc(it.title)}</span></div>`;});}
+  document.getElementById('v-today').innerHTML=h;
+}
+function bump(d){state.now=Math.max(0,Math.min(1439,state.now+d));renderToday();}
+
+/* 地図（ピン＝予定） */
+function ensureMap(){
+  if(typeof L==='undefined'){document.getElementById('map').innerHTML='<div style="padding:24px;font-size:13px;color:#5A6B86">地図ライブラリを読み込めませんでした。ダウンロードしてご自分のブラウザで開いてみてください。</div>';renderMapList();return;}
+  if(!mapInit){map=L.map('map',{zoomControl:true}).setView([39.7,140.0],7);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);map.on('click',onMapClick);map.on('contextmenu',e=>{if(e.originalEvent)e.originalEvent.preventDefault();onLongPress(e.latlng);});bindLongPress();mapInit=true;drawMap();fitMap();}
+  setTimeout(()=>map&&map.invalidateSize(),250);renderMapList();
+}
+function locatedItems(){const r=[];state.itin.forEach((d,i)=>d.items.forEach(it=>{if(it.lat!=null)r.push({day:i,it});}));return r;}
+function fitMap(){const li=locatedItems();if(li.length){try{map.fitBounds(li.map(x=>[x.it.lat,x.it.lng]),{padding:[40,40]});}catch(e){}}}
+function itemIcon(it){const c=CAT[it.cat]||'#2C3E6B';return L.divIcon({className:'',iconSize:[30,30],iconAnchor:[15,30],popupAnchor:[0,-28],html:`<div class="pin" style="--c:${c}"><span>${it.icon||'📍'}</span></div>`});}
+function photoIcon(p){return L.divIcon({className:'',iconSize:[46,46],iconAnchor:[23,23],popupAnchor:[0,-20],html:`<div class="photopin"><img src="${p.thumb}"></div>`});}
+function drawMap(){if(!map)return;if(!layer)layer=L.layerGroup().addTo(map);layer.clearLayers();
+  locatedItems().forEach(({day,it})=>{const mk=L.marker([it.lat,it.lng],{icon:itemIcon(it),draggable:true}).addTo(layer);mk.bindPopup(`<div class="pop"><b>${esc(it.title)}</b><div class="t">DAY${day+1} · ${it.cat}費</div>${it.memo?`<div class="t">${esc(it.memo)}</div>`:''}</div>`);mk.on('click',()=>openItemEd(day,it.id));mk.on('dragend',e=>{const ll=e.target.getLatLng();it.lat=ll.lat;it.lng=ll.lng;saveState();});});
+  state.photos.filter(p=>p.lat!=null).forEach(p=>{const mk=L.marker([p.lat,p.lng],{icon:photoIcon(p),draggable:true}).addTo(layer);mk.bindPopup(`<div class="pop"><b>${esc(p.name||'写真')}</b><div class="t">${p.gps?'📷 GPSから配置':'手動配置'}</div><img src="${p.thumb}"></div>`);mk.on('dragend',e=>{const ll=e.target.getLatLng();p.lat=ll.lat;p.lng=ll.lng;p.gps=false;savePhotos();});});}
+function renderMapList(){
+  const li=locatedItems().sort((a,b)=>a.day-b.day);
+  let h=`<div class="sec">地図のスポット＝予定 (${li.length})</div>`;
+  if(!li.length)h+=`<div class="empty">地図を長押し、または「＋スポット」で予定を追加できる。</div>`;
+  li.forEach(({day,it})=>{h+=`<div class="row" onclick="focusItem('${it.id}')"><span class="dot" style="background:${CAT[it.cat]}"></span><span class="nm">${it.icon||'📍'} ${esc(it.title)}</span><span class="tm mono">D${day+1}</span></div>`;});
+  h+=`<div class="sec" style="margin-top:14px">写真 (${state.photos.length})</div>`;
+  if(!state.photos.length)h+=`<div class="empty">「＋写真」で追加。位置情報つきの写真なら自動でピンが立つよ📷</div>`;
+  else{h+=`<div class="strip">`;state.photos.forEach(p=>{h+=`<div class="ph"><img class="im" src="${p.thumb}" onclick="${p.lat!=null?`flyTo(${p.lat},${p.lng})`:`startPlace('${p.id}')`}"><div class="cap ${p.lat!=null?'ok':'no'}" ${p.lat==null?`onclick="startPlace('${p.id}')"`:''}>${p.lat!=null?(p.gps?'GPS✓':'配置済'):'位置を指定'}</div></div>`;});h+=`</div>`;}
+  document.getElementById('mlist').innerHTML=h;
+}
+function focusItem(id){const f=findItem(id);if(f&&f.item.lat!=null){map&&map.panTo([f.item.lat,f.item.lng]);openItemEd(f.day,id);}}
+function newLocatedItem(lat,lng){const it=makeItem({title:'新しいスポット',lat,lng});state.itin[state.day].items.push(it);normalize(state.day);saveState();drawMap();renderMapList();openItemEd(state.day,it.id,true);}
+function addMapSpot(){const c=map?map.getCenter():{lat:39.7,lng:140};newLocatedItem(c.lat,c.lng);toast('ピンをドラッグで位置調整できるよ');}
+let _lpTs=0;
+function onLongPress(ll){const now=Date.now();if(now-_lpTs<900)return;_lpTs=now;newLocatedItem(ll.lat,ll.lng);toast('ピンを追加→編集してね');}
+function bindLongPress(){
+  const el=document.getElementById('map');let timer=null,sx=0,sy=0;
+  const clear=()=>{if(timer){clearTimeout(timer);timer=null;}};
+  el.addEventListener('touchstart',e=>{if(e.touches.length!==1){clear();return;}const t=e.touches[0];sx=t.clientX;sy=t.clientY;clear();timer=setTimeout(()=>{timer=null;const r=el.getBoundingClientRect();const ll=map.containerPointToLatLng(L.point(sx-r.left,sy-r.top));onLongPress(ll);},550);},{passive:true});
+  el.addEventListener('touchmove',e=>{const t=e.touches[0];if(t&&Math.hypot(t.clientX-sx,t.clientY-sy)>12)clear();},{passive:true});
+  el.addEventListener('touchend',clear);el.addEventListener('touchcancel',clear);
+}
+function onFiles(ev){[...ev.target.files].forEach(f=>processPhoto(f));ev.target.value='';}
+function processPhoto(file){makeThumb(file,thumb=>{const p={id:uid(),name:file.name.replace(/\.[^.]+$/,''),thumb,lat:null,lng:null,gps:false};readGPS(file,(lat,lng)=>{if(lat!=null){p.lat=lat;p.lng=lng;p.gps=true;}state.photos.push(p);renderMapList();drawMap();savePhotos();if(lat!=null){toast('📷 GPSからピンを立てた！');flyTo(lat,lng);}else toast('位置情報なし→地図で配置してね');});});}
+function makeThumb(file,cb){const url=URL.createObjectURL(file),img=new Image();img.onload=()=>{const max=200,s=Math.min(max/img.width,max/img.height,1),c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);try{cb(c.toDataURL('image/jpeg',0.6));}catch(e){cb(url);}};img.onerror=()=>cb(url);img.src=url;}
+function readGPS(file,cb){if(typeof EXIF==='undefined'){cb(null);return;}try{EXIF.getData(file,function(){const la=EXIF.getTag(this,'GPSLatitude'),laR=EXIF.getTag(this,'GPSLatitudeRef'),lo=EXIF.getTag(this,'GPSLongitude'),loR=EXIF.getTag(this,'GPSLongitudeRef');if(la&&lo)cb(dms(la,laR),dms(lo,loR));else cb(null);});}catch(e){cb(null);}}
+function dms(d,ref){let v=(+d[0])+(+d[1])/60+(+d[2])/3600;if(ref==='S'||ref==='W')v=-v;return v;}
+function startPlace(id){state.placePhoto=id;document.getElementById('placebar').classList.add('on');toast('地図をタップしてね');}
+function cancelPlace(){state.placePhoto=null;document.getElementById('placebar').classList.remove('on');}
+function onMapClick(e){if(state.placePhoto){const p=state.photos.find(x=>x.id===state.placePhoto);if(p){p.lat=e.latlng.lat;p.lng=e.latlng.lng;p.gps=false;}cancelPlace();drawMap();renderMapList();savePhotos();toast('配置した！');}}
+function flyTo(lat,lng){map&&map.flyTo([lat,lng],13,{duration:.6});}
+
+/* MD 完全往復 */
+function buildMarkdown(){
+  const L2=[];L2.push('# 🌊 '+state.trip.name,'## '+state.trip.title+'｜'+tripSub(),'');
+  state.itin.forEach((d,i)=>{const s=sched(i);L2.push(`## 📅 DAY ${i+1}（${dDate(i)}）${d.label}`,'','| 時刻 | 予定 | メモ |','|---|---|---|');s.forEach(it=>{const note=[it.area,it.memo,it.resv].filter(Boolean).join(' / ').replace(/\|/g,'／');L2.push(`| **${fmt(it.start)}** | ${it.icon||''} ${it.title} | ${note} |`);});L2.push('');});
+  const cLo={},cHi={};let tLo=0,tHi=0;state.itin.flatMap(d=>d.items).forEach(it=>{cLo[it.cat]=(cLo[it.cat]||0)+(it.cLo||0);cHi[it.cat]=(cHi[it.cat]||0)+(it.cHi||0);tLo+=it.cLo||0;tHi+=it.cHi||0;});
+  L2.push('## 💰 予算（安め〜高め）','','| 分類 | 金額 |','|---|---|');Object.keys(CAT).filter(c=>cHi[c]).forEach(c=>L2.push(`| ${c}費 | ${cLo[c]===cHi[c]?yen(cLo[c]):yen(cLo[c])+'〜'+yen(cHi[c])} |`));L2.push(`| **合計** | **${yen(tLo)}〜${yen(tHi)}** |`,'');
+  const left=state.packing.filter(p=>!p.done).map(p=>p.name);L2.push('## 🎒 持ち物（残り）','',left.length?left.map(x=>`- [ ] ${x}`).join('\n'):'- ✅ 忘れ物なし','');
+  const sv=state.souv;
+  if(sv.length){L2.push('## 🎁 お土産','');const bs={};sv.forEach(s=>{(bs[s.spotId||'']=bs[s.spotId||'']||[]).push(s);});const ks=Object.keys(bs).sort((a,b)=>{const fa=findItem(a),fb=findItem(b);return (fa?fa.day:99)-(fb?fb.day:99);});ks.forEach(k=>{L2.push(`**${k?spotLabel(k):'買う場所 未定'}**`);bs[k].forEach(s=>L2.push(`- [${s.bought?'x':' '}] ${s.name}${s.price?' '+yen(s.price):''}${s.to?' →'+s.to:''}${s.memo?'（'+s.memo+'）':''}`));L2.push('');});}
+  const payload={v:5,trip:state.trip,itin:state.itin,packing:state.packing.map(p=>({name:p.name,grp:p.grp,done:p.done})),souv:state.souv.map(s=>({name:s.name,spotId:s.spotId,price:s.price,to:s.to,memo:s.memo,bought:s.bought}))};
+  L2.push('<!-- 旅の司令塔データ（そのまま読み込めば完全復元） -->','```tripdata',JSON.stringify(payload),'```','');
+  return L2.join('\n');
+}
+function renderMD(){const md=buildMarkdown();document.getElementById('v-md').innerHTML=`<div style="font-size:13px;font-weight:700;margin-bottom:4px">書き出し（Markdown）</div><div style="font-size:11.5px;color:var(--inkSoft);margin-bottom:8px">旅程・予算・持ち物を出力。末尾のデータ枠込みで保存すれば<b>場所・費用も含めて完全復元</b>できるよ。</div><div style="display:flex;gap:8px;margin-bottom:8px"><button class="btn p" style="flex:1;padding:10px 0;font-size:13px" onclick="copyMD()">コピー</button><button class="btn s" style="flex:1;padding:10px 0;font-size:13px" onclick="downloadMD()">.md保存</button></div><textarea id="mdOut" readonly style="height:170px">${esc(md)}</textarea><div style="height:1px;background:var(--rule);margin:20px 0"></div><div style="font-size:13px;font-weight:700;margin-bottom:4px">読み込み</div><div style="font-size:11.5px;color:var(--inkSoft);margin-bottom:8px">書き出したmdを貼って読み込むと<b>そのまま完全復元</b>。データ枠が無い自由形式は時刻だけ拾うよ。</div><textarea id="mdIn" placeholder="ここにMarkdownを貼り付け…" style="height:120px"></textarea><button class="btn shu" style="width:100%;margin-top:8px;padding:11px 0;font-size:13px" onclick="importMD()">読み込む</button><div id="mdMsg"></div><div class="note">完全往復＝アプリが出したmd（データ枠つき）が対象。v17みたいな自由形式は時刻のみ反映。</div>`;}
+function copyMD(){const ta=document.getElementById('mdOut');ta.select();try{document.execCommand('copy');}catch(e){}if(navigator.clipboard)navigator.clipboard.writeText(ta.value).catch(()=>{});toast('コピーした');}
+function downloadMD(){try{const blob=new Blob([document.getElementById('mdOut').value],{type:'text/markdown'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='tohoku_trip.md';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}catch(e){toast('この環境ではDL不可。コピーを使ってね');}}
+function importMD(){
+  const txt=document.getElementById('mdIn').value,msg=document.getElementById('mdMsg'),blk=txt.match(/```tripdata\s*([\s\S]*?)```/);
+  if(blk){try{const d=JSON.parse(blk[1].trim());if(d.trip)state.trip=Object.assign({},TRIP0,d.trip);if(d.itin)state.itin=d.itin.map(dd=>({n:dd.n,label:dd.label,date:dd.date,items:dd.items.map(it=>Object.assign({},it,it.id?{}:{id:uid()}))}));if(d.packing)state.packing=d.packing.map(p=>Object.assign({id:uid()},p));if(d.souv)state.souv=d.souv.map(s=>Object.assign({id:uid()},s));state.itin.forEach((_,i)=>normalize(i));saveState();renderTop();if(mapInit){drawMap();fitMap();}msg.innerHTML=`<div style="margin-top:10px;font-size:12px;font-weight:600;color:var(--grn);background:#E3F0EA;border-radius:8px;padding:9px 11px">✓ 完全復元したよ（旅程・場所・費用・持ち物）</div>`;return;}catch(e){msg.innerHTML=`<div style="margin-top:10px;font-size:12px;font-weight:600;color:var(--shu);background:var(--shuSoft);border-radius:8px;padding:9px 11px">データ枠の解析に失敗。全文を貼ってみて</div>`;return;}}
+  let mt=0,seen=0;txt.split('\n').forEach(line=>{const tm=line.match(/(\d{1,2}):(\d{2})/);if(!tm)return;seen++;const min=(+tm[1])*60+(+tm[2]);for(const d of state.itin)for(const it of d.items){if(line.includes(it.title)||(it.title.length>=4&&line.includes(it.title.slice(0,4)))){if(it.fixed)it.t=min;else it.at=min;mt++;return;}}});
+  if(mt){state.itin.forEach((_,i)=>normalize(i));saveState();msg.innerHTML=`<div style="margin-top:10px;font-size:12px;font-weight:600;color:var(--grn);background:#E3F0EA;border-radius:8px;padding:9px 11px">✓ ${mt}件の時刻を反映（時刻のみ）</div>`;}
+  else msg.innerHTML=`<div style="margin-top:10px;font-size:12px;font-weight:600;color:var(--shu);background:var(--shuSoft);border-radius:8px;padding:9px 11px">${seen?'一致する予定が無かった':'読み込める内容が無い'}</div>`;
+}
+
+function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),1700);}
+(async function(){await loadAll();renderTop();renderNav();renderDayTabs();showView('timeline');})();
+</script>
+</body>
+</html>
