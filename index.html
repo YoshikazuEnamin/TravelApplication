@@ -94,6 +94,8 @@
   .sheet{position:absolute;left:0;right:0;bottom:0;background:var(--panel);border-radius:18px 18px 0 0;box-shadow:0 -8px 30px rgba(21,33,59,.25);padding:14px 18px calc(16px + env(safe-area-inset-bottom));transform:translateY(120%);transition:transform .25s;z-index:1000;max-height:90%;overflow-y:auto}
   .sheet.on{transform:translateY(0)}
   .sheet h3{margin:2px 0 10px;font-size:15px}
+  .sheetx{position:absolute;top:10px;right:12px;width:34px;height:34px;border:none;border-radius:50%;background:var(--chip);color:var(--ink);font-size:17px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:3}
+  .sheetx:active{transform:scale(.92)}
   label{display:block;font-size:11px;color:var(--inkSoft);font-weight:700;margin:9px 0 4px}
   input,select,textarea{width:100%;font-family:inherit;font-size:13px;color:var(--ink);border:1px solid var(--rule);border-radius:9px;padding:9px;background:#fff}
   textarea{resize:vertical;min-height:46px}
@@ -115,13 +117,36 @@
   .catrow:active{background:var(--chip)}
   #toast{position:absolute;left:50%;bottom:120px;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:12px;font-weight:600;padding:8px 14px;border-radius:99px;opacity:0;transition:opacity .2s;z-index:1200;pointer-events:none;white-space:nowrap}
   #toast.on{opacity:1}
+  .backrow{font-size:11px;color:#9FB0CC;margin-bottom:6px;cursor:pointer}
+  #shiori{display:none;position:absolute;inset:0;overflow-y:auto;background:var(--paper);z-index:5;padding-bottom:96px}
+  .shead{background:var(--ink);color:var(--paper);padding:16px 18px}
+  .shead .sttl{font-size:20px;font-weight:700}
+  .shead .ssub{font-size:11px;color:#9FB0CC;margin-top:2px}
+  .syear{font-family:'Roboto Mono',monospace;font-size:15px;font-weight:700;color:var(--ink);padding:16px 16px 8px;letter-spacing:1px}
+  .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 14px}
+  .scard{position:relative;background:var(--panel);border:1px solid var(--rule);border-radius:14px;overflow:hidden;cursor:pointer}
+  .scard:active{transform:scale(.98)}
+  .sthumb{position:relative;width:100%;aspect-ratio:16/10;background:var(--paper);border-bottom:1px solid var(--rule);overflow:hidden}
+  .sthumb svg{display:block;width:100%;height:100%}
+  .spill{position:absolute;top:8px;left:8px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:7px}
+  .smeta{padding:9px 11px}
+  .stitle{font-size:13.5px;font-weight:700;line-height:1.3}
+  .sdates{font-size:10.5px;color:var(--inkSoft);margin-top:3px}
+  .strash{position:absolute;top:6px;right:6px;width:26px;height:26px;border:none;border-radius:50%;background:rgba(255,255,255,.85);color:var(--inkSoft);font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  .sdel{position:absolute;inset:0;background:rgba(21,33,59,.93);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;font-size:12px;font-weight:700;padding:8px;text-align:center}
+  .sdel button{border:none;border-radius:8px;padding:6px 14px;font-weight:700;cursor:pointer}
+  .sdel .y{background:var(--shu);color:#fff} .sdel .n{background:var(--chip);color:var(--ink)}
+  .fab{display:none;position:absolute;right:18px;bottom:22px;width:56px;height:56px;border-radius:50%;border:none;background:var(--shu);color:#fff;font-size:28px;line-height:1;box-shadow:0 6px 18px rgba(207,63,34,.45);cursor:pointer;z-index:10;align-items:center;justify-content:center}
 </style>
 </head>
 <body>
 <div id="app">
-  <div id="top" onclick="openTripEd()">
-    <div class="ey" id="topEy"></div>
-    <div class="r"><h1 id="topTitle"></h1><span class="sub"><span id="topSub"></span> ✎</span></div>
+  <div id="top">
+    <div class="backrow" onclick="showList()">‹ 旅のしおり一覧</div>
+    <div onclick="openTripEd()">
+      <div class="ey" id="topEy"></div>
+      <div class="r"><h1 id="topTitle"></h1><span class="sub"><span id="topSub"></span> ✎</span></div>
+    </div>
   </div>
   <div id="daytabs"></div>
   <div id="views">
@@ -148,6 +173,7 @@
 
   <!-- 予定編集 -->
   <div id="itemEd" class="sheet">
+    <button class="sheetx" onclick="cancelItemEd()" aria-label="閉じる">✕</button>
     <h3 id="ieTitle">予定を編集</h3>
     <label>名前（タイトル）</label><input id="ieName" oninput="itemEdChange('title',this.value)" />
     <div class="edrow">
@@ -174,6 +200,7 @@
 
   <!-- 旅タイトル編集 -->
   <div id="tripEd" class="sheet">
+    <button class="sheetx" onclick="closeTrip()" aria-label="閉じる">✕</button>
     <h3>旅の情報を編集</h3>
     <label>旅の名前（上の小見出し）</label><input id="trName" oninput="tripChange('name',this.value)" />
     <label>タイトル</label><input id="trTitle" oninput="tripChange('title',this.value)" />
@@ -189,6 +216,7 @@
 
   <!-- お土産編集 -->
   <div id="souvEd" class="sheet">
+    <button class="sheetx" onclick="cancelSouvEd()" aria-label="閉じる">✕</button>
     <h3>お土産を編集</h3>
     <label>名前</label><input id="svEdName" oninput="souvEdChange('name',this.value)" />
     <label>買う場所（旅程の予定）</label><select id="svEdSpot" onchange="souvEdChange('spotId',this.value)"></select>
@@ -207,12 +235,15 @@
 
   <!-- 費用カテゴリ → 該当予定ピッカー -->
   <div id="pick" class="sheet">
+    <button class="sheetx" onclick="closePick()" aria-label="閉じる">✕</button>
     <h3 id="pkTitle">予定</h3>
     <div id="pkList"></div>
     <button class="btn p" style="width:100%;padding:11px 0;margin-top:8px" onclick="closePick()">閉じる</button>
   </div>
 
   <div id="nav"></div>
+  <div id="shiori"></div>
+  <button id="fab" class="fab" onclick="newShiori()" aria-label="新しい旅">＋</button>
   <div id="toast"></div>
 </div>
 
@@ -289,21 +320,82 @@ const SEED_DAYS=[
 const PACK_BASE={持ち物:['着替え','パジャマ','ハンドタオル','ボディタオル','髭剃り','歯ブラシ','歯磨き粉','マウスウォッシュ','モバイルバッテリー','ACアダプター','コンセント','タブレット','FireTV','ポータブルスピーカー','イヤホン','水筒','薬','化粧水','香水','シャンプー・リンス','日焼け止め','自撮り棒','折りたたみ傘','アレジオン','目薬','リップクリーム','手提げカバン','保冷バッグ','ハンディファン','日傘','爪研ぎ','肉球'],買うもの:['お茶2L','スポーツドリンク','野菜ジュース','枝豆','カップスープ','チョコ']};
 
 const GEOFIX={d1e:[38.7047,139.9677],d1f:[38.7043,139.9721],d1j:[38.6149,139.6072],d2a:[38.616,139.6075],d2d:[39.3923,140.0491],d2m:[39.3923,140.0491],d2g:[39.7261,140.1444],d2h:[39.7169,140.1297],d2i:[39.7169,140.1297],d2j:[39.7217,140.1244],d2k:[39.7184,140.1132],d3e:[40.5605,139.9848],d3h:[40.6148,139.8627],d4a:[40.6148,139.8627],d4d:[40.8288,140.7358],d4e:[40.8276,140.6935]};
-let state={view:'timeline',day:0,now:mm('10:30'),trip:Object.assign({},TRIP0),itin:[],photos:[],packing:[],souv:[],todoTab:'pack',svId:null,svNew:false,edId:null,edDay:0,edSnap:null,edNew:false,placePhoto:null,pkConfirm:false};
+let state={screen:'list',cur:null,index:[],delId:null,view:'timeline',day:0,now:mm('10:30'),trip:Object.assign({},TRIP0),itin:[],photos:[],packing:[],souv:[],todoTab:'pack',svId:null,svNew:false,edId:null,edDay:0,edSnap:null,edNew:false,placePhoto:null,pkConfirm:false};
 let map=null,layer=null,mapInit=false;
 
-const LS={get(k){try{const v=localStorage.getItem(k);return v==null?null:{key:k,value:v};}catch(e){return null;}},set(k,v){try{localStorage.setItem(k,v);return true;}catch(e){return false;}}};
-async function saveState(){try{if(LS)await LS.set('tohoku:v5',JSON.stringify({trip:state.trip,itin:state.itin,packing:state.packing,souv:state.souv}));}catch(e){toast('保存できなかった');}}
-async function savePhotos(){try{if(LS)await LS.set('tohoku:ph5',JSON.stringify(state.photos));}catch(e){toast('写真の保存に失敗（容量？）');}}
-async function loadAll(){
-  try{if(LS){const r=await LS.get('tohoku:v5');if(r&&r.value){const d=JSON.parse(r.value);if(d.trip)state.trip=Object.assign({},TRIP0,d.trip);state.itin=d.itin||[];state.packing=d.packing||[];state.souv=d.souv||[];}}}catch(e){}
-  try{if(LS){const p=await LS.get('tohoku:ph5');if(p&&p.value)state.photos=JSON.parse(p.value)||[];}}catch(e){}
-  if(!state.itin.length)seedItin();
-  if(!state.packing.length)seedPacking();
-  if(!state.souv.length)seedSouv();
-  await applyGeoFix();
+const LS={get(k){try{const v=localStorage.getItem(k);return v==null?null:{key:k,value:v};}catch(e){return null;}},set(k,v){try{localStorage.setItem(k,v);return true;}catch(e){return false;}},del(k){try{localStorage.removeItem(k);}catch(e){}}};
+const K_IDX='shiori:index',K_CUR='shiori:cur',tripKey=id=>'shiori:trip:'+id;
+const todayISO=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
+function applyGeoFixTo(itin){(itin||[]).forEach(d=>(d.items||[]).forEach(it=>{if(GEOFIX[it.id]){it.lat=GEOFIX[it.id][0];it.lng=GEOFIX[it.id][1];}}));}
+function saveIndex(){LS.set(K_IDX,JSON.stringify(state.index));}
+function saveTrip(){if(!state.cur)return;try{LS.set(tripKey(state.cur),JSON.stringify({meta:state.trip,itin:state.itin,packing:state.packing,souv:state.souv,photos:state.photos}));const e=state.index.find(x=>x.id===state.cur);if(e){e.name=state.trip.name;e.title=state.trip.title;e.start=state.trip.start;saveIndex();}}catch(err){toast('保存できなかった（容量？）');}}
+async function saveState(){saveTrip();}
+async function savePhotos(){saveTrip();}
+function loadTrip(id){const r=LS.get(tripKey(id));if(!r||!r.value)return false;let b;try{b=JSON.parse(r.value);}catch(e){return false;}state.cur=id;LS.set(K_CUR,id);state.trip=Object.assign({},TRIP0,b.meta||{});state.itin=(b.itin&&b.itin.length)?b.itin:[{n:1,label:'',items:[]}];state.itin.forEach((d,i)=>d.n=i+1);state.packing=b.packing||[];state.souv=b.souv||[];state.photos=b.photos||[];state.day=0;state.todoTab='pack';state.view='timeline';return true;}
+function buildTohokuTrip(){const sv={itin:state.itin,packing:state.packing,souv:state.souv};seedItin();seedPacking();seedSouv();const blob={meta:Object.assign({},TRIP0),itin:state.itin,packing:state.packing,souv:state.souv,photos:[]};state.itin=sv.itin;state.packing=sv.packing;state.souv=sv.souv;return blob;}
+function bootstrap(){
+  const idx=LS.get(K_IDX);
+  if(idx&&idx.value){try{state.index=JSON.parse(idx.value)||[];}catch(e){state.index=[];}}
+  if(!state.index||!state.index.length){
+    let blob;const old=LS.get('tohoku:v5');
+    if(old&&old.value){try{const d=JSON.parse(old.value);const ph=LS.get('tohoku:ph5');blob={meta:Object.assign({},TRIP0,d.trip||{}),itin:d.itin||[],packing:d.packing||[],souv:d.souv||[],photos:(ph&&ph.value)?JSON.parse(ph.value):[]};applyGeoFixTo(blob.itin);}catch(e){blob=buildTohokuTrip();}}
+    else blob=buildTohokuTrip();
+    if(!blob.itin.length)blob.itin=[{n:1,label:'',items:[]}];
+    const id='t'+Date.now().toString(36);
+    state.index=[{id,name:blob.meta.name,title:blob.meta.title,start:blob.meta.start}];
+    LS.set(tripKey(id),JSON.stringify(blob));saveIndex();LS.set(K_CUR,id);
+  }
 }
-async function applyGeoFix(){try{if(!LS)return;const f=await LS.get('tohoku:geofix2');if(f&&f.value)return;let ch=false;Object.keys(GEOFIX).forEach(id=>{const r=findItem(id);if(r){r.item.lat=GEOFIX[id][0];r.item.lng=GEOFIX[id][1];ch=true;}});await LS.set('tohoku:geofix2','1');if(ch)await saveState();}catch(e){}}
+function setScreen(s){state.screen=s;const t=(s==='trip');
+  document.getElementById('top').style.display=t?'block':'none';
+  document.getElementById('daytabs').style.display=t?'flex':'none';
+  document.getElementById('views').style.display=t?'block':'none';
+  document.getElementById('nav').style.display=t?'flex':'none';
+  document.getElementById('shiori').style.display=t?'none':'block';
+  document.getElementById('fab').style.display=t?'none':'flex';}
+function openTrip(id){if(!loadTrip(id)){toast('開けなかった');return;}setScreen('trip');renderTop();renderNav();renderDayTabs();showView('timeline');}
+function showList(){if(state.cur)saveTrip();state.delId=null;setScreen('list');renderShiori();}
+function newShiori(){const id='t'+Date.now().toString(36);const blob={meta:{name:'旅のしおり',title:'新しい旅',start:todayISO()},itin:[{n:1,label:'',items:[]}],packing:[],souv:[],photos:[]};LS.set(tripKey(id),JSON.stringify(blob));state.index.push({id,name:blob.meta.name,title:blob.meta.title,start:blob.meta.start});saveIndex();openTrip(id);openTripEd();toast('新しいしおりを作成');}
+function askDelShiori(id){state.delId=id;renderShiori();}
+function cancelDel(){state.delId=null;renderShiori();}
+function delShiori(id){LS.del(tripKey(id));state.index=state.index.filter(x=>x.id!==id);saveIndex();if(state.cur===id)state.cur=null;state.delId=null;renderShiori();toast('しおりを削除した');}
+function tripStatus(start,days){const t=new Date();t.setHours(0,0,0,0);const s=ymd(start),e=addDays(s,Math.max(0,days-1));if(t<s)return['計画中','#CF3F22','var(--shuSoft)'];if(t>e)return['思い出','#7A8699','var(--chip)'];return['旅行中','#2E7D6B','#E3F0EA'];}
+function dateMD(i){const d=ymd(i);return `${d.getMonth()+1}/${d.getDate()}`;}
+function addISO(i,n){return iso(addDays(ymd(i),n));}
+function thumbSVG(itin){
+  const pts=[];(itin||[]).forEach(d=>(d.items||[]).forEach(it=>{if(it.lat!=null&&it.lng!=null)pts.push([it.lat,it.lng]);}));
+  const W=300,H=168;let inner='';
+  if(pts.length>=1){
+    const lats=pts.map(p=>p[0]),lngs=pts.map(p=>p[1]);
+    const minLa=Math.min(...lats),maxLa=Math.max(...lats),minLo=Math.min(...lngs),maxLo=Math.max(...lngs);
+    const pad=30,rLa=Math.max(maxLa-minLa,0.02),rLo=Math.max(maxLo-minLo,0.02);
+    const X=lo=>pad+(lo-minLo)/rLo*(W-2*pad),Y=la=>H-pad-(la-minLa)/rLa*(H-2*pad);
+    const P=pts.map(p=>[X(p[1]),Y(p[0])]);
+    const line=P.length>1?`<polyline points="${P.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ')}" fill="none" stroke="#2C3E6B" stroke-width="3" stroke-linejoin="round" stroke-linecap="round" opacity="0.85"/>`:'';
+    const dots=P.map((q,i)=>`<circle cx="${q[0].toFixed(1)}" cy="${q[1].toFixed(1)}" r="${(i===0||i===P.length-1)?5:3}" fill="${(i===0||i===P.length-1)?'#CF3F22':'#2C3E6B'}"/>`).join('');
+    inner=line+dots;
+  }else{
+    inner=`<g fill="#CF3F22" opacity="0.8"><rect x="120" y="66" width="60" height="7" rx="3"/><rect x="110" y="57" width="80" height="7" rx="3"/><rect x="128" y="73" width="8" height="42"/><rect x="164" y="73" width="8" height="42"/></g><text x="150" y="142" text-anchor="middle" font-size="11" fill="#7A8699">ピンを置くと地図ができるよ</text>`;
+  }
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid slice"><rect width="${W}" height="${H}" fill="#EFF1EC"/>${inner}</svg>`;
+}
+function renderShiori(){
+  const entries=state.index.map(e=>{const r=LS.get(tripKey(e.id));let b={};if(r&&r.value){try{b=JSON.parse(r.value);}catch(_){}}const itin=b.itin||[];return {id:e.id,title:e.title||(b.meta&&b.meta.title)||'無題の旅',start:e.start||(b.meta&&b.meta.start)||todayISO(),days:itin.length||1,itin};});
+  const groups={};entries.forEach(x=>{const y=(x.start||'').slice(0,4)||'—';(groups[y]=groups[y]||[]).push(x);});
+  const years=Object.keys(groups).sort();
+  let h=`<div class="shead"><div class="sttl">旅のしおり</div><div class="ssub">${entries.length}件の旅 · タップで開く</div></div>`;
+  years.forEach(y=>{
+    groups[y].sort((a,b)=>(a.start<b.start?-1:1));
+    h+=`<div class="syear">${y}</div><div class="sgrid">`;
+    groups[y].forEach(x=>{
+      const st=tripStatus(x.start,x.days),dd=`${dateMD(x.start)}〜${dateMD(addISO(x.start,x.days-1))} · ${x.days-1}泊${x.days}日`;
+      h+=`<div class="scard" onclick="openTrip('${x.id}')"><div class="sthumb">${thumbSVG(x.itin)}<span class="spill" style="color:${st[1]};background:${st[2]}">${st[0]}</span></div><div class="smeta"><div class="stitle">${esc(x.title)}</div><div class="sdates mono">${dd}</div></div><button class="strash" onclick="event.stopPropagation();askDelShiori('${x.id}')">✕</button>${state.delId===x.id?`<div class="sdel"><span>このしおりを削除する？</span><div style="display:flex;gap:8px"><button class="y" onclick="event.stopPropagation();delShiori('${x.id}')">削除</button><button class="n" onclick="event.stopPropagation();cancelDel()">やめる</button></div></div>`:''}</div>`;
+    });
+    h+=`</div>`;
+  });
+  if(!entries.length)h+=`<div class="empty" style="padding:46px 18px;text-align:center">まだ旅がないよ。右下の＋で最初のしおりを作ろう！</div>`;
+  document.getElementById('shiori').innerHTML=h;
+}
 function seedItin(){state.itin=SEED_DAYS.map(d=>({n:d.n,label:d.label,date:d.date,items:d.items.map(it=>Object.assign({},it))}));}
 function seedPacking(){state.packing=[];Object.keys(PACK_BASE).forEach(g=>PACK_BASE[g].forEach(nm=>state.packing.push({id:uid(),name:nm,grp:g,done:false})));}
 
@@ -507,7 +599,8 @@ function bump(d){state.now=Math.max(0,Math.min(1439,state.now+d));renderToday();
 /* 地図（ピン＝予定） */
 function ensureMap(){
   if(typeof L==='undefined'){document.getElementById('map').innerHTML='<div style="padding:24px;font-size:13px;color:#5A6B86">地図ライブラリを読み込めませんでした。ダウンロードしてご自分のブラウザで開いてみてください。</div>';renderMapList();return;}
-  if(!mapInit){map=L.map('map',{zoomControl:true}).setView([39.7,140.0],7);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);map.on('click',onMapClick);map.on('contextmenu',e=>{if(e.originalEvent)e.originalEvent.preventDefault();onLongPress(e.latlng);});bindLongPress();mapInit=true;drawMap();fitMap();}
+  if(!mapInit){map=L.map('map',{zoomControl:true}).setView([39.7,140.0],7);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(map);map.on('click',onMapClick);map.on('contextmenu',e=>{if(e.originalEvent)e.originalEvent.preventDefault();onLongPress(e.latlng);});bindLongPress();mapInit=true;}
+  drawMap();fitMap();
   setTimeout(()=>map&&map.invalidateSize(),250);renderMapList();
 }
 function locatedItems(){const r=[];state.itin.forEach((d,i)=>d.items.forEach(it=>{if(it.lat!=null)r.push({day:i,it});}));return r;}
@@ -574,7 +667,7 @@ function importMD(){
 }
 
 function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),1700);}
-(async function(){await loadAll();renderTop();renderNav();renderDayTabs();showView('timeline');})();
+(function(){bootstrap();renderShiori();setScreen('list');})();
 </script>
 </body>
 </html>
