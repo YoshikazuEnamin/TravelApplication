@@ -20,10 +20,10 @@
   :root{--ink:#15213B;--inkSoft:#5A6B86;--paper:#EFF1EC;--panel:#FBFBF8;--rule:#D3D8CE;
         --shu:#CF3F22;--shuSoft:#F6E5DF;--chip:#E6EAE0;--amber:#C98A2B;--amberSoft:#F5EAD4;--grn:#2E7D6B;--line:#2C3E6B}
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-  html,body{margin:0;height:100%}
+  html,body{margin:0;height:100%;height:100dvh}
   body{font-family:'Noto Sans JP',system-ui,sans-serif;background:#DADED3;color:var(--ink);display:flex;justify-content:center;overflow:hidden}
   .mono{font-family:'Roboto Mono',monospace;font-variant-numeric:tabular-nums}
-  #app{width:100%;max-width:430px;height:100vh;background:var(--paper);display:flex;flex-direction:column;box-shadow:0 0 40px rgba(21,33,59,.15);position:relative;overflow:hidden}
+  #app{width:100%;max-width:430px;height:100vh;height:100dvh;background:var(--paper);display:flex;flex-direction:column;box-shadow:0 0 40px rgba(21,33,59,.15);position:relative;overflow:hidden}
   #top{flex:0 0 auto;background:var(--ink);color:var(--paper);padding:12px 18px;cursor:pointer}
   #top .ey{font-size:10px;letter-spacing:3px;color:#9FB0CC}
   #top .r{display:flex;justify-content:space-between;align-items:baseline;margin-top:3px}
