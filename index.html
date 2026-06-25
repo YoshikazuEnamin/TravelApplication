@@ -103,6 +103,27 @@
   .ckline input{width:auto}
   .edrow{display:flex;gap:9px}.edrow>div{flex:1}
   .edbtns{display:flex;gap:8px;margin-top:14px}
+  .geolist{display:none;margin-top:6px;border:1px solid var(--rule);border-radius:10px;overflow:hidden;background:#fff}
+  .geolist.on{display:block}
+  .geoitem{padding:8px 10px;border-bottom:1px solid var(--rule);cursor:pointer}
+  .geoitem:last-child{border-bottom:none}
+  .geoitem:active{background:var(--chip)}
+  .geoitem .gnm{display:block;font-size:13px;font-weight:700;color:var(--ink)}
+  .geoitem .gsub{display:block;font-size:10.5px;color:var(--inkSoft);margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .geomsg{padding:9px 10px;font-size:12px;color:var(--inkSoft)}
+  .pinstat{display:none;margin-top:7px;font-size:11.5px;font-weight:600;color:var(--inkSoft);align-items:center;gap:7px;flex-wrap:wrap}
+  .pinstat.on{display:flex}
+  .pinstat.set{color:var(--grn)}
+  .pinclr{background:var(--shuSoft);color:var(--shu);border:none;border-radius:7px;padding:3px 9px;font-weight:700;font-size:11px;cursor:pointer}
+  .cerow{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+  .cesw{flex:0 0 auto;width:32px;height:32px;border-radius:8px;border:2px solid rgba(0,0,0,.12);cursor:pointer;padding:0}
+  .cenm{flex:1}
+  .cedel{flex:0 0 auto;background:var(--shuSoft);color:var(--shu);border:none;border-radius:8px;width:36px;height:36px;font-size:15px;cursor:pointer}
+  .cepal{display:none;flex-wrap:wrap;gap:7px;padding:4px 2px 10px}
+  .cepal.on{display:flex}
+  .cepsw{width:28px;height:28px;border-radius:8px;border:2px solid rgba(0,0,0,.12);cursor:pointer;padding:0}
+  .cepsw.sel{border-color:var(--ink);box-shadow:0 0 0 2px #fff inset,0 0 0 4px var(--ink)}
+  .btn.addrow{width:100%;margin-top:2px;padding:9px 0;color:var(--ink);border:1px dashed var(--rule);background:transparent}
   #placebar{position:absolute;left:14px;right:14px;top:60px;background:var(--shu);color:#fff;z-index:600;border-radius:12px;padding:10px 14px;font-size:12.5px;font-weight:700;display:none;align-items:center;justify-content:space-between;box-shadow:0 4px 14px rgba(207,63,34,.4)}
   #placebar.on{display:flex}
   #placebar button{background:rgba(255,255,255,.25);color:#fff;border:none;border-radius:8px;padding:5px 10px;font-weight:700;cursor:pointer}
@@ -117,7 +138,8 @@
   .catrow:active{background:var(--chip)}
   #toast{position:absolute;left:50%;bottom:120px;transform:translateX(-50%);background:var(--ink);color:#fff;font-size:12px;font-weight:600;padding:8px 14px;border-radius:99px;opacity:0;transition:opacity .2s;z-index:1200;pointer-events:none;white-space:nowrap}
   #toast.on{opacity:1}
-  .backrow{font-size:11px;color:#9FB0CC;margin-bottom:6px;cursor:pointer}
+  .backrow{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:600;color:#CBD6E8;background:rgba(255,255,255,.08);border-radius:9px;padding:7px 13px 7px 10px;margin:0 0 8px -4px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .backrow:active{background:rgba(255,255,255,.18)}
   #shiori{display:none;position:absolute;inset:0;overflow-y:auto;background:var(--paper);z-index:5;padding-bottom:96px}
   .shead{background:var(--ink);color:var(--paper);padding:16px 18px}
   .shead .sttl{font-size:20px;font-weight:700}
@@ -184,7 +206,9 @@
     <label id="ieTimeLbl">時刻（この時刻以降）</label><input id="ieTime" placeholder="10:30" oninput="itemSetTime(this.value)" />
     <label>滞在（分）</label>
     <div class="durrow"><button class="sbtn" onclick="itemDurStep(-15)">−15</button><button class="sbtn" onclick="itemDurStep(-1)">−1</button><span id="ieDur" class="mono" style="flex:1;text-align:center;font-weight:600"></span><button class="sbtn" onclick="itemDurStep(1)">＋1</button><button class="sbtn" onclick="itemDurStep(15)">＋15</button></div>
-    <label>場所・エリア</label><input id="ieArea" oninput="itemEdChange('area',this.value)" />
+    <label>場所・エリア（場所名を入れると候補から地図ピンを置けるよ）</label><input id="ieArea" autocomplete="off" oninput="itemEdChange('area',this.value);ieGeo(this.value)" />
+    <div id="ieGeoList" class="geolist"></div>
+    <div id="iePinStat" class="pinstat"></div>
     <label>メモ</label><textarea id="ieMemo" oninput="itemEdChange('memo',this.value)"></textarea>
     <div class="edrow">
       <div><label>費用 安め(¥)</label><input id="ieCLo" type="number" inputmode="numeric" oninput="itemEdChange('cLo',Math.max(0,+this.value||0))" /></div>
@@ -211,7 +235,29 @@
     <div id="trCalc" style="font-size:12px;color:var(--inkSoft);margin-top:6px;font-weight:600"></div>
     <div id="trWarn"></div>
     <label style="margin-top:12px">各日のタイトル</label><div id="trDays"></div>
+    <button class="btn s" style="width:100%;margin-top:16px;padding:11px 0" onclick="openCatEd()">🎨 種別・費用カテゴリを編集</button>
     <div class="edbtns"><button class="btn p" style="flex:1;padding:11px 0" onclick="closeTrip()">完了</button></div>
+  </div>
+
+  <!-- 種別・カテゴリ編集 -->
+  <div id="catEd" class="sheet">
+    <button class="sheetx" onclick="closeCatEd()" aria-label="閉じる">✕</button>
+    <h3>種別・費用カテゴリ</h3>
+    <div class="note" style="margin-top:0">このしおり専用の設定だよ。「既定に保存」で次に作る新しいしおりの初期値になる。</div>
+    <div class="sec" style="margin-top:14px">🚃 種別（路線・ピンの色）</div>
+    <div id="kindEdList"></div>
+    <button class="btn s addrow" onclick="addKindRow()">＋ 種別を追加</button>
+    <div class="sec" style="margin-top:18px">💰 費用カテゴリ</div>
+    <div id="catEdList"></div>
+    <button class="btn s addrow" onclick="addCatRow()">＋ カテゴリを追加</button>
+    <div style="display:flex;gap:8px;margin-top:18px">
+      <button class="btn s" style="flex:1;padding:10px 0" onclick="loadDefaultsToEd()">既定を読込</button>
+      <button class="btn s" style="flex:1;padding:10px 0" onclick="saveEdAsDefaults()">既定に保存</button>
+    </div>
+    <div class="edbtns">
+      <button class="btn s" style="flex:1;padding:11px 0" onclick="closeCatEd()">キャンセル</button>
+      <button class="btn p" style="flex:1;padding:11px 0" onclick="applyCatEd()">完了</button>
+    </div>
   </div>
 
   <!-- お土産編集 -->
@@ -248,9 +294,16 @@
 </div>
 
 <script>
-const CAT={交通:'#2C3E6B',宿泊:'#CF3F22',飲食:'#C98A2B',観光:'#2E7D6B',土産:'#8A5FB0',その他:'#7A8699'};
-const EMO={交通:'🚃',宿泊:'🏨',飲食:'🍜',観光:'⛩️',土産:'🛍️',その他:'📍'};
-const KIND={move:{c:'#2C3E6B',ja:'移動'},stay:{c:'#CF3F22',ja:'宿・温泉'},sight:{c:'#2E7D6B',ja:'神社・絶景'},food:{c:'#C98A2B',ja:'グルメ'},shop:{c:'#7A8699',ja:'買い物'},play:{c:'#8A5FB0',ja:'祭り・公園'}};
+const BUILTIN_CAT={交通:'#2C3E6B',宿泊:'#CF3F22',飲食:'#C98A2B',観光:'#2E7D6B',土産:'#8A5FB0',その他:'#7A8699'};
+const BUILTIN_KIND={move:{c:'#2C3E6B',ja:'移動'},stay:{c:'#CF3F22',ja:'宿・温泉'},sight:{c:'#2E7D6B',ja:'神社・絶景'},food:{c:'#C98A2B',ja:'グルメ'},shop:{c:'#7A8699',ja:'買い物'},play:{c:'#8A5FB0',ja:'祭り・公園'}};
+// アクティブ構成（現在開いているしおり用）。しおりごとに差し替えられる。
+let CAT=Object.assign({},BUILTIN_CAT);
+let KIND=JSON.parse(JSON.stringify(BUILTIN_KIND));
+const PALETTE=['#2C3E6B','#CF3F22','#C98A2B','#2E7D6B','#8A5FB0','#7A8699','#3A7BD5','#D14D8B','#5BA199','#B5651D','#E0A100','#1F6F3F'];
+const K_DEF='shiori:defaults';
+function getDefaults(){const r=LS.get(K_DEF);if(r&&r.value){try{const d=JSON.parse(r.value);if(d&&d.kinds&&d.cats&&Object.keys(d.kinds).length&&Object.keys(d.cats).length)return d;}catch(e){}}return {kinds:JSON.parse(JSON.stringify(BUILTIN_KIND)),cats:Object.assign({},BUILTIN_CAT)};}
+function saveDefaults(kinds,cats){LS.set(K_DEF,JSON.stringify({kinds:kinds||KIND,cats:cats||CAT}));}
+function applyConfig(kinds,cats){const def=getDefaults();KIND=(kinds&&Object.keys(kinds).length)?JSON.parse(JSON.stringify(kinds)):JSON.parse(JSON.stringify(def.kinds));CAT=(cats&&Object.keys(cats).length)?Object.assign({},cats):Object.assign({},def.cats);}
 const mm=s=>{const[h,n]=s.split(':').map(Number);return h*60+n};
 const fmt=x=>String(Math.floor(x/60)).padStart(2,'0')+':'+String(((x%60)+60)%60).padStart(2,'0');
 const parseT=v=>{const t=(v||'').match(/^(\d{1,2}):(\d{2})$/);return t?(+t[1])*60+(+t[2]):null;};
@@ -328,10 +381,10 @@ const K_IDX='shiori:index',K_CUR='shiori:cur',tripKey=id=>'shiori:trip:'+id;
 const todayISO=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
 function applyGeoFixTo(itin){(itin||[]).forEach(d=>(d.items||[]).forEach(it=>{if(GEOFIX[it.id]){it.lat=GEOFIX[it.id][0];it.lng=GEOFIX[it.id][1];}}));}
 function saveIndex(){LS.set(K_IDX,JSON.stringify(state.index));}
-function saveTrip(){if(!state.cur)return;try{LS.set(tripKey(state.cur),JSON.stringify({meta:state.trip,itin:state.itin,packing:state.packing,souv:state.souv,photos:state.photos}));const e=state.index.find(x=>x.id===state.cur);if(e){e.name=state.trip.name;e.title=state.trip.title;e.start=state.trip.start;saveIndex();}}catch(err){toast('保存できなかった（容量？）');}}
+function saveTrip(){if(!state.cur)return;try{LS.set(tripKey(state.cur),JSON.stringify({meta:state.trip,itin:state.itin,packing:state.packing,souv:state.souv,photos:state.photos,kinds:KIND,cats:CAT}));const e=state.index.find(x=>x.id===state.cur);if(e){e.name=state.trip.name;e.title=state.trip.title;e.start=state.trip.start;saveIndex();}}catch(err){toast('保存できなかった（容量？）');}}
 async function saveState(){saveTrip();}
 async function savePhotos(){saveTrip();}
-function loadTrip(id){const r=LS.get(tripKey(id));if(!r||!r.value)return false;let b;try{b=JSON.parse(r.value);}catch(e){return false;}state.cur=id;LS.set(K_CUR,id);state.trip=Object.assign({},TRIP0,b.meta||{});state.itin=(b.itin&&b.itin.length)?b.itin:[{n:1,label:'',items:[]}];state.itin.forEach((d,i)=>d.n=i+1);state.packing=b.packing||[];state.souv=b.souv||[];state.photos=b.photos||[];state.day=0;state.todoTab='pack';state.view='timeline';return true;}
+function loadTrip(id){const r=LS.get(tripKey(id));if(!r||!r.value)return false;let b;try{b=JSON.parse(r.value);}catch(e){return false;}state.cur=id;LS.set(K_CUR,id);state.trip=Object.assign({},TRIP0,b.meta||{});state.itin=(b.itin&&b.itin.length)?b.itin:[{n:1,label:'',items:[]}];state.itin.forEach((d,i)=>d.n=i+1);state.packing=b.packing||[];state.souv=b.souv||[];state.photos=b.photos||[];applyConfig(b.kinds,b.cats);state.day=0;state.todoTab='pack';state.view='timeline';return true;}
 function buildTohokuTrip(){const sv={itin:state.itin,packing:state.packing,souv:state.souv};seedItin();seedPacking();seedSouv();const blob={meta:Object.assign({},TRIP0),itin:state.itin,packing:state.packing,souv:state.souv,photos:[]};state.itin=sv.itin;state.packing=sv.packing;state.souv=sv.souv;return blob;}
 function bootstrap(){
   const idx=LS.get(K_IDX);
@@ -355,7 +408,7 @@ function setScreen(s){state.screen=s;const t=(s==='trip');
   document.getElementById('fab').style.display=t?'none':'flex';}
 function openTrip(id){if(!loadTrip(id)){toast('開けなかった');return;}setScreen('trip');renderTop();renderNav();renderDayTabs();showView('timeline');}
 function showList(){if(state.cur)saveTrip();state.delId=null;setScreen('list');renderShiori();}
-function newShiori(){const id='t'+Date.now().toString(36);const blob={meta:{name:'旅のしおり',title:'新しい旅',start:todayISO()},itin:[{n:1,label:'',items:[]}],packing:[],souv:[],photos:[]};LS.set(tripKey(id),JSON.stringify(blob));state.index.push({id,name:blob.meta.name,title:blob.meta.title,start:blob.meta.start});saveIndex();openTrip(id);openTripEd();toast('新しいしおりを作成');}
+function newShiori(){const id='t'+Date.now().toString(36);const def=getDefaults();const blob={meta:{name:'旅のしおり',title:'新しい旅',start:todayISO()},itin:[{n:1,label:'',items:[]}],packing:[],souv:[],photos:[],kinds:JSON.parse(JSON.stringify(def.kinds)),cats:Object.assign({},def.cats)};LS.set(tripKey(id),JSON.stringify(blob));state.index.push({id,name:blob.meta.name,title:blob.meta.title,start:blob.meta.start});saveIndex();openTrip(id);openTripEd();toast('新しいしおりを作成');}
 function askDelShiori(id){state.delId=id;renderShiori();}
 function cancelDel(){state.delId=null;renderShiori();}
 function delShiori(id){LS.del(tripKey(id));state.index=state.index.filter(x=>x.id!==id);saveIndex();if(state.cur===id)state.cur=null;state.delId=null;renderShiori();toast('しおりを削除した');}
@@ -445,7 +498,85 @@ function openItemEd(day,id,isNew){const f=findItem(id);if(!f)return;state.edId=i
   document.getElementById('ieCLo').value=it.cLo||0;
   document.getElementById('ieCHi').value=it.cHi||0;
   document.getElementById('ieCat').innerHTML=Object.keys(CAT).map(c=>`<option ${c===it.cat?'selected':''}>${c}</option>`).join('');
+  clearGeoList();renderPinStat();
   document.getElementById('itemEd').classList.add('on');
+}
+/* 場所検索（無料ジオコーダ：Nominatim/OSM） */
+let geoTimer=null,geoCtl=null,geoCache={},geoRes=[];
+function clearGeoList(){const b=document.getElementById('ieGeoList');if(b){b.innerHTML='';b.classList.remove('on');}geoRes=[];}
+function ieGeo(q){q=(q||'').trim();clearTimeout(geoTimer);if(q.length<2){clearGeoList();return;}geoTimer=setTimeout(()=>runGeo(q),650);}
+function runGeo(q){const box=document.getElementById('ieGeoList');if(!box)return;
+  if(geoCache[q]){return renderGeo(geoCache[q]);}
+  box.innerHTML='<div class="geomsg">🔍 検索中…</div>';box.classList.add('on');
+  if(geoCtl){try{geoCtl.abort();}catch(e){}}geoCtl=new AbortController();
+  const url='https://nominatim.openstreetmap.org/search?format=jsonv2&accept-language=ja&limit=6&countrycodes=jp&q='+encodeURIComponent(q);
+  fetch(url,{signal:geoCtl.signal,headers:{'Accept':'application/json'}}).then(r=>r.json())
+   .then(arr=>{geoCache[q]=arr;renderGeo(arr);})
+   .catch(e=>{if(e&&e.name==='AbortError')return;box.innerHTML='<div class="geomsg">検索できなかった（通信状況を確認してね）</div>';box.classList.add('on');});}
+function renderGeo(arr){const box=document.getElementById('ieGeoList');if(!box)return;geoRes=arr||[];
+  if(!geoRes.length){box.innerHTML='<div class="geomsg">該当なし。キーワードを変えてみて</div>';box.classList.add('on');return;}
+  box.innerHTML=geoRes.map((r,i)=>{const nm=(r.name&&r.name.trim())?r.name:((r.display_name||'').split(',')[0]||'');return `<div class="geoitem" onclick="pickGeo(${i})"><span class="gnm">📍 ${esc(nm)}</span><span class="gsub">${esc(r.display_name||'')}</span></div>`;}).join('');
+  box.classList.add('on');}
+function pickGeo(i){const r=geoRes[i];if(!r)return;const it=curItem();if(!it)return;
+  const la=parseFloat(r.lat),lo=parseFloat(r.lon);if(isNaN(la)||isNaN(lo)){toast('座標を取得できなかった');return;}
+  it.lat=la;it.lng=lo;
+  const short=(r.name&&r.name.trim())?r.name:((r.display_name||'').split(',')[0]||'').trim();
+  if(short){it.area=short;const ia=document.getElementById('ieArea');if(ia)ia.value=short;}
+  clearGeoList();renderPinStat();afterEdit();if(mapInit)drawMap();toast('📍 ピンを設定した');}
+function renderPinStat(){const el=document.getElementById('iePinStat');if(!el)return;const it=curItem();
+  if(it&&it.lat!=null&&it.lng!=null){el.classList.add('set');el.innerHTML=`📍 ピン設定済み <span class="mono">${(+it.lat).toFixed(4)}, ${(+it.lng).toFixed(4)}</span> <button class="pinclr" onclick="clearPin()">解除</button>`;}
+  else{el.classList.remove('set');el.innerHTML='📍 ピンなし — 上の欄で場所名を入れると候補が出るよ';}
+  el.classList.add('on');}
+function clearPin(){const it=curItem();if(!it)return;it.lat=undefined;it.lng=undefined;renderPinStat();afterEdit();if(mapInit)drawMap();toast('ピンを解除した');}
+/* 種別・費用カテゴリの編集 */
+function openCatEd(){
+  state.edKinds=Object.keys(KIND).map(code=>({code,ja:KIND[code].ja,c:KIND[code].c,orig:code}));
+  state.edCats=Object.keys(CAT).map(name=>({name,c:CAT[name],orig:name}));
+  state.swOpen=null;renderKindEd();renderCatEd();
+  document.getElementById('catEd').classList.add('on');
+}
+function closeCatEd(){document.getElementById('catEd').classList.remove('on');}
+function ceRow(type,i,name,color){
+  const open=(state.swOpen===type+i);
+  const pal=PALETTE.map(p=>`<button class="cepsw ${String(p).toLowerCase()===String(color).toLowerCase()?'sel':''}" style="background:${p}" onclick="pickColor('${type}',${i},'${p}')"></button>`).join('');
+  return `<div class="cerow"><button class="cesw" style="background:${color}" onclick="toggleSw('${type}',${i})" aria-label="色"></button><input class="cenm" value="${esc(name)}" placeholder="名前" oninput="rowName('${type}',${i},this.value)"><button class="cedel" onclick="delRow('${type}',${i})" aria-label="削除">🗑</button></div><div class="cepal ${open?'on':''}">${pal}</div>`;
+}
+function renderKindEd(){document.getElementById('kindEdList').innerHTML=state.edKinds.map((k,i)=>ceRow('kind',i,k.ja,k.c)).join('');}
+function renderCatEd(){document.getElementById('catEdList').innerHTML=state.edCats.map((c,i)=>ceRow('cat',i,c.name,c.c)).join('');}
+function reRender(type){type==='kind'?renderKindEd():renderCatEd();}
+function toggleSw(type,i){state.swOpen=(state.swOpen===type+i)?null:type+i;reRender(type);}
+function pickColor(type,i,c){(type==='kind'?state.edKinds:state.edCats)[i].c=c;state.swOpen=null;reRender(type);}
+function rowName(type,i,v){const r=(type==='kind'?state.edKinds:state.edCats)[i];if(type==='kind')r.ja=v;else r.name=v;}
+function addKindRow(){state.edKinds.push({code:'k'+Date.now().toString(36),ja:'',c:PALETTE[state.edKinds.length%PALETTE.length],orig:null});state.swOpen=null;renderKindEd();}
+function addCatRow(){state.edCats.push({name:'',c:PALETTE[state.edCats.length%PALETTE.length],orig:null});state.swOpen=null;renderCatEd();}
+function delRow(type,i){const a=(type==='kind'?state.edKinds:state.edCats);if(a.length<=1){toast('最低1つは残してね');return;}a.splice(i,1);state.swOpen=null;reRender(type);}
+function edToConfig(){
+  const KOBJ={};state.edKinds.forEach(k=>{const code=k.code||('k'+Math.random().toString(36).slice(2));KOBJ[code]={c:k.c,ja:(k.ja||'').trim()||'種別'};});
+  const COBJ={};state.edCats.forEach(c=>{const nm=(c.name||'').trim();if(nm)COBJ[nm]=c.c;});
+  return {kinds:KOBJ,cats:COBJ};
+}
+function loadDefaultsToEd(){const def=getDefaults();
+  state.edKinds=Object.keys(def.kinds).map(code=>({code,ja:def.kinds[code].ja,c:def.kinds[code].c,orig:(KIND[code]?code:null)}));
+  state.edCats=Object.keys(def.cats).map(name=>({name,c:def.cats[name],orig:(CAT[name]?name:null)}));
+  state.swOpen=null;renderKindEd();renderCatEd();toast('既定を読み込んだ');
+}
+function saveEdAsDefaults(){const cfg=edToConfig();if(!Object.keys(cfg.cats).length){toast('カテゴリは最低1つ必要だよ');return;}saveDefaults(cfg.kinds,cfg.cats);toast('既定として保存した');}
+function applyCatEd(){
+  const cfg=edToConfig();
+  if(!Object.keys(cfg.kinds).length){toast('種別は最低1つ必要だよ');return;}
+  if(!Object.keys(cfg.cats).length){toast('カテゴリは最低1つ必要だよ');return;}
+  // 種別: 削除されたコードを使う項目を先頭にフォールバック
+  const newCodes=Object.keys(cfg.kinds),fbK=newCodes[0];
+  // カテゴリ: 改名マップと現存名
+  const renameC={};state.edCats.forEach(c=>{const nm=(c.name||'').trim();if(c.orig&&nm&&c.orig!==nm)renameC[c.orig]=nm;});
+  const newNames=Object.keys(cfg.cats),fbC=(newNames.indexOf('その他')>=0?'その他':newNames[0]);
+  state.itin.forEach(d=>d.items.forEach(it=>{
+    if(it.kind&&newCodes.indexOf(it.kind)<0)it.kind=fbK;
+    if(it.cat!=null){if(renameC[it.cat]){it.cat=renameC[it.cat];}else if(newNames.indexOf(it.cat)<0){it.cat=fbC;}}
+  }));
+  KIND=cfg.kinds;CAT=cfg.cats;
+  closeCatEd();saveState();renderTimeline();renderDayTabs();renderView();if(mapInit)drawMap();renderMapList();
+  toast('種別・カテゴリを更新した');
 }
 function curItem(){const f=findItem(state.edId);return f?f.item:null;}
 function afterEdit(){normalize(state.edDay);saveState();renderTimeline();renderDayTabs();if(mapInit)drawMap();renderMapList();}
@@ -458,7 +589,7 @@ function cancelItemEd(){const f=findItem(state.edId);
   if(state.edNew){if(f){state.itin[f.day].items=state.itin[f.day].items.filter(x=>x.id!==state.edId);normalize(f.day);}toast('追加を取り消した');}
   else if(f&&state.edSnap){const it=f.item;Object.keys(it).forEach(k=>delete it[k]);Object.assign(it,state.edSnap);normalize(f.day);toast('変更を取り消した');}
   saveState();closeItemEd();renderTimeline();renderDayTabs();if(mapInit)drawMap();renderMapList();}
-function closeItemEd(){document.getElementById('itemEd').classList.remove('on');state.edId=null;state.edSnap=null;state.edNew=false;}
+function closeItemEd(){clearTimeout(geoTimer);clearGeoList();document.getElementById('itemEd').classList.remove('on');state.edId=null;state.edSnap=null;state.edNew=false;}
 
 /* 旅タイトル */
 function iso(dt){return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;}
