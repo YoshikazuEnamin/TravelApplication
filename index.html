@@ -225,16 +225,20 @@
   <div id="tripEd" class="sheet">
     <button class="sheetx" onclick="closeTrip()" aria-label="閉じる">✕</button>
     <h3>旅の情報を編集</h3>
-    <label>旅の名前（上の小見出し）</label><input id="trName" oninput="tripChange('name',this.value)" />
-    <label>タイトル</label><input id="trTitle" oninput="tripChange('title',this.value)" />
-    <div class="edrow">
-      <div><label>開始日</label><input id="trStart" type="date" onchange="tripSetStart(this.value)" /></div>
-      <div><label>終了日</label><input id="trEnd" type="date" onchange="tripSetEnd(this.value)" /></div>
+    <div id="teTabBar"></div>
+    <div id="tripInfoTab">
+      <label>旅の名前（上の小見出し）</label><input id="trName" oninput="tripChange('name',this.value)" />
+      <label>タイトル</label><input id="trTitle" oninput="tripChange('title',this.value)" />
+      <div class="edrow">
+        <div><label>開始日</label><input id="trStart" type="date" onchange="tripSetStart(this.value)" /></div>
+        <div><label>終了日</label><input id="trEnd" type="date" onchange="tripSetEnd(this.value)" /></div>
+      </div>
+      <div id="trCalc" style="font-size:12px;color:var(--inkSoft);margin-top:6px;font-weight:600"></div>
+      <div id="trWarn"></div>
+      <label style="margin-top:12px">各日のタイトル</label><div id="trDays"></div>
+      <button class="btn s" style="width:100%;margin-top:16px;padding:11px 0" onclick="openCatEd()">🎨 種別を編集</button>
     </div>
-    <div id="trCalc" style="font-size:12px;color:var(--inkSoft);margin-top:6px;font-weight:600"></div>
-    <div id="trWarn"></div>
-    <label style="margin-top:12px">各日のタイトル</label><div id="trDays"></div>
-    <button class="btn s" style="width:100%;margin-top:16px;padding:11px 0" onclick="openCatEd()">🎨 種別を編集</button>
+    <div id="tripIOTab" style="display:none"></div>
     <div class="edbtns"><button class="btn p" style="flex:1;padding:11px 0" onclick="closeTrip()">完了</button></div>
   </div>
 
@@ -272,6 +276,22 @@
       <button class="btn s" style="flex:0 0 auto;padding:11px 14px;color:var(--shu)" onclick="souvDelete()">削除</button>
       <button class="btn s" style="flex:1;padding:11px 0" onclick="cancelSouvEd()">キャンセル</button>
       <button class="btn p" style="flex:1;padding:11px 0" onclick="closeSouvEd()">完了</button>
+    </div>
+  </div>
+
+  <!-- 計画書の読み込み -->
+  <div id="importSheet" class="sheet">
+    <button class="sheetx" onclick="closeImport()" aria-label="閉じる">✕</button>
+    <h3>計画書を読み込む</h3>
+    <div class="note" style="margin-top:0">「旅の司令塔インポート形式」のJSONを貼り付けるか、ファイルを選んでね。読み込むと<b>新しいしおり</b>として追加されるよ（今開いてるしおりは変わらない）。</div>
+    <label style="margin-top:12px">ファイルから読み込む</label>
+    <input id="importFile" type="file" accept=".json,.txt,application/json,text/plain" onchange="onImportFile(event)" />
+    <label>またはJSONを貼り付け</label>
+    <textarea id="importText" class="mono" placeholder='{"format":"tabi-shirei-plan-v1", ...}' style="height:200px;font-size:11.5px;line-height:1.5"></textarea>
+    <div id="importMsg" style="font-size:12px;color:var(--shu);font-weight:600;margin-top:6px"></div>
+    <div class="edbtns">
+      <button class="btn s" style="flex:1;padding:11px 0" onclick="closeImport()">やめる</button>
+      <button class="btn p" style="flex:1;padding:11px 0" onclick="doImport()">読み込んでしおりを作る</button>
     </div>
   </div>
 
@@ -667,7 +687,9 @@ function refreshTripEd(){
   document.getElementById('trWarn').innerHTML='';
   document.getElementById('trDays').innerHTML=state.itin.map((d,i)=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span class="mono" style="font-size:11px;color:var(--inkSoft);width:42px">DAY${i+1}</span><input value="${esc(d.label)}" oninput="dayLabelChange(${i},this.value)" /></div>`).join('');
 }
-function openTripEd(){document.getElementById('trName').value=state.trip.name;document.getElementById('trTitle').value=state.trip.title;state.pendingDc=null;refreshTripEd();document.getElementById('tripEd').classList.add('on');showBackdrop(closeTrip);}
+function openTripEd(){document.getElementById('trName').value=state.trip.name;document.getElementById('trTitle').value=state.trip.title;state.pendingDc=null;refreshTripEd();state.trEdTab='info';renderTripEdTabs();document.getElementById('tripInfoTab').style.display='block';document.getElementById('tripIOTab').style.display='none';document.getElementById('tripEd').classList.add('on');showBackdrop(closeTrip);}
+function renderTripEdTabs(){const t=state.trEdTab||'info';document.getElementById('teTabBar').innerHTML=`<div style="display:flex;gap:6px;margin-bottom:14px"><button class="btn ${t==='info'?'p':'s'}" style="flex:1;padding:9px 0;font-size:12.5px" onclick="setTripEdTab('info')">基本情報</button><button class="btn ${t==='io'?'p':'s'}" style="flex:1;padding:9px 0;font-size:12.5px" onclick="setTripEdTab('io')">読み込み・書き出し</button></div>`;}
+function setTripEdTab(t){state.trEdTab=t;renderTripEdTabs();document.getElementById('tripInfoTab').style.display=(t==='info')?'block':'none';document.getElementById('tripIOTab').style.display=(t==='io')?'block':'none';if(t==='io')renderTripIO();}
 function renderTripCalc(){const n=state.itin.length;document.getElementById('trCalc').textContent=`${dDateShort(0)}〜${dDateShort(n-1)} ・ ${n-1}泊${n}日（自動）`;}
 function tripChange(k,v){state.trip[k]=v;renderTop();saveState();}
 function tripSetStart(v){if(!v)return;state.trip.start=v;renderTop();renderDayTabs();refreshTripEd();saveState();}
@@ -687,7 +709,6 @@ function shrinkMerge(){const dc=state.pendingDc;if(dc==null)return;const t=state
 function shrinkDelete(){const dc=state.pendingDc;if(dc==null)return;state.itin=state.itin.slice(0,dc);renumberDays();state.pendingDc=null;afterStructural('短縮（以降の予定を削除）');}
 function cancelShrink(){state.pendingDc=null;refreshTripEd();}
 function dayLabelChange(i,v){state.itin[i].label=v;renderDayTabs();saveState();}
-function tripChange(k,v){state.trip[k]=v;renderTop();saveState();}
 function closeTrip(){document.getElementById('tripEd').classList.remove('on');hideBackdrop();}
 
 /* 持ち物 */
@@ -850,6 +871,114 @@ function flyTo(lat,lng){map&&map.flyTo([lat,lng],13,{duration:.6});}
 let _sheetCloser=null;
 function showBackdrop(closer){_sheetCloser=closer||null;document.getElementById('backdrop').classList.add('on');}
 function hideBackdrop(){document.getElementById('backdrop').classList.remove('on');_sheetCloser=null;}
+/* 書き出し（MD / スタンドアロンHTML）— 読み込みは無し */
+function exBudget(){const kC={};let total=0;state.itin.flatMap(d=>d.items).forEach(it=>{const k=it.kind||'sight',c=itemCost(it);kC[k]=(kC[k]||0)+c;total+=c;});let svC=0;state.souv.forEach(s=>svC+=(s.price||0));return {kC,total,svC,grand:total+svC};}
+function exTime(it){return it.end>it.start?fmt(it.start)+'–'+fmt(it.end):fmt(it.start);}
+function buildMarkdown(){
+  const L=[];L.push('# 🌊 '+state.trip.name,'## '+state.trip.title+'｜'+tripSub(),'');
+  state.itin.forEach((d,i)=>{const s=sched(i);L.push(`## 📅 DAY ${i+1}（${dDate(i)}）${d.label||''}`,'','| 時刻 | 予定 | メモ |','|---|---|---|');s.forEach(it=>{const note=[itemSub(it),it.memo,it.resv].filter(Boolean).join(' / ').replace(/\|/g,'／');L.push(`| **${exTime(it)}** | ${it.icon||''} ${it.title} | ${note} |`);});L.push('');});
+  const b=exBudget();L.push('## 💰 予算','','| 種別 | 金額 |','|---|---|');Object.keys(KIND).filter(k=>b.kC[k]).forEach(k=>L.push(`| ${KIND[k].ja} | ${yen(b.kC[k])} |`));if(b.svC)L.push(`| 🎁 お土産 | ${yen(b.svC)} |`);L.push(`| **合計** | **${yen(b.grand)}** |`,'');
+  const left=state.packing.filter(p=>!p.done).map(p=>p.name);L.push('## 🎒 持ち物（残り）','',left.length?left.map(x=>`- [ ] ${x}`).join('\n'):'- ✅ 忘れ物なし','');
+  if(state.souv.length){L.push('## 🎁 お土産','');state.souv.forEach(s=>L.push(`- [${s.bought?'x':' '}] ${s.name}${s.price?' '+yen(s.price):''}${s.to?' →'+s.to:''}${s.memo?'（'+s.memo+'）':''}`));L.push('');}
+  return L.join('\n');
+}
+function buildHTML(){
+  const days=state.itin.map((d,i)=>{const s=sched(i);
+    const rows=s.map(it=>{const sub=itemSub(it),cost=itemCost(it);return `<div class="it"><div class="tm">${exTime(it)}</div><div class="bd"><div class="ti">${it.icon||''} ${esc(it.title)}</div>${sub?`<div class="sub">${esc(sub)}</div>`:''}${it.memo?`<div class="mm">${esc(it.memo)}</div>`:''}${(it.resv||cost)?`<div class="tags">${it.resv?`<span class="tag r">${esc(it.resv)}</span>`:''}${cost?`<span class="tag">${yen(cost)}</span>`:''}</div>`:''}</div></div>`;}).join('');
+    return `<section class="day"><h2>DAY ${i+1} <span>${dDate(i)} ${esc(d.label||'')}</span></h2>${rows}</section>`;}).join('');
+  const b=exBudget();
+  const budRows=Object.keys(KIND).filter(k=>b.kC[k]).map(k=>`<tr><td><i style="background:${KIND[k].c}"></i>${esc(KIND[k].ja)}</td><td>${yen(b.kC[k])}</td></tr>`).join('')+(b.svC?`<tr><td>🎁 お土産</td><td>${yen(b.svC)}</td></tr>`:'');
+  const left=state.packing.filter(p=>!p.done).map(p=>`<li>${esc(p.name)}</li>`).join('');
+  const souv=state.souv.map(s=>`<li>${s.bought?'✅':'⬜'} ${esc(s.name)}${s.price?' '+yen(s.price):''}${s.to?' → '+esc(s.to):''}</li>`).join('');
+  const cover=state.trip.cover?`<img class="cover" src="${state.trip.cover}" alt="">`:'';
+  const css=`*{box-sizing:border-box;margin:0}body{font-family:'Hiragino Sans','Noto Sans JP',system-ui,sans-serif;background:#DADED3;color:#15213B;line-height:1.6;padding:16px}.wrap{max-width:640px;margin:0 auto;background:#EFF1EC;border-radius:16px;overflow:hidden;box-shadow:0 6px 30px rgba(21,33,59,.18)}header{background:#15213B;color:#EFF1EC;padding:0}header .cover{width:100%;height:200px;object-fit:cover;display:block}header .pad{padding:20px 22px}.ttl{font-size:11px;letter-spacing:3px;color:#9FB0CC}h1{font-size:22px;margin:4px 0}.dates{font-size:12px;color:#9FB0CC}main{padding:18px 22px}.day{margin-bottom:22px}.day h2{font-size:15px;border-left:4px solid #CF3F22;padding-left:9px;margin-bottom:10px}.day h2 span{font-size:11px;color:#5A6B86;font-weight:400;margin-left:6px}.it{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid #D3D8CE}.it .tm{font-family:'Roboto Mono',monospace;font-size:12px;font-weight:700;color:#2C3E6B;width:92px;flex:0 0 92px}.it .ti{font-size:14px;font-weight:700}.it .sub,.it .mm{font-size:12px;color:#5A6B86;margin-top:2px}.tags{margin-top:5px}.tag{display:inline-block;font-size:11px;background:#E6EAE0;color:#5A6B86;border-radius:6px;padding:2px 8px;margin-right:5px}.tag.r{background:#F6E5DF;color:#CF3F22}section.bk{margin-bottom:22px}section.bk h2{font-size:15px;margin-bottom:8px}table{width:100%;border-collapse:collapse;font-size:13px}td{padding:7px 4px;border-bottom:1px solid #D3D8CE}td:last-child{text-align:right;font-family:'Roboto Mono',monospace;font-weight:600}i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:8px;vertical-align:middle}tr.total td{font-weight:700;border-top:2px solid #15213B;border-bottom:none}ul{padding-left:20px;font-size:13px}li{margin:3px 0}footer{text-align:center;font-size:11px;color:#7A8699;padding:16px}`;
+  return `<!DOCTYPE html><html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(state.trip.title)}</title><style>${css}</style></head><body><div class="wrap"><header>${cover}<div class="pad"><div class="ttl">${esc(state.trip.name)}</div><h1>${esc(state.trip.title)}</h1><div class="dates">${esc(tripSub())}</div></div></header><main>${days}<section class="bk"><h2>💰 予算</h2><table>${budRows}<tr class="total"><td>合計</td><td>${yen(b.grand)}</td></tr></table></section>${left?`<section class="bk"><h2>🎒 持ち物（残り）</h2><ul>${left}</ul></section>`:''}${souv?`<section class="bk"><h2>🎁 お土産</h2><ul>${souv}</ul></section>`:''}</main><footer>🧭 旅の司令塔で作成</footer></div></body></html>`;
+}
+/* 取り込み用JSON（旅の司令塔インポート形式 tabi-shirei-plan-v1）：エクスポートとインポートで同じスキーマを共有 */
+const IMPORT_FORMAT='tabi-shirei-plan-v1';
+const DEFAULT_ICON={move:'🚌',stay:'🏨',sight:'⛩️',food:'🍜',shop:'🛍️',play:'🎉'};
+function revReserved(r){return r==='✅予約済'?'確定':(r==='⬜未予約'?'要予約':'');}
+function mapReserved(r){r=String(r||'').trim();if(/確定|予約済|OK|✅/i.test(r))return '✅予約済';if(/要予約|未定|未予約|⬜/.test(r))return '⬜未予約';return '';}
+function tripToImportObj(){
+  const days=state.itin.map(d=>({label:d.label||'',items:(d.items||[]).map(it=>{
+    const kind=BUILTIN_KIND[it.kind]?it.kind:'sight';
+    const o={kind,icon:it.icon||'',title:it.title||'新しい予定',start:fmt(it.t!=null?it.t:0),end:fmt(it.end!=null?it.end:(it.t||0))};
+    if(kind==='move'){if(it.fromName)o.from=it.fromName;if(it.toName)o.to=it.toName;}
+    else if(it.area)o.place=it.area;
+    if(it.memo)o.memo=it.memo;
+    const r=revReserved(it.resv);if(r)o.reserved=r;
+    const cost=itemCost(it);if(cost)o.cost=cost;
+    if(it.url)o.url=it.url;if(it.phone)o.phone=it.phone;if(it.hours)o.hours=it.hours;if(it.addr)o.address=it.addr;
+    return o;
+  })}));
+  const souvenirs=state.souv.map(s=>{const o={name:s.name||'お土産'};if(s.price)o.price=s.price;if(s.to)o.to=s.to;if(s.memo)o.memo=s.memo;return o;});
+  const packing=state.packing.filter(p=>!p.done).map(p=>p.name);
+  return {format:IMPORT_FORMAT,trip:{title:state.trip.title||'',subtitle:state.trip.name||'',start_date:state.trip.start||todayISO()},days,souvenirs,packing};
+}
+function buildJSON(){return JSON.stringify(tripToImportObj(),null,2);}
+/* JSON（tabi-shirei-plan-v1 or 素の互換オブジェクト）→ しおりのblob（meta/itin/packing/souv）に変換。壊れたデータはthrowせず出来る範囲で拾う */
+function importObjToBlob(obj){
+  if(!obj||typeof obj!=='object')throw new Error('JSONオブジェクトとして読めなかったよ');
+  const t=obj.trip||{};
+  const title=String(t.title||'新しい旅').trim()||'新しい旅';
+  const meta={name:String(t.subtitle||title),title,start:/^\d{4}-\d{2}-\d{2}$/.test(t.start_date||'')?t.start_date:todayISO()};
+  const daysIn=Array.isArray(obj.days)?obj.days:[];
+  let itin=daysIn.map((d,i)=>{
+    const items=(Array.isArray(d.items)?d.items:[]).map(raw=>{
+      const kind=BUILTIN_KIND[raw.kind]?raw.kind:'sight';
+      const s=parseT(String(raw.start||'').trim());const start=s!=null?s:0;
+      const e=parseT(String(raw.end||'').trim());let end=e!=null?e:start;if(end<start)end=start;
+      const cost=Math.max(0,Math.round(+raw.cost||0));
+      const it={id:uid(),icon:(raw.icon&&/\S/.test(String(raw.icon)))?String(raw.icon).trim():(DEFAULT_ICON[kind]||'📍'),kind,title:String(raw.title||'新しい予定'),t:start,end,memo:raw.memo?String(raw.memo):'',cLo:cost,cHi:cost};
+      const rv=mapReserved(raw.reserved);if(rv)it.resv=rv;
+      if(kind==='move'){if(raw.from)it.fromName=String(raw.from);if(raw.to)it.toName=String(raw.to);}
+      else if(raw.place)it.area=String(raw.place);
+      if(raw.url)it.url=String(raw.url);
+      if(raw.phone)it.phone=String(raw.phone);
+      if(raw.hours)it.hours=String(raw.hours);
+      if(raw.address)it.addr=String(raw.address);
+      return it;
+    });
+    items.sort((a,b)=>(a.t-b.t)||(a.end-b.end));
+    return {n:i+1,label:d.label?String(d.label):'',items};
+  });
+  if(!itin.length)itin=[{n:1,label:'',items:[]}];
+  const souv=(Array.isArray(obj.souvenirs)?obj.souvenirs:[]).map(s=>({id:uid(),name:String((s&&s.name)||'お土産'),price:Math.max(0,Math.round(+(s&&s.price)||0)),to:(s&&s.to)?String(s.to):'',memo:(s&&s.memo)?String(s.memo):'',spotId:'',bought:false}));
+  const packing=(Array.isArray(obj.packing)?obj.packing:[]).map(nm=>({id:uid(),name:String(nm),grp:'持ち物',done:false}));
+  return {meta,itin,packing,souv};
+}
+function openImport(){const t=document.getElementById('importText');if(t)t.value='';const f=document.getElementById('importFile');if(f)f.value='';const m=document.getElementById('importMsg');if(m)m.textContent='';document.getElementById('importSheet').classList.add('on');showBackdrop(closeImport);}
+function closeImport(){document.getElementById('importSheet').classList.remove('on');hideBackdrop();}
+function onImportFile(ev){const f=ev.target.files&&ev.target.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{const ta=document.getElementById('importText');if(ta)ta.value=String(rd.result||'');};rd.onerror=()=>{const m=document.getElementById('importMsg');if(m)m.textContent='ファイルを読めなかった…';};rd.readAsText(f,'utf-8');}
+function doImport(){
+  const raw=(document.getElementById('importText')||{}).value||'';
+  const msgEl=document.getElementById('importMsg');
+  if(!raw.trim()){if(msgEl)msgEl.textContent='JSONを貼り付けるかファイルを選んでね';return;}
+  let obj;try{obj=JSON.parse(raw);}catch(e){if(msgEl)msgEl.textContent='JSONとして読めなかった…形式を確認してね';return;}
+  let blob;try{blob=importObjToBlob(obj);}catch(e){if(msgEl)msgEl.textContent='読み込みでエラー：'+(e&&e.message?e.message:e);return;}
+  const id='t'+Date.now().toString(36);
+  const def=getDefaults();
+  const full={meta:blob.meta,itin:blob.itin,packing:blob.packing,souv:blob.souv,photos:[],kinds:JSON.parse(JSON.stringify(def.kinds)),cats:Object.assign({},def.cats)};
+  LS.set(tripKey(id),JSON.stringify(full));
+  state.index.push({id,name:blob.meta.name,title:blob.meta.title,start:blob.meta.start});
+  saveIndex();
+  closeImport();
+  toast('しおりを読み込んだよ！');
+  openTrip(id);
+}
+function curExportText(){const f=state.exportFmt||'md';return f==='md'?buildMarkdown():(f==='html'?buildHTML():buildJSON());}
+function setExportFmt(f){state.exportFmt=f;renderTripIO();}
+function renderTripIO(){const f=state.exportFmt||'md';
+  let h=`<div class="note" style="margin-top:0">このしおりの旅程・予算・持ち物・お土産の書き出しと、ほかの計画書の読み込みができるよ。</div>`;
+  h+=`<button class="btn s" style="width:100%;padding:10px 0;font-size:13px;margin:12px 0 14px" onclick="openImport()">📥 計画書を読み込む（インポート）</button>`;
+  h+=`<div style="display:flex;gap:6px;margin-bottom:12px"><button class="btn ${f==='md'?'p':'s'}" style="flex:1;padding:9px 0;font-size:12.5px" onclick="setExportFmt('md')">📝 Markdown</button><button class="btn ${f==='html'?'p':'s'}" style="flex:1;padding:9px 0;font-size:12.5px" onclick="setExportFmt('html')">🌐 HTML</button><button class="btn ${f==='json'?'p':'s'}" style="flex:1;padding:9px 0;font-size:12.5px" onclick="setExportFmt('json')">🗂️ JSON</button></div>`;
+  h+=`<div style="font-size:11.5px;color:var(--inkSoft);margin-bottom:8px">${f==='md'?'旅程・予算・持ち物・お土産をMarkdownで。メモアプリやGitHubに貼れるよ。':f==='html'?'スタンドアロンのHTML。ブラウザで開けて共有もできる「しおり」。カバー写真も埋め込むよ。':'このしおりを「旅の司令塔インポート形式」で書き出すよ。バックアップや、他のしおりへの読み込みに使えるよ（写真・地図ピンは含まれないよ）。'}</div>`;
+  h+=`<div style="display:flex;gap:8px;margin-bottom:8px"><button class="btn p" style="flex:1;padding:10px 0;font-size:13px" onclick="copyExport()">コピー</button><button class="btn s" style="flex:1;padding:10px 0;font-size:13px" onclick="downloadExport()">${f==='md'?'.md':f==='html'?'.html':'.json'}で保存</button></div>`;
+  h+=`<textarea id="exOut" readonly class="mono" style="height:260px;font-size:11px;line-height:1.5">${esc(curExportText())}</textarea>`;
+  document.getElementById('tripIOTab').innerHTML=h;
+}
+function copyExport(){const ta=document.getElementById('exOut');if(ta){ta.select();try{document.execCommand('copy');}catch(e){}}if(navigator.clipboard)navigator.clipboard.writeText(curExportText()).catch(()=>{});toast('コピーしたよ');}
+function downloadExport(){const f=state.exportFmt||'md';const ext=f==='md'?'.md':(f==='html'?'.html':'.json');const type=f==='md'?'text/markdown':(f==='html'?'text/html':'application/json');const name=(state.trip.title||'旅のしおり').replace(/[\\\/:*?"<>|]/g,'_')+ext;try{const blob=new Blob([curExportText()],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('保存したよ');}catch(e){toast('この環境ではDL不可。コピーを使ってね');}}
 function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),1700);}
 (function(){bootstrap();renderShiori();setScreen('list');})();
 </script>
