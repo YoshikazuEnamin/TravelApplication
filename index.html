@@ -223,7 +223,7 @@
 
   <!-- 旅タイトル編集 -->
   <div id="tripEd" class="sheet">
-    <button class="sheetx" onclick="closeTrip()" aria-label="閉じる">✕</button>
+    <button class="sheetx" onclick="cancelTripEd()" aria-label="閉じる">✕</button>
     <h3>旅の情報を編集</h3>
     <div id="teTabBar"></div>
     <div id="tripInfoTab">
@@ -235,6 +235,7 @@
       </div>
       <div id="trCalc" style="font-size:12px;color:var(--inkSoft);margin-top:6px;font-weight:600"></div>
       <div id="trWarn"></div>
+      <label style="margin-top:12px">予算(¥)</label><input id="trBudget" type="number" inputmode="numeric" placeholder="未設定（0）" oninput="tripChange('budget',Math.max(0,+this.value||0))" />
       <label style="margin-top:12px">各日のタイトル</label><div id="trDays"></div>
       <button class="btn s" style="width:100%;margin-top:16px;padding:11px 0" onclick="openCatEd()">🎨 種別を編集</button>
     </div>
@@ -327,8 +328,7 @@ const parseT=v=>{const t=(v||'').match(/^(\d{1,2}):(\d{2})$/);return t?(+t[1])*6
 const yen=n=>'¥'+(n||0).toLocaleString('ja-JP');
 const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
-const BUDGET_LO=130000;
-const TRIP0={name:'東北 温泉＆グルメ一人旅 / 司令塔',title:'本厚木発・新青森帰り',start:'2026-08-04'};
+const TRIP0={name:'東北 温泉＆グルメ一人旅 / 司令塔',title:'本厚木発・新青森帰り',start:'2026-08-04',budget:130000};
 const WD=['日','月','火','水','木','金','土'];
 const ymd=s=>{const[y,m,d]=(s||'2026-08-04').split('-').map(Number);return new Date(y,m-1,d);};
 const addDays=(dt,n)=>{const x=new Date(dt);x.setDate(x.getDate()+n);return x;};
@@ -425,7 +425,29 @@ function setScreen(s){state.screen=s;const t=(s==='trip');
   document.getElementById('fab').style.display=t?'none':'flex';}
 function openTrip(id){if(!loadTrip(id)){toast('うまく開けなかった…');return;}setScreen('trip');renderTop();renderNav();renderDayTabs();showView('timeline');}
 function showList(){if(state.cur)saveTrip();state.delId=null;setScreen('list');renderShiori();}
-function newShiori(){const id='t'+Date.now().toString(36);const def=getDefaults();const blob={meta:{name:'旅のしおり',title:'新しい旅',start:todayISO()},itin:[{n:1,label:'',items:[]}],packing:[],souv:[],photos:[],kinds:JSON.parse(JSON.stringify(def.kinds)),cats:Object.assign({},def.cats)};LS.set(tripKey(id),JSON.stringify(blob));state.index.push({id,name:blob.meta.name,title:blob.meta.title,start:blob.meta.start});saveIndex();openTrip(id);openTripEd();toast('新しいしおりを作成');}
+/* ＋ボタン：ここではまだ何も保存しない。「旅の情報を編集」で完了を押すまでは仮の下書き状態（state.creatingNew）。
+   ✕やバックドロップタップでやめれば、しおりは1件も増えない。読み込み（インポート）が成功した場合もこの下書きは破棄される。 */
+function newShiori(){
+  const def=getDefaults();
+  state.cur=null;
+  state.trip={name:'旅のしおり',title:'新しい旅',start:todayISO(),budget:0};
+  state.itin=[{n:1,label:'',items:[]}];
+  state.packing=[];state.souv=[];state.photos=[];
+  KIND=JSON.parse(JSON.stringify(def.kinds));CAT=Object.assign({},def.cats);
+  state.creatingNew=true;
+  openTripEd();
+}
+function commitNewTrip(){
+  const id='t'+Date.now().toString(36);
+  const blob={meta:state.trip,itin:state.itin,packing:state.packing,souv:state.souv,photos:state.photos||[],kinds:KIND,cats:CAT};
+  LS.set(tripKey(id),JSON.stringify(blob));
+  state.index.push({id,name:blob.meta.name,title:blob.meta.title,start:blob.meta.start});
+  saveIndex();
+  state.creatingNew=false;
+  document.getElementById('tripEd').classList.remove('on');hideBackdrop();
+  toast('新しいしおりを作成したよ');
+  openTrip(id);
+}
 function askDelShiori(id){state.delId=id;renderShiori();}
 function cancelDel(){state.delId=null;renderShiori();}
 function delShiori(id){LS.del(tripKey(id));state.index=state.index.filter(x=>x.id!==id);saveIndex();if(state.cur===id)state.cur=null;state.delId=null;renderShiori();toast('しおりを削除したよ');}
@@ -687,7 +709,7 @@ function refreshTripEd(){
   document.getElementById('trWarn').innerHTML='';
   document.getElementById('trDays').innerHTML=state.itin.map((d,i)=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span class="mono" style="font-size:11px;color:var(--inkSoft);width:42px">DAY${i+1}</span><input value="${esc(d.label)}" oninput="dayLabelChange(${i},this.value)" /></div>`).join('');
 }
-function openTripEd(){document.getElementById('trName').value=state.trip.name;document.getElementById('trTitle').value=state.trip.title;state.pendingDc=null;refreshTripEd();state.trEdTab='info';renderTripEdTabs();document.getElementById('tripInfoTab').style.display='block';document.getElementById('tripIOTab').style.display='none';document.getElementById('tripEd').classList.add('on');showBackdrop(closeTrip);}
+function openTripEd(){document.getElementById('trName').value=state.trip.name;document.getElementById('trTitle').value=state.trip.title;document.getElementById('trBudget').value=state.trip.budget||0;state.pendingDc=null;refreshTripEd();state.trEdTab='info';renderTripEdTabs();document.getElementById('tripInfoTab').style.display='block';document.getElementById('tripIOTab').style.display='none';document.getElementById('tripEd').classList.add('on');showBackdrop(closeTrip);}
 function renderTripEdTabs(){const t=state.trEdTab||'info';document.getElementById('teTabBar').innerHTML=`<div style="display:flex;gap:6px;margin-bottom:14px"><button class="btn ${t==='info'?'p':'s'}" style="flex:1;padding:9px 0;font-size:12.5px" onclick="setTripEdTab('info')">基本情報</button><button class="btn ${t==='io'?'p':'s'}" style="flex:1;padding:9px 0;font-size:12.5px" onclick="setTripEdTab('io')">読み込み・書き出し</button></div>`;}
 function setTripEdTab(t){state.trEdTab=t;renderTripEdTabs();document.getElementById('tripInfoTab').style.display=(t==='info')?'block':'none';document.getElementById('tripIOTab').style.display=(t==='io')?'block':'none';if(t==='io')renderTripIO();}
 function renderTripCalc(){const n=state.itin.length;document.getElementById('trCalc').textContent=`${dDateShort(0)}〜${dDateShort(n-1)} ・ ${n-1}泊${n}日（自動）`;}
@@ -709,7 +731,16 @@ function shrinkMerge(){const dc=state.pendingDc;if(dc==null)return;const t=state
 function shrinkDelete(){const dc=state.pendingDc;if(dc==null)return;state.itin=state.itin.slice(0,dc);renumberDays();state.pendingDc=null;afterStructural('短縮（以降の予定を削除）');}
 function cancelShrink(){state.pendingDc=null;refreshTripEd();}
 function dayLabelChange(i,v){state.itin[i].label=v;renderDayTabs();saveState();}
-function closeTrip(){document.getElementById('tripEd').classList.remove('on');hideBackdrop();}
+/* 完了（＆バックドロップタップ）：下書き中なら本当に作成を確定する。既存しおりの編集ならただ閉じるだけ（各項目は入力のたびに自動保存済み） */
+function closeTrip(){
+  if(state.creatingNew){commitNewTrip();return;}
+  document.getElementById('tripEd').classList.remove('on');hideBackdrop();
+}
+/* ✕：下書き中なら何も保存せずに破棄してやめる */
+function cancelTripEd(){
+  state.creatingNew=false;
+  document.getElementById('tripEd').classList.remove('on');hideBackdrop();
+}
 
 /* 持ち物 */
 function packHtml(){
@@ -788,9 +819,13 @@ function renderBudget(){
   all.forEach(it=>{const k=it.kind||'sight',c=itemCost(it);kC[k]=(kC[k]||0)+c;total+=c;});
   state.itin.forEach((d,i)=>d.items.forEach(it=>{dayC[i]+=itemCost(it);}));
   let svC=0;state.souv.forEach(s=>{const c=s.price||0;svC+=c;total+=c;const f=s.spotId?findItem(s.spotId):null;if(f)dayC[f.day]+=c;});
-  const kinds=Object.keys(KIND).filter(k=>kC[k]),maxC=Math.max(...kinds.map(k=>kC[k]),svC,1),maxDay=Math.max(...dayC,1),rem=BUDGET_LO-total;
+  const kinds=Object.keys(KIND).filter(k=>kC[k]),maxC=Math.max(...kinds.map(k=>kC[k]),svC,1),maxDay=Math.max(...dayC,1);
+  const budget=Math.max(0,+state.trip.budget||0),rem=budget-total;
   const souvC=(KIND.shop&&KIND.shop.c)||'#8A5FB0';
-  let h=`<div class="bk"><div class="mono" style="font-size:10.5px;letter-spacing:2px;color:#9FB0CC">旅の総額</div><div class="mono" style="font-size:25px;font-weight:700;margin-top:2px">${yen(total)}</div><div style="margin-top:12px"><div class="barwrap" style="background:rgba(255,255,255,.15)"><div class="seg" style="width:${Math.min(100,total/BUDGET_LO*100)}%;background:#7FD1A8"></div></div><div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11.5px"><span style="color:#9FB0CC">予算 ${yen(BUDGET_LO)}</span><span class="mono" style="color:${rem>=0?'#7FD1A8':'#ffb4a2'};font-weight:700">${rem>=0?'残り '+yen(rem):'超過 '+yen(-rem)}</span></div></div></div>`;
+  const budgetRow=budget>0
+    ?`<div style="margin-top:12px"><div class="barwrap" style="background:rgba(255,255,255,.15)"><div class="seg" style="width:${Math.min(100,total/budget*100)}%;background:#7FD1A8"></div></div><div style="display:flex;justify-content:space-between;margin-top:6px;font-size:11.5px"><span style="color:#9FB0CC">予算 ${yen(budget)}</span><span class="mono" style="color:${rem>=0?'#7FD1A8':'#ffb4a2'};font-weight:700">${rem>=0?'残り '+yen(rem):'超過 '+yen(-rem)}</span></div></div>`
+    :`<div style="margin-top:10px;font-size:11.5px;color:#9FB0CC">予算が未設定だよ。<span style="text-decoration:underline;cursor:pointer" onclick="openTripEd()">旅の情報を編集</span>から設定できるよ。</div>`;
+  let h=`<div class="bk"><div class="mono" style="font-size:10.5px;letter-spacing:2px;color:#9FB0CC">旅の総額</div><div class="mono" style="font-size:25px;font-weight:700;margin-top:2px">${yen(total)}</div>${budgetRow}</div>`;
   h+=`<div class="sec" style="margin-top:18px">種別べつ — タップで該当の予定を編集</div>`;
   const barRow=(nm,col,c,onclick)=>`<div class="catrow" onclick="${onclick}"><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-bottom:4px"><span style="display:inline-flex;align-items:center;gap:6px;font-weight:600"><span class="dot" style="background:${col}"></span>${esc(nm)} <span style="color:var(--inkSoft);font-weight:400">›</span></span><span class="mono" style="font-weight:600">${yen(c)}</span></div><div class="barwrap"><div class="seg" style="display:inline-block;width:${c/maxC*100}%;background:${col}"></div></div></div>`;
   kinds.forEach(k=>{h+=barRow(KIND[k].ja,KIND[k].c,kC[k],"openPick('"+k+"')");});
@@ -913,7 +948,9 @@ function tripToImportObj(){
   })}));
   const souvenirs=state.souv.map(s=>{const o={name:s.name||'お土産'};if(s.price)o.price=s.price;if(s.to)o.to=s.to;if(s.memo)o.memo=s.memo;return o;});
   const packing=state.packing.filter(p=>!p.done).map(p=>p.name);
-  return {format:IMPORT_FORMAT,trip:{title:state.trip.title||'',subtitle:state.trip.name||'',start_date:state.trip.start||todayISO()},days,souvenirs,packing};
+  const tripOut={title:state.trip.title||'',subtitle:state.trip.name||'',start_date:state.trip.start||todayISO()};
+  if(state.trip.budget)tripOut.budget=state.trip.budget;
+  return {format:IMPORT_FORMAT,trip:tripOut,days,souvenirs,packing};
 }
 function buildJSON(){return JSON.stringify(tripToImportObj(),null,2);}
 /* JSON（tabi-shirei-plan-v1 or 素の互換オブジェクト）→ しおりのblob（meta/itin/packing/souv）に変換。壊れたデータはthrowせず出来る範囲で拾う */
@@ -921,7 +958,7 @@ function importObjToBlob(obj){
   if(!obj||typeof obj!=='object')throw new Error('JSONオブジェクトとして読めなかったよ');
   const t=obj.trip||{};
   const title=String(t.title||'新しい旅').trim()||'新しい旅';
-  const meta={name:String(t.subtitle||title),title,start:/^\d{4}-\d{2}-\d{2}$/.test(t.start_date||'')?t.start_date:todayISO()};
+  const meta={name:String(t.subtitle||title),title,start:/^\d{4}-\d{2}-\d{2}$/.test(t.start_date||'')?t.start_date:todayISO(),budget:Math.max(0,Math.round(+t.budget||0))};
   const daysIn=Array.isArray(obj.days)?obj.days:[];
   let itin=daysIn.map((d,i)=>{
     const items=(Array.isArray(d.items)?d.items:[]).map(raw=>{
@@ -962,7 +999,9 @@ function doImport(){
   LS.set(tripKey(id),JSON.stringify(full));
   state.index.push({id,name:blob.meta.name,title:blob.meta.title,start:blob.meta.start});
   saveIndex();
+  state.creatingNew=false; /* ＋ボタンの下書き中に読み込んだ場合、下書きは破棄（インポートで作られたしおりだけが残る） */
   closeImport();
+  document.getElementById('tripEd').classList.remove('on');hideBackdrop(); /* 読み込みが成功したら「旅の情報を編集」も自動で閉じる */
   toast('しおりを読み込んだよ！');
   openTrip(id);
 }
