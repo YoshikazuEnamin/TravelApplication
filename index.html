@@ -324,6 +324,7 @@ function saveDefaults(kinds,cats){LS.set(K_DEF,JSON.stringify({kinds:kinds||KIND
 function applyConfig(kinds,cats){const def=getDefaults();KIND=(kinds&&Object.keys(kinds).length)?JSON.parse(JSON.stringify(kinds)):JSON.parse(JSON.stringify(def.kinds));CAT=(cats&&Object.keys(cats).length)?Object.assign({},cats):Object.assign({},def.cats);}
 const mm=s=>{const[h,n]=s.split(':').map(Number);return h*60+n};
 const fmt=x=>String(Math.floor(x/60)).padStart(2,'0')+':'+String(((x%60)+60)%60).padStart(2,'0');
+const nowMin=()=>{const d=new Date();return d.getHours()*60+d.getMinutes();};
 const parseT=v=>{const t=(v||'').match(/^(\d{1,2}):(\d{2})$/);return t?(+t[1])*60+(+t[2]):null;};
 const yen=n=>'¥'+(n||0).toLocaleString('ja-JP');
 const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -390,7 +391,7 @@ const SEED_DAYS=[
 const PACK_BASE={持ち物:['着替え','パジャマ','ハンドタオル','ボディタオル','髭剃り','歯ブラシ','歯磨き粉','マウスウォッシュ','モバイルバッテリー','ACアダプター','コンセント','タブレット','FireTV','ポータブルスピーカー','イヤホン','水筒','薬','化粧水','香水','シャンプー・リンス','日焼け止め','自撮り棒','折りたたみ傘','アレジオン','目薬','リップクリーム','手提げカバン','保冷バッグ','ハンディファン','日傘','爪研ぎ','肉球'],買うもの:['お茶2L','スポーツドリンク','野菜ジュース','枝豆','カップスープ','チョコ']};
 
 const GEOFIX={d1e:[38.7047,139.9677],d1f:[38.7043,139.9721],d1j:[38.6149,139.6072],d2a:[38.616,139.6075],d2d:[39.3923,140.0491],d2m:[39.3923,140.0491],d2g:[39.7261,140.1444],d2h:[39.7169,140.1297],d2i:[39.7169,140.1297],d2j:[39.7217,140.1244],d2k:[39.7184,140.1132],d3e:[40.5605,139.9848],d3h:[40.6148,139.8627],d4a:[40.6148,139.8627],d4d:[40.8288,140.7358],d4e:[40.8276,140.6935]};
-let state={screen:'list',cur:null,index:[],delId:null,view:'timeline',day:0,now:mm('10:30'),trip:Object.assign({},TRIP0),itin:[],photos:[],packing:[],souv:[],todoTab:'pack',svId:null,svNew:false,edId:null,edDay:0,edSnap:null,edNew:false,placePhoto:null,pkConfirm:false};
+let state={screen:'list',cur:null,index:[],delId:null,view:'timeline',day:0,now:nowMin(),notifyOn:false,trip:Object.assign({},TRIP0),itin:[],photos:[],packing:[],souv:[],todoTab:'pack',svId:null,svNew:false,edId:null,edDay:0,edSnap:null,edNew:false,placePhoto:null,pkConfirm:false};
 let map=null,layer=null,mapInit=false,itemMarkers={};
 
 const LS={get(k){try{const v=localStorage.getItem(k);return v==null?null:{key:k,value:v};}catch(e){return null;}},set(k,v){try{localStorage.setItem(k,v);return true;}catch(e){return false;}},del(k){try{localStorage.removeItem(k);}catch(e){}}};
@@ -509,8 +510,10 @@ function onCoverFile(ev){const f=ev.target.files&&ev.target.files[0];ev.target.v
   });}
 function renderNav(){const items=[['timeline','🕐','旅程'],['map','🗺️','地図'],['todo','✅','ToDo'],['budget','💰','予算'],['today','🧭','進行']];document.getElementById('nav').innerHTML=items.map(([k,ic,lb])=>`<button class="nb ${state.view===k?'on':''}" onclick="showView('${k}')"><span class="ic">${ic}</span><span class="lb">${lb}</span></button>`).join('');}
 function renderDayTabs(){const show=state.view==='timeline'||state.view==='today';const el=document.getElementById('daytabs');el.style.display=show?'flex':'none';if(!show)return;el.innerHTML=state.itin.map((d,i)=>{const cf=sched(i).some(x=>x.conflict);return `<button class="dtab ${i===state.day?'on':''}" onclick="setDay(${i})"><div class="d mono">DAY ${d.n}${cf?' ⚠️':''}</div><div class="l">${d.label}</div><div class="dt mono">${dDate(i)}</div></button>`;}).join('');}
-function setDay(i){state.day=i;const s=sched(i);state.now=s[0]?s[0].start:mm('09:00');renderDayTabs();renderView();}
-function showView(v){state.view=v;document.querySelectorAll('.view').forEach(el=>el.style.display='none');document.getElementById('v-'+v).style.display=(v==='map')?'flex':'block';renderNav();renderDayTabs();if(v==='map')ensureMap();else renderView();}
+function isRealToday(i){return addISO(state.trip.start,i)===todayISO();}
+function syncNowIfToday(){if(isRealToday(state.day))state.now=nowMin();}
+function setDay(i){state.day=i;if(isRealToday(i)){state.now=nowMin();}else{const s=sched(i);state.now=s[0]?s[0].start:mm('09:00');}renderDayTabs();renderView();}
+function showView(v){state.view=v;if(v==='today')syncNowIfToday();document.querySelectorAll('.view').forEach(el=>el.style.display='none');document.getElementById('v-'+v).style.display=(v==='map')?'flex':'block';renderNav();renderDayTabs();if(v==='map')ensureMap();else renderView();}
 function renderView(){({timeline:renderTimeline,todo:renderTodo,budget:renderBudget,today:renderToday,map:renderMapList}[state.view]||(()=>{}))();}
 
 /* 旅程 */
@@ -844,7 +847,10 @@ function editFromPick(day,id){closePick();state.day=day;showView('timeline');set
 function renderToday(){
   const d=state.itin[state.day],s=sched(state.day),now=state.now;
   const up=s.filter(i=>i.start>=now),past=s.filter(i=>i.start<now),next=up[0],rest=up.slice(1),cur=past.length?past[past.length-1]:null;
-  let h=`<div style="display:flex;align-items:center;justify-content:space-between;background:var(--ink);color:var(--paper);border-radius:14px;padding:12px 14px"><div><div class="mono" style="font-size:10px;letter-spacing:2px;color:#9FB0CC">DAY ${d.n} · ${dDate(state.day)} · いま</div><div class="mono" style="font-size:30px;font-weight:700;line-height:1.1">${fmt(now)}</div></div><div style="display:flex;gap:8px"><button class="btn" style="background:rgba(255,255,255,.12);width:38px;height:38px;font-size:18px;color:#fff" onclick="bump(-15)">‹</button><button class="btn" style="background:rgba(255,255,255,.12);width:38px;height:38px;font-size:18px;color:#fff" onclick="bump(15)">›</button></div></div><div style="font-size:10.5px;color:var(--inkSoft);text-align:center;margin-top:6px">← デモ：時刻を動かすと「次の予定」が変わる →</div>`;
+  const live=isRealToday(state.day);
+  const bellBtn=`<button class="btn" style="background:${state.notifyOn?'var(--shu)':'rgba(255,255,255,.12)'};width:38px;height:38px;font-size:16px;color:#fff" onclick="toggleNotify()" title="次の予定の通知">${state.notifyOn?'🔔':'🔕'}</button>`;
+  const bumpBtns=live?'':`<button class="btn" style="background:rgba(255,255,255,.12);width:38px;height:38px;font-size:18px;color:#fff" onclick="bump(-15)">‹</button><button class="btn" style="background:rgba(255,255,255,.12);width:38px;height:38px;font-size:18px;color:#fff" onclick="bump(15)">›</button>`;
+  let h=`<div style="display:flex;align-items:center;justify-content:space-between;background:var(--ink);color:var(--paper);border-radius:14px;padding:12px 14px"><div><div class="mono" style="font-size:10px;letter-spacing:2px;color:#9FB0CC">DAY ${d.n} · ${dDate(state.day)} · ${live?'🔴 いま':'いま（プレビュー）'}</div><div class="mono" style="font-size:30px;font-weight:700;line-height:1.1">${fmt(now)}</div></div><div style="display:flex;gap:8px">${bellBtn}${bumpBtns}</div></div><div style="font-size:10.5px;color:var(--inkSoft);text-align:center;margin-top:6px">${live?(state.notifyOn?'🔔 次の予定が近づいたら通知するよ（このタブを開いてる間）':'🔔を押すと次の予定の通知をONにできるよ'):'← ‹›で時刻を動かして「次の予定」をプレビューできるよ →'}</div>`;
   if(cur)h+=`<div style="font-size:12px;color:var(--inkSoft);margin-top:14px">いま：${cur.icon||''} ${esc(cur.title)}</div>`;
   if(next){h+=`<div style="margin-top:8px;background:var(--panel);border:2px solid var(--shu);border-radius:16px;overflow:hidden"><div style="background:var(--shu);color:#fff;font-size:11px;font-weight:700;letter-spacing:1px;padding:5px 14px">次の予定</div><div style="padding:14px 16px 16px"><div style="display:flex;align-items:baseline;gap:10px"><span class="mono" style="font-size:26px;font-weight:700">${fmt(next.start)}</span><span style="font-size:22px">${next.icon||''}</span></div><div style="font-size:18px;font-weight:700;margin-top:6px">${esc(next.title)}</div>${itemSub(next)?`<div style="font-size:13px;color:var(--inkSoft);margin-top:3px">${esc(itemSub(next))}</div>`:''}${next.memo?`<div style="font-size:12.5px;color:var(--inkSoft);margin-top:6px">${esc(next.memo)}</div>`:''}${next.resv?`<div style="display:inline-block;margin-top:9px;background:var(--shuSoft);color:var(--shu);font-size:12px;font-weight:600;padding:4px 10px;border-radius:8px">${esc(next.resv)}</div>`:''}${souvHtml(next.id)}${(next.lat!=null||next.phone)?`<div style="display:flex;gap:8px;margin-top:13px">${next.lat!=null?`<a class="btn p" style="flex:1;padding:10px 0;font-size:13px;text-decoration:none" href="https://www.google.com/maps/search/?api=1&query=${next.lat},${next.lng}" target="_blank" rel="noreferrer">📍 地図で開く</a>`:''}${next.phone?`<a class="btn s" style="flex:0 0 auto;padding:10px 16px;font-size:13px;text-decoration:none" href="tel:${next.phone}">📞 電話</a>`:''}</div>`:''}</div></div>`;}
   else h+=`<div style="text-align:center;color:var(--inkSoft);padding:30px 0"><div style="font-size:30px">🌙</div><div style="font-size:14px;font-weight:600;color:var(--ink);margin-top:6px">本日の予定は完了！</div></div>`;
@@ -852,6 +858,41 @@ function renderToday(){
   document.getElementById('v-today').innerHTML=h;
 }
 function bump(d){state.now=Math.max(0,Math.min(1439,state.now+d));renderToday();}
+
+/* 通知：次の予定が近づいたら知らせる（このタブを開いている間だけ有効・15分前）*/
+const REMIND_LEAD=15;
+let notifiedIds=new Set();
+async function toggleNotify(){
+  if(!state.notifyOn){
+    if(typeof Notification!=='undefined'&&Notification.permission==='default'){try{await Notification.requestPermission();}catch(e){}}
+    state.notifyOn=true;
+    const ok=typeof Notification!=='undefined'&&Notification.permission==='granted';
+    toast(ok?'通知ON！このタブを開いていれば知らせるよ':'通知ON（アプリ内でお知らせするよ）',2400);
+  }else{state.notifyOn=false;toast('通知OFF',1700);}
+  if(state.view==='today')renderToday();
+}
+function fireReminder(it){
+  const text=`${it.icon||''} ${it.title}（${fmt(it.start)}〜）`;
+  if(typeof Notification!=='undefined'&&Notification.permission==='granted'){try{new Notification('⏰ まもなく次の予定',{body:text,tag:it.id});}catch(e){}}
+  toast('⏰ '+text,6000);
+  if(navigator.vibrate)try{navigator.vibrate([120,60,120]);}catch(e){}
+}
+function checkReminders(){
+  if(!state.notifyOn||state.screen!=='trip'||!state.itin.length)return;
+  const day=state.itin.findIndex((d,i)=>isRealToday(i));
+  if(day<0)return;
+  const now=nowMin();
+  sched(day).forEach(it=>{
+    if(notifiedIds.has(it.id))return;
+    const diff=it.start-now;
+    if(diff<=REMIND_LEAD&&diff>=-1){notifiedIds.add(it.id);fireReminder(it);}
+  });
+}
+/* 進行タブを見ている間、時計を自動で進める＋通知チェック */
+setInterval(()=>{
+  if(state.screen==='trip'&&state.view==='today'){syncNowIfToday();renderToday();}
+  checkReminders();
+},20000);
 
 /* 地図（ピン＝予定） */
 function ensureMap(){
@@ -932,14 +973,21 @@ function buildHTML(){
 /* 取り込み用JSON（旅の司令塔インポート形式 tabi-shirei-plan-v1）：エクスポートとインポートで同じスキーマを共有 */
 const IMPORT_FORMAT='tabi-shirei-plan-v1';
 const DEFAULT_ICON={move:'🚌',stay:'🏨',sight:'⛩️',food:'🍜',shop:'🛍️',play:'🎉'};
+function toCoord(v,max){if(v==null||v==='')return null;const n=+v;return isFinite(n)&&Math.abs(n)<=max?n:null;}
 function revReserved(r){return r==='✅予約済'?'確定':(r==='⬜未予約'?'要予約':'');}
 function mapReserved(r){r=String(r||'').trim();if(/確定|予約済|OK|✅/i.test(r))return '✅予約済';if(/要予約|未定|未予約|⬜/.test(r))return '⬜未予約';return '';}
 function tripToImportObj(){
   const days=state.itin.map(d=>({label:d.label||'',items:(d.items||[]).map(it=>{
     const kind=BUILTIN_KIND[it.kind]?it.kind:'sight';
     const o={kind,icon:it.icon||'',title:it.title||'新しい予定',start:fmt(it.t!=null?it.t:0),end:fmt(it.end!=null?it.end:(it.t||0))};
-    if(kind==='move'){if(it.fromName)o.from=it.fromName;if(it.toName)o.to=it.toName;}
-    else if(it.area)o.place=it.area;
+    if(kind==='move'){
+      if(it.fromName)o.from=it.fromName;if(it.toName)o.to=it.toName;
+      if(it.fromLat!=null&&it.fromLng!=null){o.from_lat=it.fromLat;o.from_lng=it.fromLng;}
+      if(it.toLat!=null&&it.toLng!=null){o.to_lat=it.toLat;o.to_lng=it.toLng;}
+    }else{
+      if(it.area)o.place=it.area;
+      if(it.lat!=null&&it.lng!=null){o.lat=it.lat;o.lng=it.lng;}
+    }
     if(it.memo)o.memo=it.memo;
     const r=revReserved(it.resv);if(r)o.reserved=r;
     const cost=itemCost(it);if(cost)o.cost=cost;
@@ -968,8 +1016,17 @@ function importObjToBlob(obj){
       const cost=Math.max(0,Math.round(+raw.cost||0));
       const it={id:uid(),icon:(raw.icon&&/\S/.test(String(raw.icon)))?String(raw.icon).trim():(DEFAULT_ICON[kind]||'📍'),kind,title:String(raw.title||'新しい予定'),t:start,end,memo:raw.memo?String(raw.memo):'',cLo:cost,cHi:cost};
       const rv=mapReserved(raw.reserved);if(rv)it.resv=rv;
-      if(kind==='move'){if(raw.from)it.fromName=String(raw.from);if(raw.to)it.toName=String(raw.to);}
-      else if(raw.place)it.area=String(raw.place);
+      if(kind==='move'){
+        if(raw.from)it.fromName=String(raw.from);if(raw.to)it.toName=String(raw.to);
+        const fLat=toCoord(raw.from_lat,90),fLng=toCoord(raw.from_lng,180);
+        if(fLat!=null&&fLng!=null){it.fromLat=fLat;it.fromLng=fLng;}
+        const tLat=toCoord(raw.to_lat,90),tLng=toCoord(raw.to_lng,180);
+        if(tLat!=null&&tLng!=null){it.toLat=tLat;it.toLng=tLng;it.lat=tLat;it.lng=tLng;}
+      }else{
+        if(raw.place)it.area=String(raw.place);
+        const la=toCoord(raw.lat,90),lo=toCoord(raw.lng,180);
+        if(la!=null&&lo!=null){it.lat=la;it.lng=lo;}
+      }
       if(raw.url)it.url=String(raw.url);
       if(raw.phone)it.phone=String(raw.phone);
       if(raw.hours)it.hours=String(raw.hours);
@@ -1011,14 +1068,14 @@ function renderTripIO(){const f=state.exportFmt||'md';
   let h=`<div class="note" style="margin-top:0">このしおりの旅程・予算・持ち物・お土産の書き出しと、ほかの計画書の読み込みができるよ。</div>`;
   h+=`<button class="btn s" style="width:100%;padding:10px 0;font-size:13px;margin:12px 0 14px" onclick="openImport()">📥 計画書を読み込む（インポート）</button>`;
   h+=`<div style="display:flex;gap:6px;margin-bottom:12px"><button class="btn ${f==='md'?'p':'s'}" style="flex:1;padding:9px 0;font-size:12.5px" onclick="setExportFmt('md')">📝 Markdown</button><button class="btn ${f==='html'?'p':'s'}" style="flex:1;padding:9px 0;font-size:12.5px" onclick="setExportFmt('html')">🌐 HTML</button><button class="btn ${f==='json'?'p':'s'}" style="flex:1;padding:9px 0;font-size:12.5px" onclick="setExportFmt('json')">🗂️ JSON</button></div>`;
-  h+=`<div style="font-size:11.5px;color:var(--inkSoft);margin-bottom:8px">${f==='md'?'旅程・予算・持ち物・お土産をMarkdownで。メモアプリやGitHubに貼れるよ。':f==='html'?'スタンドアロンのHTML。ブラウザで開けて共有もできる「しおり」。カバー写真も埋め込むよ。':'このしおりを「旅の司令塔インポート形式」で書き出すよ。バックアップや、他のしおりへの読み込みに使えるよ（写真・地図ピンは含まれないよ）。'}</div>`;
+  h+=`<div style="font-size:11.5px;color:var(--inkSoft);margin-bottom:8px">${f==='md'?'旅程・予算・持ち物・お土産をMarkdownで。メモアプリやGitHubに貼れるよ。':f==='html'?'スタンドアロンのHTML。ブラウザで開けて共有もできる「しおり」。カバー写真も埋め込むよ。':'このしおりを「旅の司令塔インポート形式」で書き出すよ。バックアップや、他のしおりへの読み込みに使えるよ（地図ピンの緯度経度は含まれるけど、写真は含まれないよ）。'}</div>`;
   h+=`<div style="display:flex;gap:8px;margin-bottom:8px"><button class="btn p" style="flex:1;padding:10px 0;font-size:13px" onclick="copyExport()">コピー</button><button class="btn s" style="flex:1;padding:10px 0;font-size:13px" onclick="downloadExport()">${f==='md'?'.md':f==='html'?'.html':'.json'}で保存</button></div>`;
   h+=`<textarea id="exOut" readonly class="mono" style="height:260px;font-size:11px;line-height:1.5">${esc(curExportText())}</textarea>`;
   document.getElementById('tripIOTab').innerHTML=h;
 }
 function copyExport(){const ta=document.getElementById('exOut');if(ta){ta.select();try{document.execCommand('copy');}catch(e){}}if(navigator.clipboard)navigator.clipboard.writeText(curExportText()).catch(()=>{});toast('コピーしたよ');}
 function downloadExport(){const f=state.exportFmt||'md';const ext=f==='md'?'.md':(f==='html'?'.html':'.json');const type=f==='md'?'text/markdown':(f==='html'?'text/html':'application/json');const name=(state.trip.title||'旅のしおり').replace(/[\\\/:*?"<>|]/g,'_')+ext;try{const blob=new Blob([curExportText()],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('保存したよ');}catch(e){toast('この環境ではDL不可。コピーを使ってね');}}
-function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),1700);}
+function toast(t,ms){const el=document.getElementById('toast');el.textContent=t;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),ms||1700);}
 (function(){bootstrap();renderShiori();setScreen('list');})();
 </script>
 </body>
