@@ -286,6 +286,19 @@
     </div>
   </div>
 
+  <!-- 持ち物アイテム編集 -->
+  <div id="pkItemEd" class="sheet">
+    <button class="sheetx" onclick="requestCancelPkItemEd()" aria-label="閉じる">✕</button>
+    <h3>持ち物を編集</h3>
+    <label>名前</label><input id="pkEdName" oninput="pkItemEdChange('name',this.value)" />
+    <label>グループ</label><select id="pkEdGrp" onchange="pkItemEdChange('grp',this.value)"><option value="持ち物">持ち物</option><option value="買うもの">買うもの</option><option value="その他">その他</option></select>
+    <div class="edbtns">
+      <button class="btn s" style="flex:0 0 auto;padding:11px 14px;color:var(--shu)" onclick="pkItemDelete()">削除</button>
+      <button class="btn s" style="flex:1;padding:11px 0" onclick="requestCancelPkItemEd()">キャンセル</button>
+      <button class="btn p" style="flex:1;padding:11px 0" onclick="closePkItemEd()">完了</button>
+    </div>
+  </div>
+
   <!-- 計画書の読み込み -->
   <div id="importSheet" class="sheet">
     <button class="sheetx" onclick="closeImport()" aria-label="閉じる">✕</button>
@@ -355,7 +368,7 @@ const parseT=v=>{const t=(v||'').match(/^(\d{1,2}):(\d{2})$/);return t?(+t[1])*6
 const yen=n=>'¥'+(n||0).toLocaleString('ja-JP');
 const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
-const APP_VERSION='1.5.0';
+const APP_VERSION='1.6.0';
 const TRIP0={name:'東北 温泉＆グルメ一人旅 / 司令塔',title:'本厚木発・新青森帰り',start:'2026-08-04',budget:130000};
 const WD=['日','月','火','水','木','金','土'];
 const ymd=s=>{const[y,m,d]=(s||'2026-08-04').split('-').map(Number);return new Date(y,m-1,d);};
@@ -415,10 +428,16 @@ const SEED_DAYS=[
   {id:'d4j',at:mm('20:29'),dur:0,icon:'🏠',kind:'stay',title:'本厚木 着',area:'おつかれさま！',cLo:0,cHi:0,cat:'その他'},
  ]},
 ];
-const PACK_BASE={持ち物:['着替え','パジャマ','ハンドタオル','ボディタオル','髭剃り','歯ブラシ','歯磨き粉','マウスウォッシュ','モバイルバッテリー','ACアダプター','コンセント','タブレット','FireTV','ポータブルスピーカー','イヤホン','水筒','薬','化粧水','香水','シャンプー・リンス','日焼け止め','自撮り棒','折りたたみ傘','アレジオン','目薬','リップクリーム','手提げカバン','保冷バッグ','ハンディファン','日傘','爪研ぎ','肉球'],買うもの:['お茶2L','スポーツドリンク','野菜ジュース','枝豆','カップスープ','チョコ']};
+const PACK_SHOPPING=['お茶2L','スポーツドリンク','野菜ジュース','枝豆','カップスープ','チョコ'];
+const PACK_TEMPLATES={
+  '日帰り旅行':{持ち物:['モバイルバッテリー','イヤホン','日傘','ハンディファン','撮影機材(カメラ、三脚、バッテリー)'],買うもの:PACK_SHOPPING},
+  '日帰り温泉':{持ち物:['ボディタオル','モバイルバッテリー','ACアダプター','イヤホン','水筒','館内着','化粧水','香水','シャンプー・リンス','シェーバー','ハンドタオル3枚','日焼け止め','折りたたみ傘','目薬','手提げカバン','ビニール袋','本','空気枕','ハンディファン','日傘','撮影機材(カメラ、三脚、バッテリー)'],買うもの:PACK_SHOPPING},
+  '宿泊':{持ち物:['着替え','パジャマ','ハンドタオル','ボディタオル','髭剃り','歯ブラシ','歯磨き粉','マウスウォッシュ','モバイルバッテリー','ACアダプター','コンセント','タブレット','FireTV','ポータブルスピーカー','イヤホン','水筒','薬','化粧水','香水','シャンプー・リンス','日焼け止め','自撮り棒','折りたたみ傘','アレジオン','目薬','リップクリーム','手提げカバン','保冷バッグ','ハンディファン','日傘','爪研ぎ','肉球','撮影機材(カメラ、三脚、バッテリー、充電器)'],買うもの:PACK_SHOPPING},
+};
+const PACK_TPL_DEFAULT='宿泊';
 
 const GEOFIX={d1e:[38.7047,139.9677],d1f:[38.7043,139.9721],d1j:[38.6149,139.6072],d2a:[38.616,139.6075],d2d:[39.3923,140.0491],d2m:[39.3923,140.0491],d2g:[39.7261,140.1444],d2h:[39.7169,140.1297],d2i:[39.7169,140.1297],d2j:[39.7217,140.1244],d2k:[39.7184,140.1132],d3e:[40.5605,139.9848],d3h:[40.6148,139.8627],d4a:[40.6148,139.8627],d4d:[40.8288,140.7358],d4e:[40.8276,140.6935]};
-let state={screen:'list',cur:null,index:[],delId:null,view:'timeline',day:0,now:nowMin(),notifyOn:false,trip:Object.assign({},TRIP0),itin:[],photos:[],packing:[],souv:[],todoTab:'pack',svId:null,svNew:false,edId:null,edDay:0,edSnap:null,edNew:false,placePhoto:null,pkConfirm:false};
+let state={screen:'list',cur:null,index:[],delId:null,view:'timeline',day:0,now:nowMin(),notifyOn:false,trip:Object.assign({},TRIP0),itin:[],photos:[],packing:[],souv:[],todoTab:'pack',svId:null,svNew:false,edId:null,edDay:0,edSnap:null,edNew:false,placePhoto:null,pkConfirm:false,pkTplOpen:false,pkId:null,pkSnap:null};
 let map=null,layer=null,mapInit=false,itemMarkers={};
 
 const LS={get(k){try{const v=localStorage.getItem(k);return v==null?null:{key:k,value:v};}catch(e){return null;}},set(k,v){try{localStorage.setItem(k,v);return true;}catch(e){return false;}},del(k){try{localStorage.removeItem(k);}catch(e){}}};
@@ -518,7 +537,7 @@ function renderShiori(){
   document.getElementById('shiori').innerHTML=h;
 }
 function seedItin(){state.itin=SEED_DAYS.map(d=>({n:d.n,label:d.label,date:d.date,items:d.items.map(it=>Object.assign({},it))}));}
-function seedPacking(){state.packing=[];Object.keys(PACK_BASE).forEach(g=>PACK_BASE[g].forEach(nm=>state.packing.push({id:uid(),name:nm,grp:g,done:false})));}
+function seedPacking(tplKey){const tpl=PACK_TEMPLATES[tplKey]||PACK_TEMPLATES[PACK_TPL_DEFAULT];state.packing=[];Object.keys(tpl).forEach(g=>tpl[g].forEach(nm=>state.packing.push({id:uid(),name:nm,grp:g,done:false})));}
 
 function schedule(items){const out=(items||[]).map(it=>{const start=it.t!=null?it.t:0;const end=it.end!=null?it.end:start;return Object.assign({},it,{start,end});});out.sort((a,b)=>(a.start-b.start)||(a.end-b.end));let maxEnd=null;out.forEach(it=>{it.conflict=(maxEnd!=null&&it.start<maxEnd);maxEnd=(maxEnd==null)?it.end:Math.max(maxEnd,it.end);});return out;}
 const sched=i=>schedule(state.itin[i].items);
@@ -859,17 +878,34 @@ function packHtml(){
   const total=state.packing.length,done=state.packing.filter(p=>p.done).length,left=total-done;
   let h=`<div class="bk"><div class="mono" style="font-size:10.5px;letter-spacing:2px;color:#9FB0CC">持ち物チェック（消し込み式）</div><div style="display:flex;align-items:baseline;gap:8px;margin-top:2px"><div class="mono" style="font-size:30px;font-weight:700">残り ${left}</div><div style="font-size:12px;color:#9FB0CC">/ 全${total}</div></div><div style="margin-top:10px"><div class="barwrap" style="background:rgba(255,255,255,.15)"><div class="seg" style="width:${total?done/total*100:0}%;background:#7FD1A8"></div></div></div></div>`;
   h+=`<div style="display:flex;gap:7px;margin:14px 0 6px"><input id="pkAdd" placeholder="追加するものを入力" style="flex:1" onkeydown="if(event.key==='Enter')addPackInline()"><button class="btn p" style="flex:0 0 auto;padding:0 16px" onclick="addPackInline()">追加</button></div>`;
-  if(state.pkConfirm)h+=`<div style="display:flex;gap:7px;align-items:center;background:var(--shuSoft);border-radius:10px;padding:8px 10px;margin-bottom:8px"><span style="flex:1;font-size:12px;color:var(--shu);font-weight:600">テンプレに戻す？（今の状態は消えるよ）</span><button class="btn shu" style="padding:6px 12px;font-size:12px" onclick="resetPackDo()">はい</button><button class="btn s" style="padding:6px 12px;font-size:12px" onclick="state.pkConfirm=false;renderTodo()">やめる</button></div>`;
-  else h+=`<div style="margin-bottom:8px"><button class="btn s" style="width:100%;padding:8px 0;font-size:11.5px" onclick="state.pkConfirm=true;renderTodo()">全リセット（テンプレ読み直し）</button></div>`;
+  if(state.pkConfirm)h+=`<div style="display:flex;gap:7px;align-items:center;background:var(--shuSoft);border-radius:10px;padding:8px 10px;margin-bottom:8px"><span style="flex:1;font-size:12px;color:var(--shu);font-weight:600">テンプレ『${esc(state.pkConfirm)}』に切り替える？（今の状態は消えるよ）</span><button class="btn shu" style="padding:6px 12px;font-size:12px" onclick="resetPackDo('${esc(state.pkConfirm)}')">はい</button><button class="btn s" style="padding:6px 12px;font-size:12px" onclick="cancelPkTplPick()">やめる</button></div>`;
+  else if(state.pkTplOpen)h+=`<div style="background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:10px;margin-bottom:8px"><div style="font-size:11.5px;color:var(--inkSoft);font-weight:700;margin-bottom:8px">テンプレを選んでね（今の状態は消えるよ）</div><div style="display:flex;flex-direction:column;gap:6px">${Object.keys(PACK_TEMPLATES).map(k=>`<button class="btn s" style="width:100%;padding:9px 0;font-size:12.5px" onclick="pickPkTpl('${esc(k)}')">${esc(k)}</button>`).join('')}</div><button class="btn s" style="width:100%;padding:7px 0;font-size:11px;margin-top:8px;color:var(--inkSoft)" onclick="cancelPkTplPick()">やめる</button></div>`;
+  else h+=`<div style="margin-bottom:8px"><button class="btn s" style="width:100%;padding:8px 0;font-size:11.5px" onclick="state.pkTplOpen=true;renderTodo()">🌟 テンプレを選ぶ</button></div>`;
   if(total&&left===0)h+=`<div style="text-align:center;padding:24px 0"><div style="font-size:38px">🎉</div><div style="font-size:16px;font-weight:700;margin-top:6px">忘れ物なし！</div><div style="font-size:12px;color:var(--inkSoft);margin-top:3px">準備かんりょう。いってらっしゃい〜</div></div>`;
-  ['持ち物','買うもの','その他'].forEach(g=>{const active=state.packing.filter(p=>p.grp===g&&!p.done);if(!active.length)return;h+=`<div class="sec" style="margin-top:14px">${g}（残り${active.length}）</div>`;active.forEach(p=>{h+=`<div class="pkitem" onclick="togglePack('${p.id}')"><div class="pkck"></div><div class="nm">${esc(p.name)}</div></div>`;});});
-  const di=state.packing.filter(p=>p.done);if(di.length){h+=`<div class="sec" style="margin-top:18px">済み（${di.length}）— タップで戻す</div>`;di.forEach(p=>{h+=`<div class="pkitem pkdone" onclick="togglePack('${p.id}')"><div class="pkck">✓</div><div class="nm">${esc(p.name)}</div></div>`;});}
-  h+=`<div class="note">タップで「済み」に。全部消えたら忘れ物なし！</div>`;
+  ['持ち物','買うもの','その他'].forEach(g=>{const active=state.packing.filter(p=>p.grp===g&&!p.done);if(!active.length)return;h+=`<div class="sec" style="margin-top:14px">${g}（残り${active.length}）</div>`;active.forEach(p=>{h+=`<div class="pkitem"><div class="pkck" onclick="event.stopPropagation();togglePack('${p.id}')"></div><div class="nm" onclick="openPkItemEd('${p.id}')">${esc(p.name)}</div></div>`;});});
+  const di=state.packing.filter(p=>p.done);if(di.length){h+=`<div class="sec" style="margin-top:18px">済み（${di.length}）— タップで戻す</div>`;di.forEach(p=>{h+=`<div class="pkitem pkdone"><div class="pkck" onclick="event.stopPropagation();togglePack('${p.id}')">✓</div><div class="nm" onclick="openPkItemEd('${p.id}')">${esc(p.name)}</div></div>`;});}
+  h+=`<div class="note">チェックで「済み」に。名前をタップすると編集・削除ができるよ。</div>`;
   return h;
 }
 function togglePack(id){const p=state.packing.find(x=>x.id===id);if(p){p.done=!p.done;saveState();renderTodo();}}
 function addPackInline(){const el=document.getElementById('pkAdd');const v=(el&&el.value||'').trim();if(!v)return;state.packing.push({id:uid(),name:v,grp:'持ち物',done:false});saveState();renderTodo();const n=document.getElementById('pkAdd');if(n)n.focus();}
-function resetPackDo(){state.pkConfirm=false;seedPacking();saveState();renderTodo();toast('テンプレを読み直したよ');}
+function pickPkTpl(tplKey){state.pkConfirm=tplKey;renderTodo();}
+function cancelPkTplPick(){state.pkConfirm=false;state.pkTplOpen=false;renderTodo();}
+function resetPackDo(tplKey){state.pkConfirm=false;state.pkTplOpen=false;seedPacking(tplKey);saveState();renderTodo();toast('テンプレを読み直したよ');}
+/* 持ち物アイテムの個別編集（名前変更・グループ変更・削除） */
+function curPkItem(){return state.packing.find(p=>p.id===state.pkId);}
+function openPkItemEd(id){const p=state.packing.find(x=>x.id===id);if(!p)return;state.pkId=id;state.pkSnap=JSON.parse(JSON.stringify(p));
+  document.getElementById('pkEdName').value=p.name||'';
+  document.getElementById('pkEdGrp').value=p.grp||'持ち物';
+  document.getElementById('pkItemEd').classList.add('on');showBackdrop(requestCancelPkItemEd);renderTodo();}
+function pkItemEdChange(k,v){const p=curPkItem();if(!p)return;p[k]=v;saveState();renderTodo();}
+function pkItemIsDirty(){const p=curPkItem();if(!p)return false;return JSON.stringify(p)!==JSON.stringify(state.pkSnap||{});}
+function requestCancelPkItemEd(){if(pkItemIsDirty())askDiscard(cancelPkItemEd);else cancelPkItemEd();}
+function cancelPkItemEd(){const p=curPkItem();
+  if(p&&state.pkSnap){const wasDirty=JSON.stringify(p)!==JSON.stringify(state.pkSnap);Object.keys(p).forEach(k=>delete p[k]);Object.assign(p,state.pkSnap);if(wasDirty)toast('変更を破棄したよ');}
+  saveState();closePkItemEd();renderTodo();}
+function closePkItemEd(){document.getElementById('pkItemEd').classList.remove('on');hideBackdrop();state.pkId=null;state.pkSnap=null;}
+function pkItemDelete(){if(state.pkId){state.packing=state.packing.filter(x=>x.id!==state.pkId);saveState();toast('削除したよ');}closePkItemEd();renderTodo();}
 
 /* お土産 */
 function seedSouv(){state.souv=[
