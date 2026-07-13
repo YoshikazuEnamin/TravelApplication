@@ -112,6 +112,10 @@
   .sheet h3{margin:2px 0 10px;font-size:15px}
   .sheetx{position:absolute;top:10px;right:12px;width:34px;height:34px;border:none;border-radius:50%;background:var(--chip);color:var(--ink);font-size:17px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:3}
   .sheetx:active{transform:scale(.92)}
+  #discardBox{display:none;position:absolute;left:24px;right:24px;top:50%;transform:translateY(-50%);background:var(--panel);border-radius:16px;padding:18px 18px 16px;box-shadow:0 14px 40px rgba(21,33,59,.35);z-index:1500}
+  #discardBox.on{display:block}
+  #discardBox p{margin:0 0 14px;font-size:13.5px;font-weight:700;color:var(--ink);text-align:center;line-height:1.6}
+  #discardBox .row2{display:flex;gap:8px}
   label{display:block;font-size:11px;color:var(--inkSoft);font-weight:700;margin:9px 0 4px}
   input,select,textarea{width:100%;font-family:inherit;font-size:13px;color:var(--ink);border:1px solid var(--rule);border-radius:9px;padding:9px;background:#fff}
   textarea{resize:vertical;min-height:46px}
@@ -214,7 +218,7 @@
 
   <!-- 予定編集 -->
   <div id="itemEd" class="sheet">
-    <button class="sheetx" onclick="cancelItemEd()" aria-label="閉じる">✕</button>
+    <button class="sheetx" onclick="requestCancelItemEd()" aria-label="閉じる">✕</button>
     <h3 id="ieTitle">予定を編集</h3>
     <div id="ieBody"></div>
     <div class="edbtns">
@@ -225,7 +229,7 @@
 
   <!-- 旅タイトル編集 -->
   <div id="tripEd" class="sheet">
-    <button class="sheetx" onclick="cancelTripEd()" aria-label="閉じる">✕</button>
+    <button class="sheetx" onclick="requestCancelTripEd()" aria-label="閉じる">✕</button>
     <h3>旅の情報を編集</h3>
     <div id="teTabBar"></div>
     <div id="tripInfoTab">
@@ -247,7 +251,7 @@
 
   <!-- 種別・カテゴリ編集 -->
   <div id="catEd" class="sheet">
-    <button class="sheetx" onclick="closeCatEd()" aria-label="閉じる">✕</button>
+    <button class="sheetx" onclick="requestCancelCatEd()" aria-label="閉じる">✕</button>
     <h3>種別の編集</h3>
     <div class="note" style="margin-top:0">種別＝路線・ピンの色＆予算の分類だよ。「既定に保存」で次に作る新しいしおりの初期値になる。</div>
     <div class="sec" style="margin-top:14px">🚃 種別（路線・ピンの色／予算分類）</div>
@@ -258,14 +262,14 @@
       <button class="btn s" style="flex:1;padding:10px 0" onclick="saveEdAsDefaults()">既定に保存</button>
     </div>
     <div class="edbtns">
-      <button class="btn s" style="flex:1;padding:11px 0" onclick="closeCatEd()">キャンセル</button>
+      <button class="btn s" style="flex:1;padding:11px 0" onclick="requestCancelCatEd()">キャンセル</button>
       <button class="btn p" style="flex:1;padding:11px 0" onclick="applyCatEd()">完了</button>
     </div>
   </div>
 
   <!-- お土産編集 -->
   <div id="souvEd" class="sheet">
-    <button class="sheetx" onclick="cancelSouvEd()" aria-label="閉じる">✕</button>
+    <button class="sheetx" onclick="requestCancelSouvEd()" aria-label="閉じる">✕</button>
     <h3>お土産を編集</h3>
     <label>名前</label><input id="svEdName" oninput="souvEdChange('name',this.value)" />
     <label>買う場所（旅程の予定）</label><select id="svEdSpot" onchange="souvEdChange('spotId',this.value)"></select>
@@ -277,7 +281,7 @@
     <div class="ckline"><input type="checkbox" id="svEdBought" onchange="souvSetBought(this.checked)" /><span>買った（予算の土産費に反映）</span></div>
     <div class="edbtns">
       <button class="btn s" style="flex:0 0 auto;padding:11px 14px;color:var(--shu)" onclick="souvDelete()">削除</button>
-      <button class="btn s" style="flex:1;padding:11px 0" onclick="cancelSouvEd()">キャンセル</button>
+      <button class="btn s" style="flex:1;padding:11px 0" onclick="requestCancelSouvEd()">キャンセル</button>
       <button class="btn p" style="flex:1;padding:11px 0" onclick="closeSouvEd()">完了</button>
     </div>
   </div>
@@ -320,6 +324,13 @@
   </div>
 
   <div id="backdrop" onclick="if(_sheetCloser)_sheetCloser()"></div>
+  <div id="discardBox">
+    <p id="discardMsg">変更を破棄してもいいですか？</p>
+    <div class="row2">
+      <button class="btn s" style="flex:1;padding:10px 0" onclick="discardNo()">いいえ</button>
+      <button class="btn shu" style="flex:1;padding:10px 0" onclick="discardYes()">はい</button>
+    </div>
+  </div>
   <div id="nav"></div>
   <div id="shiori"></div>
   <button id="fab" class="fab" onclick="newShiori()" aria-label="新しい旅">＋</button>
@@ -460,7 +471,7 @@ function commitNewTrip(){
   LS.set(tripKey(id),JSON.stringify(blob));
   state.index.push({id,name:blob.meta.name,title:blob.meta.title,start:blob.meta.start});
   saveIndex();
-  state.creatingNew=false;
+  state.creatingNew=false;state.trSnap=null;
   document.getElementById('tripEd').classList.remove('on');hideBackdrop();
   toast('新しいしおりを作成したよ');
   openTrip(id);
@@ -555,7 +566,7 @@ function addItem(){const it=makeItem();state.itin[state.day].items.push(it);norm
 function openItemEd(day,id,isNew){const f=findItem(id);if(!f)return;state.edId=id;state.edDay=f.day;state.edNew=!!isNew;state.edTab='基本';state.edSnap=JSON.parse(JSON.stringify(f.item));
   document.getElementById('ieTitle').textContent=isNew?'予定を追加':'予定を編集';
   renderItemForm();
-  document.getElementById('itemEd').classList.add('on');showBackdrop(closeItemEd);
+  document.getElementById('itemEd').classList.add('on');showBackdrop(requestCancelItemEd);
 }
 const IE_TABS=['基本','時刻・場所','詳細'];
 const ICONS=['📍','⛩️','♨️','🏨','🌊','🗻','🏞️','🌅','🚃','🚅','✈️','🚌','🚗','🚢','🍜','🍣','🍱','🍶','☕','🍡','🍵','🧳','🎁','📷','🌸','🐴','🎋','🏯'];
@@ -613,7 +624,7 @@ function openPinPicker(target){
   document.getElementById('pinPickSheet').classList.add('on');showBackdrop(closePinPicker);
   setTimeout(()=>initPinPickMap(lat,lng),60);
 }
-function closePinPicker(){document.getElementById('pinPickSheet').classList.remove('on');showBackdrop(closeItemEd);}
+function closePinPicker(){document.getElementById('pinPickSheet').classList.remove('on');showBackdrop(requestCancelItemEd);}
 function placePinPickMarker(lat,lng){
   if(!pinPickMapObj)return;
   if(pinPickMarker)pinPickMarker.setLatLng([lat,lng]);
@@ -721,9 +732,13 @@ function clearPin(target){const it=curItem();if(!it)return;if(target==='from'){i
 function openCatEd(){
   state.edKinds=Object.keys(KIND).map(code=>({code,ja:KIND[code].ja,c:KIND[code].c,orig:code}));
   state.edCats=Object.keys(CAT).map(name=>({name,c:CAT[name],orig:name}));
+  state.edKindsSnap=JSON.stringify(state.edKinds);state.edCatsSnap=JSON.stringify(state.edCats);
   state.swOpen=null;renderKindEd();renderCatEd();
-  document.getElementById('catEd').classList.add('on');showBackdrop(closeCatEd);
+  document.getElementById('catEd').classList.add('on');showBackdrop(requestCancelCatEd);
 }
+/* ✕・キャンセル・バックドロップタップ：編集中の下書き（edKinds/edCats）を破棄するだけ（applyCatEdを押すまでKIND/CATは変わらない）。変更があれば確認する */
+function catEdIsDirty(){return JSON.stringify(state.edKinds)!==state.edKindsSnap||JSON.stringify(state.edCats)!==state.edCatsSnap;}
+function requestCancelCatEd(){if(catEdIsDirty())askDiscard(closeCatEd);else closeCatEd();}
 function closeCatEd(){document.getElementById('catEd').classList.remove('on');hideBackdrop();}
 function ceRow(type,i,name,color){
   const open=(state.swOpen===type+i);
@@ -771,9 +786,12 @@ function curItem(){const f=findItem(state.edId);return f?f.item:null;}
 function afterEdit(){normalize(state.edDay);saveState();renderTimeline();renderDayTabs();if(mapInit)drawMap();renderMapList();}
 function itemEdChange(k,v){const it=curItem();if(!it)return;it[k]=v;afterEdit();}
 function itemDelete(){const f=findItem(state.edId);if(!f)return;state.itin[f.day].items=state.itin[f.day].items.filter(x=>x.id!==state.edId);normalize(f.day);saveState();closeItemEd();renderTimeline();renderDayTabs();if(mapInit)drawMap();renderMapList();toast('削除したよ');}
+function itemIsDirty(){const f=findItem(state.edId);if(!f)return false;return JSON.stringify(f.item)!==JSON.stringify(state.edSnap||{});}
+/* ✕やバックドロップタップ：変更があれば「破棄していい？」を確認してから、はいの場合だけcancelItemEdを実行する */
+function requestCancelItemEd(){if(itemIsDirty())askDiscard(cancelItemEd);else cancelItemEd();}
 function cancelItemEd(){const f=findItem(state.edId);
   if(state.edNew){if(f){state.itin[f.day].items=state.itin[f.day].items.filter(x=>x.id!==state.edId);normalize(f.day);}toast('追加をやめたよ');}
-  else if(f&&state.edSnap){const it=f.item;Object.keys(it).forEach(k=>delete it[k]);Object.assign(it,state.edSnap);normalize(f.day);toast('変更を元に戻したよ');}
+  else if(f&&state.edSnap){const it=f.item,wasDirty=JSON.stringify(it)!==JSON.stringify(state.edSnap);Object.keys(it).forEach(k=>delete it[k]);Object.assign(it,state.edSnap);normalize(f.day);if(wasDirty)toast('変更を破棄したよ');}
   saveState();closeItemEd();renderTimeline();renderDayTabs();if(mapInit)drawMap();renderMapList();}
 function closeItemEd(){clearTimeout(geoTimer);clearGeoList();document.getElementById('itemEd').classList.remove('on');hideBackdrop();state.edId=null;state.edSnap=null;state.edNew=false;}
 
@@ -787,7 +805,7 @@ function refreshTripEd(){
   document.getElementById('trWarn').innerHTML='';
   document.getElementById('trDays').innerHTML=state.itin.map((d,i)=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span class="mono" style="font-size:11px;color:var(--inkSoft);width:42px">DAY${i+1}</span><input value="${esc(d.label)}" oninput="dayLabelChange(${i},this.value)" /></div>`).join('');
 }
-function openTripEd(){document.getElementById('trName').value=state.trip.name;document.getElementById('trTitle').value=state.trip.title;document.getElementById('trBudget').value=state.trip.budget||0;state.pendingDc=null;refreshTripEd();state.trEdTab='info';renderTripEdTabs();document.getElementById('tripInfoTab').style.display='block';document.getElementById('tripIOTab').style.display='none';document.getElementById('tripEd').classList.add('on');showBackdrop(closeTrip);}
+function openTripEd(){document.getElementById('trName').value=state.trip.name;document.getElementById('trTitle').value=state.trip.title;document.getElementById('trBudget').value=state.trip.budget||0;state.pendingDc=null;refreshTripEd();state.trEdTab='info';renderTripEdTabs();document.getElementById('tripInfoTab').style.display='block';document.getElementById('tripIOTab').style.display='none';state.trSnap={trip:JSON.parse(JSON.stringify(state.trip)),itin:JSON.parse(JSON.stringify(state.itin))};document.getElementById('tripEd').classList.add('on');showBackdrop(requestCancelTripEd);}
 function renderTripEdTabs(){const t=state.trEdTab||'info';document.getElementById('teTabBar').innerHTML=`<div style="display:flex;gap:6px;margin-bottom:14px"><button class="btn ${t==='info'?'p':'s'}" style="flex:1;padding:9px 0;font-size:12.5px" onclick="setTripEdTab('info')">基本情報</button><button class="btn ${t==='io'?'p':'s'}" style="flex:1;padding:9px 0;font-size:12.5px" onclick="setTripEdTab('io')">読み込み・書き出し</button></div>`;}
 function setTripEdTab(t){state.trEdTab=t;renderTripEdTabs();document.getElementById('tripInfoTab').style.display=(t==='info')?'block':'none';document.getElementById('tripIOTab').style.display=(t==='io')?'block':'none';if(t==='io')renderTripIO();}
 function renderTripCalc(){const n=state.itin.length;document.getElementById('trCalc').textContent=`${dDateShort(0)}〜${dDateShort(n-1)} ・ ${n-1}泊${n}日（自動）`;}
@@ -812,11 +830,27 @@ function dayLabelChange(i,v){state.itin[i].label=v;renderDayTabs();saveState();}
 /* 完了（＆バックドロップタップ）：下書き中なら本当に作成を確定する。既存しおりの編集ならただ閉じるだけ（各項目は入力のたびに自動保存済み） */
 function closeTrip(){
   if(state.creatingNew){commitNewTrip();return;}
+  state.trSnap=null;
   document.getElementById('tripEd').classList.remove('on');hideBackdrop();
 }
-/* ✕：下書き中なら何も保存せずに破棄してやめる */
+/* ✕やバックドロップタップ：変更があれば確認してから破棄する（下書き中なら何も保存せずにやめる） */
+function tripIsDirty(){if(!state.trSnap)return false;return JSON.stringify(state.trip)!==JSON.stringify(state.trSnap.trip)||JSON.stringify(state.itin)!==JSON.stringify(state.trSnap.itin);}
+function requestCancelTripEd(){if(tripIsDirty())askDiscard(cancelTripEd);else cancelTripEd();}
 function cancelTripEd(){
-  state.creatingNew=false;
+  if(state.creatingNew){
+    state.creatingNew=false;state.trSnap=null;
+    document.getElementById('tripEd').classList.remove('on');hideBackdrop();
+    return;
+  }
+  if(state.trSnap){
+    const wasDirty=tripIsDirty();
+    state.trip=state.trSnap.trip;state.itin=state.trSnap.itin;
+    if(state.day>=state.itin.length)state.day=state.itin.length-1;
+    state.pendingDc=null;
+    saveState();renderTop();renderDayTabs();renderView();if(mapInit)drawMap();renderMapList();
+    if(wasDirty)toast('変更を破棄したよ');
+  }
+  state.trSnap=null;
   document.getElementById('tripEd').classList.remove('on');hideBackdrop();
 }
 
@@ -878,13 +912,16 @@ function openSouvEd(id,isNew){const s=state.souv.find(x=>x.id===id);if(!s)return
   document.getElementById('svEdTo').value=s.to||'';
   document.getElementById('svEdMemo').value=s.memo||'';
   document.getElementById('svEdBought').checked=!!s.bought;
-  document.getElementById('souvEd').classList.add('on');showBackdrop(closeSouvEd);renderTodo();}
+  document.getElementById('souvEd').classList.add('on');showBackdrop(requestCancelSouvEd);renderTodo();}
 function souvEdChange(k,v){const s=curSouv();if(!s)return;s[k]=v;saveState();renderTodo();}
 function souvSetBought(b){const s=curSouv();if(!s)return;s.bought=b;saveState();renderTodo();}
+/* ✕・キャンセル・バックドロップタップ：変更があれば確認してから破棄する */
+function souvIsDirty(){const s=curSouv();if(!s)return false;return JSON.stringify(s)!==JSON.stringify(state.svSnap||{});}
+function requestCancelSouvEd(){if(souvIsDirty())askDiscard(cancelSouvEd);else cancelSouvEd();}
 function souvDelete(){if(state.svId)delSouv(state.svId);closeSouvEd();}
 function cancelSouvEd(){const s=curSouv();
   if(state.svNew){if(s)state.souv=state.souv.filter(x=>x.id!==state.svId);toast('追加をやめたよ');}
-  else if(s&&state.svSnap){Object.keys(s).forEach(k=>delete s[k]);Object.assign(s,state.svSnap);toast('変更を元に戻したよ');}
+  else if(s&&state.svSnap){const wasDirty=JSON.stringify(s)!==JSON.stringify(state.svSnap);Object.keys(s).forEach(k=>delete s[k]);Object.assign(s,state.svSnap);if(wasDirty)toast('変更を破棄したよ');}
   saveState();closeSouvEd();renderTodo();}
 function closeSouvEd(){document.getElementById('souvEd').classList.remove('on');hideBackdrop();state.svId=null;state.svNew=false;state.svSnap=null;}
 function renderTodo(){const seg=`<div style="display:flex;gap:6px;margin-bottom:12px"><button class="btn ${state.todoTab!=='souv'?'p':'s'}" style="flex:1;padding:9px 0;font-size:13px" onclick="setTodoTab('pack')">🎒 持ち物</button><button class="btn ${state.todoTab==='souv'?'p':'s'}" style="flex:1;padding:9px 0;font-size:13px" onclick="setTodoTab('souv')">🎁 お土産</button></div>`;document.getElementById('v-todo').innerHTML=seg+(state.todoTab==='souv'?souvListHtml():packHtml());}
@@ -1031,6 +1068,12 @@ function flyTo(lat,lng){map&&map.flyTo([lat,lng],13,{duration:.6});}
 let _sheetCloser=null;
 function showBackdrop(closer){_sheetCloser=closer||null;document.getElementById('backdrop').classList.add('on');}
 function hideBackdrop(){document.getElementById('backdrop').classList.remove('on');_sheetCloser=null;}
+/* 変更破棄の確認：✕やバックドロップタップで「本当に破棄する？」を挟む共通の仕組み。
+   完了ボタン以外では変更を確定させない、というポリシーをどの編集画面でも統一するため。 */
+let _discardAction=null;
+function askDiscard(action){_discardAction=action;document.getElementById('discardBox').classList.add('on');}
+function discardYes(){const a=_discardAction;_discardAction=null;document.getElementById('discardBox').classList.remove('on');if(a)a();}
+function discardNo(){_discardAction=null;document.getElementById('discardBox').classList.remove('on');}
 /* 書き出し（MD / スタンドアロンHTML）— 読み込みは無し */
 function exBudget(){const kC={};let total=0;state.itin.flatMap(d=>d.items).forEach(it=>{const k=it.kind||'sight',c=itemCost(it);kC[k]=(kC[k]||0)+c;total+=c;});let svC=0;state.souv.forEach(s=>svC+=(s.price||0));return {kC,total,svC,grand:total+svC};}
 function exTime(it){return it.end>it.start?fmt(it.start)+'–'+fmt(it.end):fmt(it.start);}
