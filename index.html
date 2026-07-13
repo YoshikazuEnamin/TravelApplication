@@ -157,9 +157,10 @@
   .backrow{display:inline-flex;align-items:center;gap:4px;font-size:13px;font-weight:600;color:#CBD6E8;background:rgba(255,255,255,.08);border-radius:9px;padding:7px 13px 7px 10px;margin:0 0 8px -4px;cursor:pointer;-webkit-tap-highlight-color:transparent}
   .backrow:active{background:rgba(255,255,255,.18)}
   #shiori{display:none;position:absolute;inset:0;overflow-y:auto;background:var(--paper);z-index:5;padding-bottom:96px}
-  .shead{background:var(--ink);color:var(--paper);padding:16px 18px}
+  .shead{background:var(--ink);color:var(--paper);padding:16px 18px;position:relative}
   .shead .sttl{font-size:20px;font-weight:700}
   .shead .ssub{font-size:11px;color:#9FB0CC;margin-top:2px}
+  .shead .sver{position:absolute;right:18px;top:18px;font-size:10px;color:#9FB0CC;opacity:.65;font-family:'Roboto Mono',monospace}
   .syear{font-family:'Roboto Mono',monospace;font-size:15px;font-weight:700;color:var(--ink);padding:16px 16px 8px;letter-spacing:1px}
   .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 14px}
   .scard{position:relative;background:var(--panel);border:1px solid var(--rule);border-radius:14px;overflow:hidden;cursor:pointer}
@@ -198,6 +199,7 @@
         <div id="mhandle"></div>
         <div id="mbar">
           <span style="flex:1;font-size:11px;color:var(--inkSoft)">地図を<b>長押し</b>でピン＆予定追加 📍</span>
+          <button class="btn s" style="font-size:12px;padding:8px 12px" onclick="fitAllPins()" title="全部のピンが入るように縮尺調整">🔍 全体表示</button>
           <button class="btn s" style="font-size:12px;padding:8px 12px" onclick="addMapSpot()">＋ スポット</button>
           <button class="btn s" style="font-size:12px;padding:8px 12px" onclick="document.getElementById('file').click()">＋ 写真</button>
           <input id="file" type="file" accept="image/*" multiple style="display:none" onchange="onFiles(event)" />
@@ -304,6 +306,19 @@
     <button class="btn p" style="width:100%;padding:11px 0;margin-top:8px" onclick="closePick()">閉じる</button>
   </div>
 
+  <!-- 手動ピン設定（地図から自由にピンを置く） -->
+  <div id="pinPickSheet" class="sheet" style="z-index:1100">
+    <button class="sheetx" onclick="closePinPicker()" aria-label="閉じる">✕</button>
+    <h3>地図でピンを設定</h3>
+    <div style="font-size:11.5px;color:var(--inkSoft);margin-bottom:10px">地図をタップ、またはピンをドラッグして場所を指定してね</div>
+    <div id="pinPickMap" style="width:100%;height:min(46vh,340px);border-radius:12px;overflow:hidden;background:var(--paper)"></div>
+    <div style="display:flex;gap:8px;margin-top:12px">
+      <button class="btn s" style="flex:1;padding:10px 0;font-size:12.5px" onclick="pinPickUseCurrentLoc()">📍 現在地</button>
+      <button class="btn s" style="flex:1;padding:10px 0;font-size:12.5px" onclick="closePinPicker()">やめる</button>
+      <button class="btn p" style="flex:1;padding:10px 0;font-size:12.5px" onclick="confirmPinPick()">この位置に決定</button>
+    </div>
+  </div>
+
   <div id="backdrop" onclick="if(_sheetCloser)_sheetCloser()"></div>
   <div id="nav"></div>
   <div id="shiori"></div>
@@ -329,6 +344,7 @@ const parseT=v=>{const t=(v||'').match(/^(\d{1,2}):(\d{2})$/);return t?(+t[1])*6
 const yen=n=>'¥'+(n||0).toLocaleString('ja-JP');
 const esc=s=>(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const uid=()=>Math.random().toString(36).slice(2,9);
+const APP_VERSION='1.5.0';
 const TRIP0={name:'東北 温泉＆グルメ一人旅 / 司令塔',title:'本厚木発・新青森帰り',start:'2026-08-04',budget:130000};
 const WD=['日','月','火','水','木','金','土'];
 const ymd=s=>{const[y,m,d]=(s||'2026-08-04').split('-').map(Number);return new Date(y,m-1,d);};
@@ -476,7 +492,7 @@ function renderShiori(){
   const entries=state.index.map(e=>{const r=LS.get(tripKey(e.id));let b={};if(r&&r.value){try{b=JSON.parse(r.value);}catch(_){}}const itin=b.itin||[];return {id:e.id,title:e.title||(b.meta&&b.meta.title)||'無題の旅',start:e.start||(b.meta&&b.meta.start)||todayISO(),days:itin.length||1,itin,cover:(b.meta&&b.meta.cover)||''};});
   const groups={};entries.forEach(x=>{const y=(x.start||'').slice(0,4)||'—';(groups[y]=groups[y]||[]).push(x);});
   const years=Object.keys(groups).sort();
-  let h=`<div class="shead"><div class="sttl">旅のしおり</div><div class="ssub">${entries.length}件の旅 · タップで開く</div></div>`;
+  let h=`<div class="shead"><span class="sver">v${APP_VERSION}</span><div class="sttl">旅のしおり</div><div class="ssub">${entries.length}件の旅 · タップで開く</div></div>`;
   years.forEach(y=>{
     groups[y].sort((a,b)=>(a.start<b.start?-1:1));
     h+=`<div class="syear">${y}</div><div class="sgrid">`;
@@ -585,7 +601,66 @@ function locField(target,label,name,lat,lng){const set=(lat!=null&&lng!=null);
   return `<label>${label}（場所名を入れると候補から地図ピンを置けるよ）</label>`+
     `<input id="ieLoc_${target}" autocomplete="off" value="${esc(name||'')}" oninput="ieLocName('${target}',this.value);ieGeo(this.value,'${target}')">`+
     `<div id="ieGeo_${target}" class="geolist"></div>`+
-    `<div id="iePin_${target}" class="pinstat ${set?'set':''} on">${set?`📍 ピン設定済み <span class="mono">${(+lat).toFixed(4)}, ${(+lng).toFixed(4)}</span> <button class="pinclr" onclick="clearPin('${target}')">解除</button>`:'📍 ピンなし — 上の欄で場所名を入れると候補が出るよ'}</div>`;}
+    `<div style="display:flex;gap:8px;align-items:center;margin-top:4px">`+
+    `<div id="iePin_${target}" class="pinstat ${set?'set':''} on" style="flex:1">${set?`📍 ピン設定済み <span class="mono">${(+lat).toFixed(4)}, ${(+lng).toFixed(4)}</span> <button class="pinclr" onclick="clearPin('${target}')">解除</button>`:'📍 ピンなし — 上の欄で場所名を入れると候補が出るよ'}</div>`+
+    `<button class="btn s" style="padding:8px 10px;font-size:11.5px;white-space:nowrap;flex:0 0 auto" onclick="openPinPicker('${target}')">🗺️ 地図で設定</button>`+
+    `</div>`;}
+/* 手動ピン設定（地図モーダルで自由にピンを置く） */
+let pinPickMapObj=null,pinPickMarker=null,pinPickTarget=null;
+function openPinPicker(target){
+  const it=curItem();if(!it)return;pinPickTarget=target;
+  let lat,lng;if(target==='from'){lat=it.fromLat;lng=it.fromLng;}else if(target==='to'){lat=it.toLat;lng=it.toLng;}else{lat=it.lat;lng=it.lng;}
+  document.getElementById('pinPickSheet').classList.add('on');showBackdrop(closePinPicker);
+  setTimeout(()=>initPinPickMap(lat,lng),60);
+}
+function closePinPicker(){document.getElementById('pinPickSheet').classList.remove('on');showBackdrop(closeItemEd);}
+function placePinPickMarker(lat,lng){
+  if(!pinPickMapObj)return;
+  if(pinPickMarker)pinPickMarker.setLatLng([lat,lng]);
+  else pinPickMarker=L.marker([lat,lng],{draggable:true}).addTo(pinPickMapObj);
+}
+function initPinPickMap(lat,lng){
+  if(typeof L==='undefined'){toast('地図ライブラリを読み込めなかった…');return;}
+  if(!pinPickMapObj){
+    pinPickMapObj=L.map('pinPickMap',{zoomControl:true});
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'}).addTo(pinPickMapObj);
+    pinPickMapObj.on('click',e=>placePinPickMarker(e.latlng.lat,e.latlng.lng));
+  }
+  if(lat!=null&&lng!=null){
+    pinPickMapObj.setView([lat,lng],15);placePinPickMarker(lat,lng);
+    setTimeout(()=>pinPickMapObj.invalidateSize(),80);
+  }else{
+    setTimeout(()=>pinPickMapObj.invalidateSize(),80);
+    pinPickMapObj.setView([39.7,140.0],7); /* 現在地が取れるまでの仮表示（既存の地図タブと同じ初期位置） */
+    if(navigator.geolocation){
+      toast('現在地を取得中…');
+      navigator.geolocation.getCurrentPosition(
+        pos=>{pinPickMapObj.setView([pos.coords.latitude,pos.coords.longitude],15);placePinPickMarker(pos.coords.latitude,pos.coords.longitude);},
+        ()=>toast('現在地を取得できなかった…地図をタップしてピンを置いてね'),
+        {timeout:6000}
+      );
+    }
+  }
+}
+function pinPickUseCurrentLoc(){
+  if(!navigator.geolocation){toast('この端末では現在地が取得できないみたい');return;}
+  toast('現在地を取得中…');
+  navigator.geolocation.getCurrentPosition(
+    pos=>{pinPickMapObj.setView([pos.coords.latitude,pos.coords.longitude],15);placePinPickMarker(pos.coords.latitude,pos.coords.longitude);},
+    ()=>toast('現在地を取得できなかった…'),
+    {timeout:6000}
+  );
+}
+function confirmPinPick(){
+  if(!pinPickMarker){toast('地図をタップしてピンを置いてね');return;}
+  const it=curItem();if(!it){closePinPicker();return;}
+  const ll=pinPickMarker.getLatLng(),target=pinPickTarget;
+  if(target==='from'){it.fromLat=ll.lat;it.fromLng=ll.lng;}
+  else if(target==='to'){it.toLat=ll.lat;it.toLng=ll.lng;it.lat=ll.lat;it.lng=ll.lng;}
+  else{it.lat=ll.lat;it.lng=ll.lng;}
+  renderPinStat(target);afterEdit();if(mapInit)drawMap();
+  closePinPicker();toast('📍 ピンを設定したよ');
+}
 function renderItemForm(){const it=curItem();if(!it)return;const mv=isMove(it);const tab=state.edTab||'基本';
   let h=`<div style="display:flex;gap:2px;margin-bottom:12px;border-bottom:1px solid var(--rule)">`+IE_TABS.map(t=>`<button class="ietab ${t===tab?'on':''}" onclick="setEdTab('${t}')">${t}</button>`).join('')+`</div>`;
   if(tab==='基本'){
@@ -903,6 +978,15 @@ function ensureMap(){
 }
 function locatedItems(){const r=[];state.itin.forEach((d,i)=>d.items.forEach(it=>{if(it.lat!=null)r.push({day:i,it});}));return r;}
 function fitMap(){const li=locatedItems();if(li.length){try{map.fitBounds(li.map(x=>[x.it.lat,x.it.lng]),{padding:[40,40]});}catch(e){}}}
+function fitAllPins(){
+  if(!map){return;}
+  const li=locatedItems();
+  const pts=li.map(x=>[x.it.lat,x.it.lng]).concat(
+    state.itin.flatMap(d=>d.items).filter(it=>isMove(it)&&it.fromLat!=null).map(it=>[it.fromLat,it.fromLng])
+  ).concat(state.photos.filter(p=>p.lat!=null).map(p=>[p.lat,p.lng]));
+  if(!pts.length){toast('地図ピンがまだ無いよ');return;}
+  try{map.fitBounds(pts,{padding:[40,40]});}catch(e){}
+}
 function itemIcon(it){const c=CAT[it.cat]||'#2C3E6B';return L.divIcon({className:'',iconSize:[30,30],iconAnchor:[15,30],popupAnchor:[0,-28],html:`<div class="pin" style="--c:${c}"><span>${it.icon||'📍'}</span></div>`});}
 function photoIcon(p){return L.divIcon({className:'',iconSize:[46,46],iconAnchor:[23,23],popupAnchor:[0,-20],html:`<div class="photopin"><img src="${p.thumb}"></div>`});}
 function drawMap(){if(!map)return;if(!layer)layer=L.layerGroup().addTo(map);layer.clearLayers();itemMarkers={};
