@@ -24,6 +24,23 @@
   body{font-family:'Noto Sans JP',system-ui,sans-serif;background:#DADED3;color:var(--ink);display:flex;justify-content:center;overflow:hidden}
   .mono{font-family:'Roboto Mono',monospace;font-variant-numeric:tabular-nums}
   #app{width:100%;max-width:430px;height:100vh;height:100dvh;background:var(--paper);display:flex;flex-direction:column;box-shadow:0 0 40px rgba(21,33,59,.15);position:relative;overflow:hidden}
+  /* --- 大画面（PC/タブレット）: 画面いっぱいに広げる --- */
+  @media (min-width:700px){
+    body{background:var(--paper)}
+    #app{max-width:none;width:100%;height:100dvh;border-radius:0;box-shadow:none}
+    /* しおり一覧: カードを敷き詰めて空白を埋める */
+    #shiori{padding-bottom:120px}
+    .shead{padding-left:max(18px,calc((100% - 1120px)/2));padding-right:max(18px,calc((100% - 1120px)/2))}
+    .syear{width:100%;max-width:1120px;margin:0 auto}
+    .sgrid{grid-template-columns:repeat(auto-fill,minmax(210px,1fr));width:100%;max-width:1120px;margin:0 auto}
+    /* 旅程・予算・ToDo・進行: 読みやすい幅で中央寄せ */
+    .view.scroll{padding-left:max(16px,calc((100% - 820px)/2));padding-right:max(16px,calc((100% - 820px)/2))}
+    /* 日タブ・下ナビは中央に寄せて間延び防止 */
+    #daytabs{justify-content:center}
+    #daytabs .dtab{flex:0 0 auto;min-width:96px}
+    #nav{justify-content:center}
+    #nav .nb{flex:0 0 auto;min-width:104px;max-width:150px}
+  }
   #top{flex:0 0 auto;background:var(--ink);color:var(--paper);padding:12px 18px;cursor:pointer;position:relative;overflow:hidden}
   #topBg{position:absolute;inset:0;background-size:cover;background-position:center;opacity:.32;z-index:0;pointer-events:none}
   #coverBtn{position:absolute;top:8px;right:0px;width:34px;height:34px;display:flex;align-items:center;justify-content:flex-end;cursor:pointer;z-index:2}
@@ -167,6 +184,21 @@
   .shead .sver{position:absolute;right:18px;top:18px;font-size:10px;color:#9FB0CC;opacity:.65;font-family:'Roboto Mono',monospace}
   .syear{font-family:'Roboto Mono',monospace;font-size:15px;font-weight:700;color:var(--ink);padding:16px 16px 8px;letter-spacing:1px}
   .sgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 14px}
+  /* しおり一覧: 表示切り替えトグル */
+  .sviewtog{position:absolute;right:14px;bottom:12px;display:flex;gap:2px;background:rgba(255,255,255,.1);border-radius:9px;padding:3px}
+  .sviewtog button{border:none;background:transparent;color:#9FB0CC;width:32px;height:26px;border-radius:6px;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent}
+  .sviewtog button.on{background:rgba(255,255,255,.92);color:var(--ink)}
+  /* しおり一覧: 小さいモード（コンパクト行表示） */
+  .sgrid.compact{grid-template-columns:1fr;gap:8px}
+  .compact .scard{display:flex;align-items:stretch}
+  .compact .sthumb{width:60px;flex:0 0 60px;aspect-ratio:1;border-bottom:none;border-right:1px solid var(--rule)}
+  .compact .smeta{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;padding:8px 42px 8px 12px}
+  .compact .stitle{font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .compact .sdates{font-size:11px;margin-top:2px}
+  .compact .spill{font-size:8px;padding:2px 4px;top:3px;left:3px;border-radius:5px}
+  .compact .scover{display:none}
+  .compact .strash{top:50%;transform:translateY(-50%);right:8px}
+  @media (min-width:700px){.sgrid.compact{grid-template-columns:repeat(auto-fill,minmax(300px,1fr))}}
   .scard{position:relative;background:var(--panel);border:1px solid var(--rule);border-radius:14px;overflow:hidden;cursor:pointer}
   .scard:active{transform:scale(.98)}
   .sthumb{position:relative;width:100%;aspect-ratio:16/10;background:var(--paper);border-bottom:1px solid var(--rule);overflow:hidden}
@@ -487,11 +519,12 @@ function tplNames(grp){const custom=getCustomPackTpl();return [...Object.keys(PA
 function tplItemsOf(grp,name){if(isBuiltinTpl(grp,name))return PACK_BUILTIN_TPL[grp][name];const custom=getCustomPackTpl();return (custom[grp]&&custom[grp][name])||[];}
 
 const GEOFIX={d1e:[38.7047,139.9677],d1f:[38.7043,139.9721],d1j:[38.6149,139.6072],d2a:[38.616,139.6075],d2d:[39.3923,140.0491],d2m:[39.3923,140.0491],d2g:[39.7261,140.1444],d2h:[39.7169,140.1297],d2i:[39.7169,140.1297],d2j:[39.7217,140.1244],d2k:[39.7184,140.1132],d3e:[40.5605,139.9848],d3h:[40.6148,139.8627],d4a:[40.6148,139.8627],d4d:[40.8288,140.7358],d4e:[40.8276,140.6935]};
-let state={screen:'list',cur:null,index:[],delId:null,view:'timeline',day:0,now:nowMin(),notifyOn:false,trip:Object.assign({},TRIP0),itin:[],photos:[],packing:[],souv:[],todoTab:'pack',svId:null,svNew:false,edId:null,edDay:0,edSnap:null,edNew:false,placePhoto:null,pkConfirm:false,pkTplOpen:false,pkTplDel:false,pkSaveGrp:false,pkAddGrp:'持ち物',pkId:null,pkSnap:null};
+let state={screen:'list',cur:null,index:[],delId:null,listView:'grid',view:'timeline',day:0,now:nowMin(),notifyOn:false,trip:Object.assign({},TRIP0),itin:[],photos:[],packing:[],souv:[],todoTab:'pack',svId:null,svNew:false,edId:null,edDay:0,edSnap:null,edNew:false,placePhoto:null,pkConfirm:false,pkTplOpen:false,pkTplDel:false,pkSaveGrp:false,pkAddGrp:'持ち物',pkId:null,pkSnap:null};
 let map=null,layer=null,mapInit=false,itemMarkers={};
 
 const LS={get(k){try{const v=localStorage.getItem(k);return v==null?null:{key:k,value:v};}catch(e){return null;}},set(k,v){try{localStorage.setItem(k,v);return true;}catch(e){return false;}},del(k){try{localStorage.removeItem(k);}catch(e){}}};
 const K_IDX='shiori:index',K_CUR='shiori:cur',tripKey=id=>'shiori:trip:'+id;
+const K_LISTVIEW='shiori:listView';
 const todayISO=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
 function applyGeoFixTo(itin){(itin||[]).forEach(d=>(d.items||[]).forEach(it=>{if(GEOFIX[it.id]){it.lat=GEOFIX[it.id][0];it.lng=GEOFIX[it.id][1];}}));}
 function saveIndex(){LS.set(K_IDX,JSON.stringify(state.index));}
@@ -501,6 +534,7 @@ async function savePhotos(){saveTrip();}
 function loadTrip(id){const r=LS.get(tripKey(id));if(!r||!r.value)return false;let b;try{b=JSON.parse(r.value);}catch(e){return false;}state.cur=id;LS.set(K_CUR,id);state.trip=Object.assign({},TRIP0,b.meta||{});state.itin=(b.itin&&b.itin.length)?b.itin:[{n:1,label:'',items:[]}];state.itin.forEach((d,i)=>d.n=i+1);migrateItems(state.itin);state.packing=b.packing||[];state.souv=b.souv||[];state.photos=b.photos||[];applyConfig(b.kinds,b.cats);state.day=0;state.todoTab='pack';state.view='timeline';return true;}
 function buildTohokuTrip(){const sv={itin:state.itin,packing:state.packing,souv:state.souv};seedItin();seedPacking();seedSouv();const blob={meta:Object.assign({},TRIP0),itin:state.itin,packing:state.packing,souv:state.souv,photos:[]};state.itin=sv.itin;state.packing=sv.packing;state.souv=sv.souv;return blob;}
 function bootstrap(){
+  try{const lv=LS.get(K_LISTVIEW);if(lv&&(lv.value==='grid'||lv.value==='compact'))state.listView=lv.value;}catch(e){}
   const idx=LS.get(K_IDX);
   if(idx&&idx.value){try{state.index=JSON.parse(idx.value)||[];}catch(e){state.index=[];}}
   if(!state.index||!state.index.length){
@@ -523,6 +557,7 @@ function setScreen(s){state.screen=s;const t=(s==='trip');
   if(t){const a=document.getElementById('app');a.classList.remove('screen-in');void a.offsetWidth;a.classList.add('screen-in');}}
 function openTrip(id){if(!loadTrip(id)){toast('うまく開けなかった…');return;}setScreen('trip');renderTop();renderNav();renderDayTabs();showView('timeline');}
 function showList(){if(state.cur)saveTrip();state.delId=null;setScreen('list');renderShiori(true);}
+function setListView(m){if(m!=='grid'&&m!=='compact')return;if(state.listView===m)return;state.listView=m;LS.set(K_LISTVIEW,m);renderShiori();}
 /* ＋ボタン：ここではまだ何も保存しない。「旅の情報を編集」で完了を押すまでは仮の下書き状態（state.creatingNew）。
    ✕やバックドロップタップでやめれば、しおりは1件も増えない。読み込み（インポート）が成功した場合もこの下書きは破棄される。 */
 function newShiori(){
@@ -558,10 +593,11 @@ function renderShiori(anim){
   const years=Object.keys(groups).sort();
   const ac=anim?' anim-in':'';let ai=0; /* 順次出現用のインデックス */
   const dly=i=>anim?` style="animation-delay:${Math.min(i*75,900)}ms"`:'';
-  let h=`<div class="shead${ac}"><span class="sver">v${APP_VERSION}</span><div class="sttl">旅のしおり</div><div class="ssub">${entries.length}件の旅 · タップで開く</div></div>`;
+  const tog=entries.length?`<div class="sviewtog"><button class="${state.listView==='grid'?'on':''}" onclick="setListView('grid')" title="大きく表示" aria-label="大きく表示">▦</button><button class="${state.listView==='compact'?'on':''}" onclick="setListView('compact')" title="小さく表示" aria-label="小さく表示">☰</button></div>`:'';
+  let h=`<div class="shead${ac}"><span class="sver">v${APP_VERSION}</span><div class="sttl">旅のしおり</div><div class="ssub">${entries.length}件の旅 · タップで開く</div>${tog}</div>`;
   years.forEach(y=>{
     groups[y].sort((a,b)=>(a.start<b.start?-1:1));
-    h+=`<div class="syear${ac}"${dly(ai++)}>${y}</div><div class="sgrid">`;
+    h+=`<div class="syear${ac}"${dly(ai++)}>${y}</div><div class="sgrid${state.listView==='compact'?' compact':''}">`;
     groups[y].forEach(x=>{
       const st=tripStatus(x.start,x.days),dd=`${dateMD(x.start)}〜${dateMD(addISO(x.start,x.days-1))} · ${x.days-1}泊${x.days}日`;
       const thumb=`<img src="${x.cover||DEFAULT_TRIP_ICON}" style="width:100%;height:100%;object-fit:cover;display:block">`;
