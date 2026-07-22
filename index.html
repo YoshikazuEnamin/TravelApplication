@@ -126,6 +126,41 @@
   .chipsel{display:flex;gap:7px;flex-wrap:wrap;margin:4px 0}
   .chipbtn{border:1px solid var(--rule);border-radius:9px;background:#fff;padding:8px 14px;font-family:inherit;font-size:13px;font-weight:600;color:var(--ink);cursor:pointer}
   .chipbtn.on{border-color:var(--shu);background:var(--shuSoft);color:var(--shu)}
+  /* ===== 🎬 クリエイターズモード ===== */
+  .cutcard{background:var(--panel);border:1px solid var(--rule);border-radius:12px;padding:10px 12px;margin-bottom:9px}
+  .cuthd{display:flex;align-items:center;gap:8px;cursor:pointer}
+  .cutno{flex:0 0 auto;width:22px;height:22px;border-radius:50%;background:var(--ink);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+  .cutnm{flex:1;font-size:13.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .cutmini{font-size:11px;color:var(--inkSoft);font-weight:600;flex:0 0 auto}
+  .rowline{display:flex;gap:6px;align-items:center;margin-bottom:6px}
+  .rowline input{flex:1}
+  .rowx{flex:0 0 auto;width:30px;height:32px;border:none;border-radius:8px;background:var(--chip);color:var(--inkSoft);font-size:14px;cursor:pointer}
+  .tonebtn{flex:0 0 auto;min-width:52px;height:32px;border:1px solid var(--rule);border-radius:8px;background:#fff;font-family:inherit;font-size:11px;font-weight:700;cursor:pointer;padding:0 6px}
+  /* 撮影モード本体：屋外・片手・急いでる前提で大きめ・高コントラスト */
+  #v-shoot{background:var(--paper)}
+  .shHd{background:var(--ink);color:var(--paper);border-radius:14px;padding:11px 13px}
+  .shBar{height:6px;border-radius:4px;background:rgba(255,255,255,.16);overflow:hidden;margin-top:8px}
+  .shBar>i{display:block;height:100%;background:var(--grn);border-radius:4px;transition:width .3s}
+  .shStrip{display:flex;gap:5px;overflow-x:auto;padding:9px 0 3px;-webkit-overflow-scrolling:touch}
+  .shChip{flex:0 0 auto;min-width:34px;height:30px;border:1px solid var(--rule);border-radius:8px;background:#fff;font-family:inherit;font-size:11.5px;font-weight:700;color:var(--inkSoft);cursor:pointer;padding:0 8px}
+  .shChip.on{border-color:var(--shu);background:var(--shuSoft);color:var(--shu)}
+  .shChip.done{background:#E4F0EA;border-color:var(--grn);color:var(--grn)}
+  .shChip.on.done{border-color:var(--shu);background:var(--shuSoft);color:var(--shu)}
+  .shCard{background:var(--panel);border:2px solid var(--ink);border-radius:16px;overflow:hidden;margin-top:4px}
+  .shTop{background:var(--ink);color:#fff;padding:10px 14px}
+  .shBody{padding:13px 14px 16px}
+  .shSec{font-size:11px;font-weight:700;color:var(--inkSoft);letter-spacing:.5px;margin:16px 0 7px}
+  .shShot{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid var(--rule);border-radius:10px;padding:11px 12px;margin-bottom:7px;cursor:pointer;font-size:14px;line-height:1.5}
+  .shShot.done{background:#EAF3EE;border-color:var(--grn)}
+  .shShot.done .tx{color:var(--inkSoft);text-decoration:line-through}
+  .shBox{flex:0 0 auto;width:22px;height:22px;border-radius:6px;border:2px solid var(--rule);background:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;margin-top:1px}
+  .shShot.done .shBox{background:var(--grn);border-color:var(--grn)}
+  .shSub{display:flex;gap:9px;align-items:flex-start;background:#fff;border:1px solid var(--rule);border-radius:10px;padding:10px 11px;margin-bottom:7px;cursor:pointer;font-size:14px;line-height:1.55}
+  .shTone{flex:0 0 auto;font-size:10.5px;font-weight:700;border-radius:6px;padding:3px 7px;margin-top:1px}
+  .shMeta{display:flex;gap:8px;font-size:12.5px;line-height:1.55;padding:7px 0;border-top:1px solid var(--rule)}
+  .shMeta b{flex:0 0 auto;color:var(--inkSoft);font-weight:700}
+  .shNav{display:flex;gap:9px;margin-top:16px}
+  .shNav .btn{flex:1;padding:14px 0;font-size:14px}
   .sheet h3{margin:2px 0 10px;font-size:15px}
   .sheetx{position:absolute;top:10px;right:12px;width:34px;height:34px;border:none;border-radius:50%;background:var(--chip);color:var(--ink);font-size:17px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:3}
   .sheetx:active{transform:scale(.92)}
@@ -274,6 +309,7 @@
     <div id="v-todo" class="view scroll"></div>
     <div id="v-budget" class="view scroll"></div>
     <div id="v-today" class="view scroll"></div>
+    <div id="v-shoot" class="view scroll"></div>
   </div>
 
   <!-- 予定編集 -->
@@ -304,9 +340,19 @@
       <label style="margin-top:12px">予算(¥)</label><input id="trBudget" type="number" inputmode="numeric" placeholder="未設定（0）" oninput="tripChange('budget',Math.max(0,+this.value||0))" />
       <label style="margin-top:12px">各日のタイトル</label><div id="trDays"></div>
       <button class="btn s" style="width:100%;margin-top:16px;padding:11px 0" onclick="openCatEd()">🎨 種別を編集</button>
+      <div id="trCreator" style="margin-top:14px"></div>
     </div>
     <div id="tripIOTab" style="display:none"></div>
     <div class="edbtns"><button class="btn p" style="flex:1;padding:11px 0" onclick="closeTrip()">完了</button></div>
+  </div>
+
+  <!-- 🎬 フリーカット編集（時刻に紐づかないカット） -->
+  <div id="freeCutEd" class="sheet">
+    <button class="sheetx" onclick="closeFreeCutEd()" aria-label="閉じる">✕</button>
+    <h3>🎬 フリーカットを編集</h3>
+    <div class="note" style="margin-top:0">時刻に縛られないカット（オープニングの無人カット、寄りのインサートなど）。撮影モードでは☆で表示されるよ。</div>
+    <div id="fcBody" style="margin-top:12px"></div>
+    <div class="edbtns"><button class="btn p" style="flex:1;padding:11px 0" onclick="closeFreeCutEd()">完了</button></div>
   </div>
 
   <!-- 種別・カテゴリ編集 -->
@@ -519,12 +565,15 @@ function tplNames(grp){const custom=getCustomPackTpl();return [...Object.keys(PA
 function tplItemsOf(grp,name){if(isBuiltinTpl(grp,name))return PACK_BUILTIN_TPL[grp][name];const custom=getCustomPackTpl();return (custom[grp]&&custom[grp][name])||[];}
 
 const GEOFIX={d1e:[38.7047,139.9677],d1f:[38.7043,139.9721],d1j:[38.6149,139.6072],d2a:[38.616,139.6075],d2d:[39.3923,140.0491],d2m:[39.3923,140.0491],d2g:[39.7261,140.1444],d2h:[39.7169,140.1297],d2i:[39.7169,140.1297],d2j:[39.7217,140.1244],d2k:[39.7184,140.1132],d3e:[40.5605,139.9848],d3h:[40.6148,139.8627],d4a:[40.6148,139.8627],d4d:[40.8288,140.7358],d4e:[40.8276,140.6935]};
-let state={screen:'list',cur:null,index:[],delId:null,listView:'grid',view:'timeline',day:0,now:nowMin(),notifyOn:false,trip:Object.assign({},TRIP0),itin:[],photos:[],packing:[],souv:[],todoTab:'pack',svId:null,svNew:false,edId:null,edDay:0,edSnap:null,edNew:false,placePhoto:null,pkConfirm:false,pkTplOpen:false,pkTplDel:false,pkSaveGrp:false,pkAddGrp:'持ち物',pkId:null,pkSnap:null};
+let state={screen:'list',cur:null,index:[],delId:null,listView:'grid',view:'timeline',day:0,now:nowMin(),notifyOn:false,trip:Object.assign({},TRIP0),itin:[],photos:[],packing:[],souv:[],todoTab:'pack',svId:null,svNew:false,edId:null,edDay:0,edSnap:null,edNew:false,placePhoto:null,pkConfirm:false,pkTplOpen:false,pkTplDel:false,pkSaveGrp:false,pkAddGrp:'持ち物',pkId:null,pkSnap:null,creator:false,shootPos:0,shootOpenCut:null,shootPasteOpen:false};
 let map=null,layer=null,mapInit=false,itemMarkers={};
 
 const LS={get(k){try{const v=localStorage.getItem(k);return v==null?null:{key:k,value:v};}catch(e){return null;}},set(k,v){try{localStorage.setItem(k,v);return true;}catch(e){return false;}},del(k){try{localStorage.removeItem(k);}catch(e){}}};
 const K_IDX='shiori:index',K_CUR='shiori:cur',tripKey=id=>'shiori:trip:'+id;
 const K_LISTVIEW='shiori:listView';
+/* 🎬 クリエイターズモード：将来ネイティブ化したら profiles.plan==='creator' に差し替えるだけで済むよう、
+   機能の出し分けは必ずこのフラグ1個を通す。（フリープランではこのフラグが立たない想定） */
+const K_CREATOR='shiori:creatorMode';
 const todayISO=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;};
 function applyGeoFixTo(itin){(itin||[]).forEach(d=>(d.items||[]).forEach(it=>{if(GEOFIX[it.id]){it.lat=GEOFIX[it.id][0];it.lng=GEOFIX[it.id][1];}}));}
 function saveIndex(){LS.set(K_IDX,JSON.stringify(state.index));}
@@ -535,6 +584,7 @@ function loadTrip(id){const r=LS.get(tripKey(id));if(!r||!r.value)return false;l
 function buildTohokuTrip(){const sv={itin:state.itin,packing:state.packing,souv:state.souv};seedItin();seedPacking();seedSouv();const blob={meta:Object.assign({},TRIP0),itin:state.itin,packing:state.packing,souv:state.souv,photos:[]};state.itin=sv.itin;state.packing=sv.packing;state.souv=sv.souv;return blob;}
 function bootstrap(){
   try{const lv=LS.get(K_LISTVIEW);if(lv&&(lv.value==='grid'||lv.value==='compact'))state.listView=lv.value;}catch(e){}
+  try{const cm=LS.get(K_CREATOR);state.creator=!!(cm&&cm.value==='1');}catch(e){}
   const idx=LS.get(K_IDX);
   if(idx&&idx.value){try{state.index=JSON.parse(idx.value)||[];}catch(e){state.index=[];}}
   if(!state.index||!state.index.length){
@@ -627,14 +677,15 @@ function onCoverFile(ev){const f=ev.target.files&&ev.target.files[0];ev.target.v
     if(state.screen==='list')renderShiori();
     toast('カバー写真を設定したよ');
   });}
-function renderNav(){const items=[['timeline','🕐','旅程'],['map','🗺️','地図'],['todo','✅','ToDo'],['budget','💰','予算'],['today','🧭','進行']];document.getElementById('nav').innerHTML=items.map(([k,ic,lb])=>`<button class="nb ${state.view===k?'on':''}" onclick="showView('${k}')"><span class="ic">${ic}</span><span class="lb">${lb}</span></button>`).join('');}
-function renderDayTabs(){const show=state.view==='timeline'||state.view==='today';const el=document.getElementById('daytabs');el.style.display=show?'flex':'none';if(!show)return;el.innerHTML=state.itin.map((d,i)=>{const cf=sched(i).some(x=>x.conflict);return `<button class="dtab ${i===state.day?'on':''}" onclick="setDay(${i})"><div class="d mono">DAY ${d.n}${cf?' ⚠️':''}</div><div class="l">${d.label}</div><div class="dt mono">${dDate(i)}</div></button>`;}).join('');}
+function renderNav(){const items=[['timeline','🕐','旅程'],['map','🗺️','地図'],['todo','✅','ToDo'],['budget','💰','予算'],['today','🧭','進行']];
+  if(state.creator)items.push(['shoot','🎬','撮影']);document.getElementById('nav').innerHTML=items.map(([k,ic,lb])=>`<button class="nb ${state.view===k?'on':''}" onclick="showView('${k}')"><span class="ic">${ic}</span><span class="lb">${lb}</span></button>`).join('');}
+function renderDayTabs(){const show=state.view==='timeline'||state.view==='today'||state.view==='shoot';const el=document.getElementById('daytabs');el.style.display=show?'flex':'none';if(!show)return;el.innerHTML=state.itin.map((d,i)=>{const cf=sched(i).some(x=>x.conflict);return `<button class="dtab ${i===state.day?'on':''}" onclick="setDay(${i})"><div class="d mono">DAY ${d.n}${cf?' ⚠️':''}</div><div class="l">${d.label}</div><div class="dt mono">${dDate(i)}</div></button>`;}).join('');}
 function isRealToday(i){return addISO(state.trip.start,i)===todayISO();}
 function syncNowIfToday(){if(isRealToday(state.day))state.now=nowMin();}
-function setDay(i){state.day=i;if(isRealToday(i)){state.now=nowMin();}else{const s=sched(i);state.now=s[0]?s[0].start:mm('09:00');}if(state.view==='timeline')state._animTL=true;renderDayTabs();renderView();playViewIn('v-'+state.view);}
-function showView(v){state.view=v;if(v==='today')syncNowIfToday();if(v==='timeline')state._animTL=true;document.querySelectorAll('.view').forEach(el=>el.style.display='none');document.getElementById('v-'+v).style.display=(v==='map')?'flex':'block';renderNav();renderDayTabs();if(v==='map')ensureMap();else renderView();if(v!=='map')playViewIn('v-'+v);}
+function setDay(i){state.day=i;if(isRealToday(i)){state.now=nowMin();}else{const s=sched(i);state.now=s[0]?s[0].start:mm('09:00');}if(state.view==='timeline')state._animTL=true;if(state.view==='shoot')state.shootPos=shootAutoPos();renderDayTabs();renderView();playViewIn('v-'+state.view);}
+function showView(v){if(v==='shoot'&&!state.creator)v='timeline';state.view=v;if(v==='today')syncNowIfToday();if(v==='shoot'){syncNowIfToday();state.shootPos=shootAutoPos();}if(v==='timeline')state._animTL=true;document.querySelectorAll('.view').forEach(el=>el.style.display='none');document.getElementById('v-'+v).style.display=(v==='map')?'flex':'block';renderNav();renderDayTabs();if(v==='map')ensureMap();else renderView();if(v!=='map')playViewIn('v-'+v);}
 function playViewIn(id){const el=document.getElementById(id);if(!el)return;el.classList.remove('view-in');void el.offsetWidth;el.classList.add('view-in');}
-function renderView(){({timeline:renderTimeline,todo:renderTodo,budget:renderBudget,today:renderToday,map:renderMapList}[state.view]||(()=>{}))();}
+function renderView(){({timeline:renderTimeline,todo:renderTodo,budget:renderBudget,today:renderToday,map:renderMapList,shoot:renderShoot}[state.view]||(()=>{}))();}
 
 /* 旅程 */
 function renderTimeline(){
@@ -646,6 +697,7 @@ function renderTimeline(){
   s.forEach((it,idx)=>{
     const last=idx===s.length-1,kc=it.conflict?'var(--shu)':(KIND[it.kind]?KIND[it.kind].c:'#2C3E6B'),sub=itemSub(it);
     const chips=[];if(it.resv)chips.push(`<span class="chip" style="background:var(--shuSoft);color:var(--shu)">${esc(it.resv)}</span>`);if(it.cLo||it.cHi)chips.push(`<span class="chip" style="background:var(--chip);color:var(--inkSoft)">${yen(itemCost(it))}</span>`);if(it.lat!=null)chips.push(`<span class="chip" style="background:var(--chip);color:var(--inkSoft);cursor:pointer" onclick="event.stopPropagation();gotoMapSpot('${it.id}')">📍地図</span>`);if(it.url)chips.push(`<a class="chip" style="background:var(--chip);color:var(--inkSoft);cursor:pointer;text-decoration:none" href="${esc(it.url)}" target="_blank" rel="noreferrer" onclick="event.stopPropagation()">🔗リンク</a>`);{const sv=state.souv.filter(x=>x.spotId===it.id&&!x.bought).length;if(sv)chips.push(`<span class="chip" style="background:var(--amberSoft);color:var(--amber)">🎁${sv}</span>`);}
+    if(state.creator){const cst=itemCutStat(it);if(cst)chips.push(`<span class="chip" style="background:${cst.total&&cst.done===cst.total?'#E4F0EA':'var(--chip)'};color:${cst.total&&cst.done===cst.total?'var(--grn)':'var(--inkSoft)'};cursor:pointer" onclick="event.stopPropagation();gotoShootCut('${it.id}')">🎬${cst.cuts}カット ${cst.done}/${cst.total}</span>`);}
     const acl=anim?' tl-in':'',ady=anim?` style="animation-delay:${Math.min(idx*110,1100)}ms"`:'';
     h+=`<div class="trow${acl}"${ady}><div class="ttime"><div class="s mono ${it.conflict?'cf':''}">${fmt(it.start)}</div>${it.end>it.start?`<div class="e mono">〜${fmt(it.end)}</div>`:''}</div>
       <div class="tnode"><div class="tdot" style="border:3px solid ${kc}"></div>${last?'':'<div class="tbar"></div>'}</div>
@@ -658,12 +710,13 @@ function renderTimeline(){
 
 function makeItem(extra){const s=sched(state.day),lastEnd=s.length?s[s.length-1].end:mm('09:00');return Object.assign({id:uid(),icon:'📍',kind:'sight',title:'新しい予定',area:'',memo:'',t:lastEnd,end:lastEnd+60,cLo:0,cHi:0},extra||{});}
 function addItem(){const it=makeItem();state.itin[state.day].items.push(it);normalize(state.day);saveState();renderTimeline();renderDayTabs();openItemEd(state.day,it.id,true);toast('予定を追加したよ');}
-function openItemEd(day,id,isNew){const f=findItem(id);if(!f)return;state.edId=id;state.edDay=f.day;state.edNew=!!isNew;state.edTab='基本';state.edSnap=JSON.parse(JSON.stringify(f.item));
+function openItemEd(day,id,isNew){const f=findItem(id);if(!f)return;state.edId=id;state.edDay=f.day;state.edNew=!!isNew;state.edTab='基本';state.shootPasteOpen=false;state.shootOpenCut=null;state.edSnap=JSON.parse(JSON.stringify(f.item));
   document.getElementById('ieTitle').textContent=isNew?'予定を追加':'予定を編集';
   renderItemForm();
   document.getElementById('itemEd').classList.add('on');showBackdrop(requestCancelItemEd);
 }
-const IE_TABS=['基本','時刻・場所','詳細'];
+const IE_TABS_BASE=['基本','時刻・場所','詳細'];
+const ieTabs=()=>state.creator?IE_TABS_BASE.concat(['🎬撮影']):IE_TABS_BASE;
 const ICONS=['📍','⛩️','♨️','🏨','🌊','🗻','🏞️','🌅','🚃','🚅','✈️','🚌','🚗','🚢','🍜','🍣','🍱','🍶','☕','🍡','🍵','🧳','🎁','📷','🌸','🐴','🎋','🏯'];
 const RESV=['','✅予約済','⬜未予約'];
 const IE_DETAIL=[
@@ -767,9 +820,11 @@ function confirmPinPick(){
   renderPinStat(target);afterEdit();if(mapInit)drawMap();
   closePinPicker();toast('📍 ピンを設定したよ');
 }
-function renderItemForm(){const it=curItem();if(!it)return;const mv=isMove(it);const tab=state.edTab||'基本';
-  let h=`<div style="display:flex;gap:2px;margin-bottom:12px;border-bottom:1px solid var(--rule)">`+IE_TABS.map(t=>`<button class="ietab ${t===tab?'on':''}" onclick="setEdTab('${t}')">${t}</button>`).join('')+`</div>`;
-  if(tab==='基本'){
+function renderItemForm(){const it=curItem();if(!it)return;const mv=isMove(it);const TABS=ieTabs();let tab=state.edTab||'基本';if(TABS.indexOf(tab)<0)tab=state.edTab='基本';
+  let h=`<div style="display:flex;gap:2px;margin-bottom:12px;border-bottom:1px solid var(--rule)">`+TABS.map(t=>`<button class="ietab ${t===tab?'on':''}" onclick="setEdTab('${t}')">${t}</button>`).join('')+`</div>`;
+  if(tab==='🎬撮影'){
+    h+=renderShootTab(it);
+  } else if(tab==='基本'){
     const kindOpts=Object.keys(KIND).map(k=>`<option value="${k}" ${k===it.kind?'selected':''}>${esc(KIND[k].ja)}</option>`).join('');
     h+=`<label>名前（タイトル）</label><input id="ieName" value="${esc(it.title||'')}" oninput="itemEdChange('title',this.value)">`;
     h+=`<div class="edrow"><div><label>種別（色・予算分類）</label><select id="ieKind" onchange="ieKindChange(this.value)">${kindOpts}</select></div><div><label>アイコン</label><input id="ieIcon" value="${esc(it.icon||'')}" oninput="itemEdChange('icon',this.value)" placeholder="自由入力もOK"></div></div>`;
@@ -888,7 +943,7 @@ function cancelItemEd(){const f=findItem(state.edId);
   if(state.edNew){if(f){state.itin[f.day].items=state.itin[f.day].items.filter(x=>x.id!==state.edId);normalize(f.day);}toast('追加をやめたよ');}
   else if(f&&state.edSnap){const it=f.item,wasDirty=JSON.stringify(it)!==JSON.stringify(state.edSnap);Object.keys(it).forEach(k=>delete it[k]);Object.assign(it,state.edSnap);normalize(f.day);if(wasDirty)toast('変更を破棄したよ');}
   saveState();closeItemEd();renderTimeline();renderDayTabs();if(mapInit)drawMap();renderMapList();}
-function closeItemEd(){clearTimeout(geoTimer);clearGeoList();document.getElementById('itemEd').classList.remove('on');hideBackdrop();state.edId=null;state.edSnap=null;state.edNew=false;}
+function closeItemEd(){clearTimeout(geoTimer);clearGeoList();document.getElementById('itemEd').classList.remove('on');hideBackdrop();state.edId=null;state.edSnap=null;state.edNew=false;state.shootPasteOpen=false;if(state.view==='shoot')renderShoot();}
 
 /* 旅タイトル */
 function iso(dt){return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}-${String(dt.getDate()).padStart(2,'0')}`;}
@@ -900,7 +955,7 @@ function refreshTripEd(){
   document.getElementById('trWarn').innerHTML='';
   document.getElementById('trDays').innerHTML=state.itin.map((d,i)=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span class="mono" style="font-size:11px;color:var(--inkSoft);width:42px">DAY${i+1}</span><input value="${esc(d.label)}" oninput="dayLabelChange(${i},this.value)" /></div>`).join('');
 }
-function openTripEd(){document.getElementById('trName').value=state.trip.name;document.getElementById('trTitle').value=state.trip.title;document.getElementById('trBudget').value=state.trip.budget||0;state.pendingDc=null;refreshTripEd();state.trEdTab='info';renderTripEdTabs();document.getElementById('tripInfoTab').style.display='block';document.getElementById('tripIOTab').style.display='none';state.trSnap={trip:JSON.parse(JSON.stringify(state.trip)),itin:JSON.parse(JSON.stringify(state.itin))};document.getElementById('tripEd').classList.add('on');showBackdrop(requestCancelTripEd);}
+function openTripEd(){document.getElementById('trName').value=state.trip.name;document.getElementById('trTitle').value=state.trip.title;document.getElementById('trBudget').value=state.trip.budget||0;state.pendingDc=null;refreshTripEd();state.trEdTab='info';renderTripEdTabs();renderCreatorToggle();document.getElementById('tripInfoTab').style.display='block';document.getElementById('tripIOTab').style.display='none';state.trSnap={trip:JSON.parse(JSON.stringify(state.trip)),itin:JSON.parse(JSON.stringify(state.itin))};document.getElementById('tripEd').classList.add('on');showBackdrop(requestCancelTripEd);}
 function renderTripEdTabs(){const t=state.trEdTab||'info';document.getElementById('teTabBar').innerHTML=`<div style="display:flex;gap:6px;margin-bottom:14px"><button class="btn ${t==='info'?'p':'s'}" style="flex:1;padding:9px 0;font-size:12.5px" onclick="setTripEdTab('info')">基本情報</button><button class="btn ${t==='io'?'p':'s'}" style="flex:1;padding:9px 0;font-size:12.5px" onclick="setTripEdTab('io')">読み込み・書き出し</button></div>`;}
 function setTripEdTab(t){state.trEdTab=t;renderTripEdTabs();document.getElementById('tripInfoTab').style.display=(t==='info')?'block':'none';document.getElementById('tripIOTab').style.display=(t==='io')?'block':'none';if(t==='io')renderTripIO();}
 function renderTripCalc(){const n=state.itin.length;document.getElementById('trCalc').textContent=`${dDateShort(0)}〜${dDateShort(n-1)} ・ ${n-1}泊${n}日（自動）`;}
@@ -1152,6 +1207,7 @@ function renderToday(){
   if(cur)h+=`<div style="font-size:12px;color:var(--inkSoft);margin-top:14px">いま：${cur.icon||''} ${esc(cur.title)}</div>`;
   if(next){h+=`<div style="margin-top:8px;background:var(--panel);border:2px solid var(--shu);border-radius:16px;overflow:hidden"><div style="background:var(--shu);color:#fff;font-size:11px;font-weight:700;letter-spacing:1px;padding:5px 14px">次の予定</div><div style="padding:14px 16px 16px"><div style="display:flex;align-items:baseline;gap:10px"><span class="mono" style="font-size:26px;font-weight:700">${fmt(next.start)}</span><span style="font-size:22px">${next.icon||''}</span></div><div style="font-size:18px;font-weight:700;margin-top:6px">${esc(next.title)}</div>${itemSub(next)?`<div style="font-size:13px;color:var(--inkSoft);margin-top:3px">${esc(itemSub(next))}</div>`:''}${next.memo?`<div style="font-size:12.5px;color:var(--inkSoft);margin-top:6px">${esc(next.memo)}</div>`:''}${next.resv?`<div style="display:inline-block;margin-top:9px;background:var(--shuSoft);color:var(--shu);font-size:12px;font-weight:600;padding:4px 10px;border-radius:8px">${esc(next.resv)}</div>`:''}${souvHtml(next.id)}${(next.lat!=null||next.phone)?`<div style="display:flex;gap:8px;margin-top:13px">${next.lat!=null?`<a class="btn p" style="flex:1;padding:10px 0;font-size:13px;text-decoration:none" href="https://www.google.com/maps/search/?api=1&query=${next.lat},${next.lng}" target="_blank" rel="noreferrer">📍 地図で開く</a>`:''}${next.phone?`<a class="btn s" style="flex:0 0 auto;padding:10px 16px;font-size:13px;text-decoration:none" href="tel:${next.phone}">📞 電話</a>`:''}</div>`:''}</div></div>`;}
   else h+=`<div style="text-align:center;color:var(--inkSoft);padding:30px 0"><div style="font-size:30px">🌙</div><div style="font-size:14px;font-weight:600;color:var(--ink);margin-top:6px">本日の予定は完了！</div></div>`;
+  if(state.creator){const l=shootList(state.day);if(l.length)h+=`<button class="btn s" style="width:100%;margin-top:14px;padding:11px 0;font-size:13px" onclick="showView('shoot')">🎬 撮影モードを開く（${l.length}カット）</button>`;}
   if(rest.length){h+=`<div class="sec" style="margin-top:18px">このあと</div>`;rest.forEach(it=>{h+=`<div style="display:flex;align-items:center;gap:10px;padding:8px 4px;border-bottom:1px solid var(--rule)"><span class="mono" style="font-size:13px;color:var(--inkSoft);width:42px">${fmt(it.start)}</span><span style="font-size:15px">${it.icon||''}</span><span style="font-size:13.5px;flex:1">${esc(it.title)}</span></div>`;});}
   document.getElementById('v-today').innerHTML=h;
 }
@@ -1189,6 +1245,7 @@ function checkReminders(){
 /* 進行タブを見ている間、時計を自動で進める＋通知チェック */
 setInterval(()=>{
   if(state.screen==='trip'&&state.view==='today'){syncNowIfToday();renderToday();}
+  if(state.screen==='trip'&&state.view==='shoot'&&isRealToday(state.day)&&!state.edId&&!state.fcId){syncNowIfToday();renderShoot();}
   checkReminders();
 },20000);
 
@@ -1289,8 +1346,36 @@ const DEFAULT_ICON={move:'🚌',stay:'🏨',sight:'⛩️',food:'🍜',shop:'�
 function toCoord(v,max){if(v==null||v==='')return null;const n=+v;return isFinite(n)&&Math.abs(n)<=max?n:null;}
 function revReserved(r){return r==='✅予約済'?'確定':(r==='⬜未予約'?'要予約':'');}
 function mapReserved(r){r=String(r||'').trim();if(/確定|予約済|OK|✅/i.test(r))return '✅予約済';if(/要予約|未定|未予約|⬜/.test(r))return '⬜未予約';return '';}
+/* 🎬 台本カットの JSON 相互変換（撮影チェックの done も保持＝バックアップから戻せる） */
+function cutsToJson(cuts){
+  if(!Array.isArray(cuts)||!cuts.length)return null;
+  return cuts.map(c=>{const o={name:c.name||''};
+    if(c.aim)o.aim=c.aim;
+    if((c.shots||[]).length)o.shots=c.shots.map(s=>s.done?{text:s.t||'',done:true}:(s.t||''));
+    if((c.subs||[]).length)o.subs=c.subs.map(s=>({tone:s.tone||'タメ',text:s.t||''}));
+    CUT_META.forEach(m=>{if(c[m.k])o[m.k]=c[m.k];});
+    return o;});
+}
+function cutsFromJson(arr){
+  if(!Array.isArray(arr))return [];
+  return arr.map(raw=>{
+    if(!raw||typeof raw!=='object')return null;
+    const c=newCut(String(raw.name||'カット'));
+    c.aim=raw.aim?String(raw.aim):'';
+    (Array.isArray(raw.shots)?raw.shots:[]).forEach(x=>{
+      if(typeof x==='string')c.shots.push({id:'s'+uid(),t:x,done:false});
+      else if(x&&typeof x==='object')c.shots.push({id:'s'+uid(),t:String(x.text||x.t||''),done:!!x.done});
+    });
+    (Array.isArray(raw.subs)?raw.subs:[]).forEach(x=>{
+      if(typeof x==='string')c.subs.push({id:'b'+uid(),tone:'タメ',t:x});
+      else if(x&&typeof x==='object')c.subs.push({id:'b'+uid(),tone:TONES.indexOf(x.tone)>=0?x.tone:'タメ',t:String(x.text||x.t||'')});
+    });
+    CUT_META.forEach(m=>{if(raw[m.k])c[m.k]=String(raw[m.k]);});
+    return c;
+  }).filter(Boolean);
+}
 function tripToImportObj(){
-  const days=state.itin.map(d=>({label:d.label||'',items:(d.items||[]).map(it=>{
+  const days=state.itin.map(d=>{const o={label:d.label||'',items:(d.items||[]).map(it=>{
     const kind=BUILTIN_KIND[it.kind]?it.kind:'sight';
     const o={kind,icon:it.icon||'',title:it.title||'新しい予定',start:fmt(it.t!=null?it.t:0),end:fmt(it.end!=null?it.end:(it.t||0))};
     if(kind==='move'){
@@ -1305,8 +1390,12 @@ function tripToImportObj(){
     const r=revReserved(it.resv);if(r)o.reserved=r;
     const cost=itemCost(it);if(cost)o.cost=cost;
     if(it.url)o.url=it.url;if(it.phone)o.phone=it.phone;if(it.hours)o.hours=it.hours;if(it.addr)o.address=it.addr;
+    const cu=cutsToJson(it.cuts);if(cu)o.cuts=cu;
     return o;
-  })}));
+  })};
+  const fc=cutsToJson(d.freeCuts);if(fc)o.free_cuts=fc;
+  return o;
+  });
   const souvenirs=state.souv.map(s=>{const o={name:s.name||'お土産'};if(s.price)o.price=s.price;if(s.to)o.to=s.to;if(s.memo)o.memo=s.memo;return o;});
   const packing=state.packing.filter(p=>!p.done).map(p=>p.name);
   const tripOut={title:state.trip.title||'',subtitle:state.trip.name||'',start_date:state.trip.start||todayISO()};
@@ -1344,10 +1433,13 @@ function importObjToBlob(obj){
       if(raw.phone)it.phone=String(raw.phone);
       if(raw.hours)it.hours=String(raw.hours);
       if(raw.address)it.addr=String(raw.address);
+      const cu=cutsFromJson(raw.cuts);if(cu.length)it.cuts=cu;
       return it;
     });
     items.sort((a,b)=>(a.t-b.t)||(a.end-b.end));
-    return {n:i+1,label:d.label?String(d.label):'',items};
+    const day={n:i+1,label:d.label?String(d.label):'',items};
+    const fc=cutsFromJson(d.free_cuts);if(fc.length)day.freeCuts=fc;
+    return day;
   });
   if(!itin.length)itin=[{n:1,label:'',items:[]}];
   const souv=(Array.isArray(obj.souvenirs)?obj.souvenirs:[]).map(s=>({id:uid(),name:String((s&&s.name)||'お土産'),price:Math.max(0,Math.round(+(s&&s.price)||0)),to:(s&&s.to)?String(s.to):'',memo:(s&&s.memo)?String(s.memo):'',spotId:'',bought:false}));
@@ -1434,6 +1526,251 @@ function renderTripIO(){const f=state.exportFmt||'md';
 }
 function copyExport(){const ta=document.getElementById('exOut');if(ta){ta.select();try{document.execCommand('copy');}catch(e){}}if(navigator.clipboard)navigator.clipboard.writeText(curExportText()).catch(()=>{});toast('コピーしたよ');}
 function downloadExport(){const f=state.exportFmt||'md';const ext=f==='md'?'.md':(f==='html'?'.html':'.json');const type=f==='md'?'text/markdown':(f==='html'?'text/html':'application/json');const name=(state.trip.title||'旅のしおり').replace(/[\\\/:*?"<>|]/g,'_')+ext;try{const blob=new Blob([curExportText()],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('保存したよ');}catch(e){toast('この環境ではDL不可。コピーを使ってね');}}
+/* ============================================================
+   🎬 クリエイターズモード（動画撮影者向け）
+   ------------------------------------------------------------
+   狙い：撮影先で「旅程アプリ」と「台本」を行き来しなくて済むようにする。
+   台本は独立データではなく、旅程item配下の cuts[] として持つ＝情報源が1つになる。
+   出し分けは state.creator フラグ1個に集約（将来 plan==='creator' に差し替えるだけ）。
+   ============================================================ */
+const TONES=['タメ','敬語','情報'];
+const TONE_STYLE={'タメ':'background:var(--shuSoft);color:var(--shu)','敬語':'background:#E2E7F2;color:var(--line)','情報':'background:var(--amberSoft);color:var(--amber)'};
+const CUT_META=[{k:'sound',label:'🎵 音'},{k:'voice',label:'🎙 声'},{k:'permit',label:'✅ 許可'},{k:'caution',label:'⚠ 注意'}];
+
+function toggleCreator(){state.creator=!state.creator;LS.set(K_CREATOR,state.creator?'1':'0');
+  if(!state.creator&&state.view==='shoot')showView('timeline');
+  renderCreatorToggle();renderNav();renderTimeline();
+  toast(state.creator?'🎬 クリエイターズモードON！下のバーに撮影タブが出たよ':'クリエイターズモードOFF',2600);}
+function renderCreatorToggle(){const el=document.getElementById('trCreator');if(!el)return;const on=state.creator;
+  el.innerHTML=`<button class="btn ${on?'p':'s'}" style="width:100%;padding:11px 0" onclick="toggleCreator()">🎬 クリエイターズモード：${on?'ON':'OFF'}</button>
+  <div class="note" style="margin-top:8px">動画撮影する人向け。予定ごとに<b>撮影カット（台本）</b>を持たせて、撮影タブで台本を見ながらチェックできるよ。${on?'':'ONにすると下のバーに「🎬撮影」が出るよ。'}</div>`;}
+
+/* --- カットのデータ操作 --------------------------------------------------- */
+function newCut(name){return {id:'c'+uid(),name:name||'新しいカット',aim:'',shots:[],subs:[],sound:'',voice:'',permit:'',caution:''};}
+function cutsOf(it){if(!it)return [];if(!Array.isArray(it.cuts))it.cuts=[];return it.cuts;}
+function dayFreeCuts(di){const d=state.itin[di];if(!d)return [];if(!Array.isArray(d.freeCuts))d.freeCuts=[];return d.freeCuts;}
+function cutStat(c){const s=c.shots||[];return {done:s.filter(x=>x.done).length,total:s.length};}
+function cutDone(c){const st=cutStat(c);return st.total>0&&st.done===st.total;}
+function itemCutStat(it){const cs=cutsOf(it);if(!cs.length)return null;let d=0,t=0;cs.forEach(c=>{const s=cutStat(c);d+=s.done;t+=s.total;});return {cuts:cs.length,doneCuts:cs.filter(cutDone).length,done:d,total:t};}
+function findCut(cid){
+  for(let d=0;d<state.itin.length;d++){
+    for(const it of state.itin[d].items){const cs=cutsOf(it);for(let i=0;i<cs.length;i++)if(cs[i].id===cid)return{cut:cs[i],list:cs,item:it,day:d,idx:i,free:false};}
+    const fc=dayFreeCuts(d);for(let i=0;i<fc.length;i++)if(fc[i].id===cid)return{cut:fc[i],list:fc,item:null,day:d,idx:i,free:true};
+  }
+  return null;}
+function saveCuts(){saveState();}
+/* カットエディタは「予定編集シート」と「フリーカット編集シート」の両方から使うので、
+   再描画先はここで一元的に切り替える */
+function reRenderCuts(){if(state.fcId)renderFreeCutEd();else renderItemForm();}
+function cutChange(cid,k,v){const f=findCut(cid);if(!f)return;f.cut[k]=v;saveCuts();}
+function cutRename(cid,v){cutChange(cid,'name',v);if(state.view==='shoot')return;}
+function addCut(itemId){const f=findItem(itemId);if(!f)return;const cs=cutsOf(f.item);const c=newCut('カット'+(cs.length+1));cs.push(c);state.shootOpenCut=c.id;saveCuts();renderItemForm();}
+function delCut(cid){const f=findCut(cid);if(!f)return;f.list.splice(f.idx,1);if(state.shootOpenCut===cid)state.shootOpenCut=null;saveCuts();
+  if(state.fcId===cid){closeFreeCutEd();}else if(state.view==='shoot'){state.shootPos=Math.max(0,state.shootPos-1);renderShoot();}else renderItemForm();
+  renderTimeline();toast('カットを削除したよ');}
+function moveCut(cid,dir){const f=findCut(cid);if(!f)return;const j=f.idx+dir;if(j<0||j>=f.list.length)return;const t=f.list[f.idx];f.list[f.idx]=f.list[j];f.list[j]=t;saveCuts();reRenderCuts();}
+function toggleOpenCut(cid){if(state.fcId)return;state.shootOpenCut=(state.shootOpenCut===cid)?null:cid;renderItemForm();}
+function addShot(cid){const f=findCut(cid);if(!f)return;(f.cut.shots=f.cut.shots||[]).push({id:'s'+uid(),t:'',done:false});saveCuts();reRenderCuts();}
+function delShot(cid,i){const f=findCut(cid);if(!f)return;f.cut.shots.splice(i,1);saveCuts();reRenderCuts();}
+function shotChange(cid,i,v){const f=findCut(cid);if(!f)return;f.cut.shots[i].t=v;saveCuts();}
+function addSub(cid){const f=findCut(cid);if(!f)return;(f.cut.subs=f.cut.subs||[]).push({id:'b'+uid(),tone:'タメ',t:''});saveCuts();reRenderCuts();}
+function delSub(cid,i){const f=findCut(cid);if(!f)return;f.cut.subs.splice(i,1);saveCuts();reRenderCuts();}
+function subChange(cid,i,v){const f=findCut(cid);if(!f)return;f.cut.subs[i].t=v;saveCuts();}
+function cycleTone(cid,i){const f=findCut(cid);if(!f)return;const s=f.cut.subs[i];s.tone=TONES[(TONES.indexOf(s.tone)+1)%TONES.length];saveCuts();reRenderCuts();}
+/* 撮影チェック（撮影モードから叩く。sched()のコピーではなく実体を書き換える） */
+function toggleShot(cid,sid){const f=findCut(cid);if(!f)return;const s=(f.cut.shots||[]).find(x=>x.id===sid);if(!s)return;s.done=!s.done;saveCuts();renderShoot();
+  if(navigator.vibrate&&s.done)try{navigator.vibrate(18);}catch(e){}}
+function cutCheckAll(cid,on){const f=findCut(cid);if(!f)return;(f.cut.shots||[]).forEach(s=>s.done=!!on);saveCuts();renderShoot();}
+function copyText(t){const s=String(t||'');
+  const done=()=>toast('コピーしたよ📋 編集ソフトに貼ってね');
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(s).then(done).catch(()=>fallbackCopy(s,done));}
+  else fallbackCopy(s,done);}
+function copySub(cid,i){const f=findCut(cid);if(!f)return;const s=(f.cut.subs||[])[i];if(!s)return;copyText(s.t);}
+function fallbackCopy(s,done){try{const ta=document.createElement('textarea');ta.value=s;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);done();}catch(e){toast('コピーできなかった…');}}
+
+/* --- 台本の貼り付け取り込み ----------------------------------------------
+   AIに書かせた台本テキストをそのまま流し込める。書式は下のヒント参照。 */
+function parseCutText(txt){
+  const out=[];let c=null;
+  String(txt||'').split(/\r?\n/).forEach(raw=>{
+    const line=raw.trim();if(!line)return;
+    let m;
+    if((m=line.match(/^#+\s*(.+)$/))){c=newCut(m[1].trim());out.push(c);return;}
+    if(!c){c=newCut('カット1');out.push(c);}
+    if((m=line.match(/^[>＞]\s*(.+)$/))){c.aim=(c.aim?c.aim+' ':'')+m[1].trim();return;}
+    if((m=line.match(/^[-・*＊]\s*(.+)$/))){c.shots.push({id:'s'+uid(),t:m[1].trim(),done:false});return;}
+    if((m=line.match(/^(タメ|敬語|情報)\s*[:：]?\s*(.+)$/))){c.subs.push({id:'b'+uid(),tone:m[1],t:m[2].trim()});return;}
+    if((m=line.match(/^(音|音楽)\s*[:：]\s*(.+)$/))){c.sound=m[2].trim();return;}
+    if((m=line.match(/^(声|音声)\s*[:：]\s*(.+)$/))){c.voice=m[2].trim();return;}
+    if((m=line.match(/^(許可|撮影許可)\s*[:：]\s*(.+)$/))){c.permit=m[2].trim();return;}
+    if((m=line.match(/^(注意|注)\s*[:：]\s*(.+)$/))){c.caution=m[2].trim();return;}
+    c.shots.push({id:'s'+uid(),t:line,done:false});
+  });
+  return out.filter(c=>c.name||c.shots.length||c.subs.length);
+}
+function togglePaste(){state.shootPasteOpen=!state.shootPasteOpen;renderItemForm();}
+function runPasteCuts(itemId){
+  const ta=document.getElementById('cutPasteTa');if(!ta)return;
+  const cuts=parseCutText(ta.value);
+  if(!cuts.length){toast('読み取れなかった…書式を見てね');return;}
+  const f=findItem(itemId);if(!f)return;
+  cutsOf(f.item).push(...cuts);
+  state.shootPasteOpen=false;saveCuts();renderItemForm();renderTimeline();
+  toast(`${cuts.length}カット取り込んだよ🎬`,2600);
+}
+
+/* --- item編集の「🎬撮影」タブ --------------------------------------------- */
+function cutEditorHtml(c){
+  const open=state.shootOpenCut===c.id;
+  const st=cutStat(c);
+  let h=`<div class="cutcard">
+    <div class="cuthd" onclick="toggleOpenCut('${c.id}')">
+      <span class="cutno">${open?'▾':'▸'}</span>
+      <span class="cutnm">${esc(c.name||'（無題）')}</span>
+      <span class="cutmini">📦${st.done}/${st.total}${(c.subs||[]).length?` 💬${c.subs.length}`:''}</span>
+    </div>`;
+  if(open){
+    h+=`<div style="margin-top:10px">
+      <label>カット名</label><input value="${esc(c.name||'')}" oninput="cutRename('${c.id}',this.value)">
+      <label>▶ 狙い（この画で何を伝えるか）</label><textarea style="min-height:52px" oninput="cutChange('${c.id}','aim',this.value)">${esc(c.aim||'')}</textarea>
+      <label style="margin-top:10px">📦 撮る画</label>`;
+    (c.shots||[]).forEach((s,i)=>{h+=`<div class="rowline"><input value="${esc(s.t||'')}" placeholder="例：五重塔の見上げ（主観／10秒）" oninput="shotChange('${c.id}',${i},this.value)"><button class="rowx" onclick="delShot('${c.id}',${i})">✕</button></div>`;});
+    h+=`<button class="btn addrow" onclick="addShot('${c.id}')">＋ 撮る画を追加</button>
+      <label style="margin-top:12px">💬 字幕案（左のボタンでトーン切替）</label>`;
+    (c.subs||[]).forEach((s,i)=>{h+=`<div class="rowline"><button class="tonebtn" style="${TONE_STYLE[s.tone]||''}" onclick="cycleTone('${c.id}',${i})">${s.tone||'タメ'}</button><input value="${esc(s.t||'')}" placeholder="字幕テキスト" oninput="subChange('${c.id}',${i},this.value)"><button class="rowx" onclick="delSub('${c.id}',${i})">✕</button></div>`;});
+    h+=`<button class="btn addrow" onclick="addSub('${c.id}')">＋ 字幕案を追加</button>`;
+    CUT_META.forEach(m=>{h+=`<label style="margin-top:10px">${m.label}</label><input value="${esc(c[m.k]||'')}" oninput="cutChange('${c.id}','${m.k}',this.value)">`;});
+    h+=`<div style="display:flex;gap:7px;margin-top:14px">
+      <button class="btn s" style="flex:0 0 auto;padding:9px 13px" onclick="moveCut('${c.id}',-1)">↑</button>
+      <button class="btn s" style="flex:0 0 auto;padding:9px 13px" onclick="moveCut('${c.id}',1)">↓</button>
+      <button class="btn s" style="flex:1;padding:9px 0;color:var(--shu)" onclick="delCut('${c.id}')">このカットを削除</button>
+    </div></div>`;
+  }
+  return h+`</div>`;
+}
+function renderShootTab(it){
+  const cs=cutsOf(it);
+  let h=`<div class="note" style="margin-top:0">この予定で撮るカットを並べておくと、<b>🎬撮影タブ</b>で台本として順に見られるよ。撮る画のチェックはそこで付ける。</div>`;
+  h+=`<div class="sec" style="margin-top:14px">🎬 カット（${cs.length}）</div>`;
+  if(!cs.length)h+=`<div class="empty">まだカットがないよ。下から追加するか、台本テキストを貼り付けて一気に取り込んでね。</div>`;
+  cs.forEach(c=>{h+=cutEditorHtml(c);});
+  h+=`<button class="btn addrow" onclick="addCut('${it.id}')">＋ カットを追加</button>`;
+  h+=`<button class="btn s" style="width:100%;margin-top:10px;padding:10px 0;font-size:12.5px" onclick="togglePaste()">📋 台本テキストを貼り付けて取り込む</button>`;
+  if(state.shootPasteOpen){
+    h+=`<div style="margin-top:10px"><textarea id="cutPasteTa" style="min-height:150px;font-size:12px" placeholder="# カット名&#10;&gt; 狙いを1行&#10;- 撮る画&#10;- 撮る画&#10;タメ: 字幕テキスト&#10;敬語: 字幕テキスト&#10;情報: 情報字幕&#10;音: 音楽オフ&#10;声: とっさのみ&#10;許可: 不要&#10;注意: 店内は写さない"></textarea>
+    <div class="note" style="margin-top:6px"><b>#</b>＝カット名（複数書けば複数カット）／<b>&gt;</b>＝狙い／<b>-</b>＝撮る画／<b>タメ・敬語・情報</b>＝字幕／<b>音・声・許可・注意</b>＝その他。書式に合わない行は「撮る画」として入るよ。</div>
+    <div style="display:flex;gap:7px;margin-top:9px"><button class="btn s" style="flex:1;padding:10px 0" onclick="togglePaste()">やめる</button><button class="btn p" style="flex:1;padding:10px 0" onclick="runPasteCuts('${it.id}')">取り込む</button></div></div>`;
+  }
+  return h;
+}
+
+/* --- 🎬 撮影モード ---------------------------------------------------------
+   屋外・片手・急いでる前提。1カットを大きく1枚で出して、前後は‹›とチップで飛ぶ。 */
+function shootList(di){
+  const out=[];
+  schedule(state.itin[di]?state.itin[di].items:[]).forEach(si=>{
+    const real=findItem(si.id);if(!real)return;
+    cutsOf(real.item).forEach(c=>out.push({cut:c,item:real.item,start:si.start,end:si.end,free:false}));
+  });
+  dayFreeCuts(di).forEach(c=>out.push({cut:c,item:null,start:null,end:null,free:true}));
+  return out;
+}
+function shootAutoPos(){
+  const l=shootList(state.day);if(!l.length)return 0;
+  const now=state.now;
+  let idx=l.findIndex(e=>e.start!=null&&e.end!=null&&now>=e.start&&now<e.end);
+  if(idx<0)idx=l.findIndex(e=>e.start!=null&&e.start>=now);
+  if(idx<0){ /* この日の予定を全部過ぎてたら、最後の時刻つきカットに留まる（先頭に戻さない） */
+    let lastTimed=-1;l.forEach((e,i)=>{if(e.start!=null)lastTimed=i;});
+    idx=(lastTimed>=0&&now>=l[lastTimed].start)?lastTimed:0;
+  }
+  return idx;
+}
+function shootGo(d){const l=shootList(state.day);if(!l.length)return;state.shootPos=Math.max(0,Math.min(l.length-1,state.shootPos+d));renderShoot();document.getElementById('v-shoot').scrollTop=0;}
+function shootJump(i){state.shootPos=i;renderShoot();document.getElementById('v-shoot').scrollTop=0;}
+function openItemEdAtCut(day,itemId,cid){openItemEd(day,itemId);state.edTab='🎬撮影';state.shootOpenCut=cid;renderItemForm();}
+function gotoShootCut(itemId){
+  if(!state.creator)return;
+  const l=shootList(state.day),i=l.findIndex(e=>e.item&&e.item.id===itemId);
+  showView('shoot');if(i>=0){state.shootPos=i;renderShoot();}
+}
+function shootNow(){syncNowIfToday();state.shootPos=shootAutoPos();renderShoot();toast('いまの時刻のカットに合わせたよ');}
+function addFreeCut(){const fc=dayFreeCuts(state.day);const c=newCut('フリーカット'+(fc.length+1));fc.push(c);saveCuts();const l=shootList(state.day);state.shootPos=l.length-1;renderShoot();toast('フリーカットを追加。✎から中身を書けるよ');}
+function renderShoot(){
+  const el=document.getElementById('v-shoot');if(!el)return;
+  const keepScroll=el.scrollTop; /* チェックを付けるたびに先頭へ飛ばない */
+  const di=state.day,d=state.itin[di],l=shootList(di),live=isRealToday(di);
+  if(state.shootPos>=l.length)state.shootPos=Math.max(0,l.length-1);
+  const totalShots=l.reduce((a,e)=>a+cutStat(e.cut).total,0);
+  const doneShots=l.reduce((a,e)=>a+cutStat(e.cut).done,0);
+  const pct=totalShots?Math.round(doneShots/totalShots*100):0;
+  let h=`<div class="shHd">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="flex:1">
+        <div class="mono" style="font-size:10px;letter-spacing:2px;color:#9FB0CC">DAY ${d?d.n:1} · ${dDate(di)} · ${live?'🔴 いま':'プレビュー'} ${fmt(state.now)}</div>
+        <div style="font-size:16px;font-weight:700;margin-top:2px">🎬 撮影モード</div>
+      </div>
+      <button class="btn" style="background:rgba(255,255,255,.14);color:#fff;padding:9px 12px;font-size:12px" onclick="shootNow()">⏱ いまへ</button>
+    </div>
+    <div class="shBar"><i style="width:${pct}%"></i></div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;color:#9FB0CC;margin-top:5px"><span>撮る画 ${doneShots}/${totalShots}</span><span>${l.filter(e=>cutDone(e.cut)).length}/${l.length} カット完了</span></div>
+  </div>`;
+
+  if(!l.length){
+    h+=`<div class="empty" style="margin-top:18px">この日のカットはまだ空っぽ。<br>「🕐旅程」で予定をタップ →「🎬撮影」タブからカットを追加してね。台本テキストの貼り付け取り込みもそこにあるよ。</div>
+    <button class="btn s" style="width:100%;margin-top:6px;padding:11px 0" onclick="addFreeCut()">＋ 時刻なしのフリーカットを追加</button>`;
+    el.innerHTML=h;el.scrollTop=keepScroll;return;
+  }
+
+  h+=`<div class="shStrip">`+l.map((e,i)=>`<button class="shChip ${i===state.shootPos?'on':''} ${cutDone(e.cut)?'done':''}" onclick="shootJump(${i})">${e.free?'☆':i+1}</button>`).join('')+`</div>`;
+
+  const e=l[state.shootPos],c=e.cut,it=e.item,st=cutStat(c);
+  const timeTxt=e.free?'時刻なし（いつでも撮る）':`${fmt(e.start)}${e.end>e.start?'〜'+fmt(e.end):''}`;
+  h+=`<div class="shCard"><div class="shTop">
+    <div style="display:flex;align-items:baseline;gap:9px">
+      <span class="mono" style="font-size:19px;font-weight:700">${e.free?'☆':fmt(e.start)}</span>
+      <span style="font-size:11px;color:#9FB0CC">${esc(timeTxt)}</span>
+    </div>
+    <div style="font-size:17px;font-weight:700;margin-top:5px">${it?(it.icon||'📍')+' ':''}${esc(c.name||'（無題カット）')}</div>
+    ${it?`<div style="font-size:12px;color:#9FB0CC;margin-top:2px">${esc(it.title)}${itemSub(it)?' · '+esc(itemSub(it)):''}</div>`:''}
+  </div><div class="shBody">`;
+
+  const acts=[];
+  if(it&&it.lat!=null)acts.push(`<a class="btn s" style="flex:1;padding:10px 0;font-size:12.5px;text-decoration:none" href="https://www.google.com/maps/search/?api=1&query=${it.lat},${it.lng}" target="_blank" rel="noreferrer">📍 地図</a>`);
+  if(it)acts.push(`<button class="btn s" style="flex:1;padding:10px 0;font-size:12.5px" onclick="openItemEdAtCut(${di},'${it.id}','${c.id}')">✎ 台本・旅程を編集</button>`);
+  else acts.push(`<button class="btn s" style="flex:1;padding:10px 0;font-size:12.5px" onclick="openFreeCutEd('${c.id}')">✎ このカットを編集</button>`);
+  h+=`<div style="display:flex;gap:8px">${acts.join('')}</div>`;
+
+  if(c.aim)h+=`<div style="background:var(--chip);border-radius:10px;padding:10px 12px;margin-top:12px;font-size:13.5px;line-height:1.6">▶ ${esc(c.aim)}</div>`;
+
+  if((c.shots||[]).length){
+    h+=`<div style="display:flex;align-items:center;gap:8px"><div class="shSec" style="flex:1">📦 撮る画　${st.done}/${st.total}</div>
+      <button class="btn s" style="padding:6px 10px;font-size:11px;margin-top:8px" onclick="cutCheckAll('${c.id}',${st.done===st.total?'false':'true'})">${st.done===st.total?'全部はずす':'全部チェック'}</button></div>`;
+    c.shots.forEach(s=>{h+=`<div class="shShot ${s.done?'done':''}" onclick="toggleShot('${c.id}','${s.id}')"><span class="shBox">${s.done?'✓':''}</span><span class="tx">${esc(s.t||'')}</span></div>`;});
+  }
+  if((c.subs||[]).length){
+    h+=`<div class="shSec">💬 字幕案　<span style="font-weight:600">タップでコピー</span></div>`;
+    c.subs.forEach((s,i)=>{h+=`<div class="shSub" onclick="copySub('${c.id}',${i})"><span class="shTone" style="${TONE_STYLE[s.tone]||''}">${esc(s.tone||'タメ')}</span><span style="flex:1">${esc(s.t||'')}</span><span style="flex:0 0 auto;color:var(--inkSoft);font-size:12px">📋</span></div>`;});
+  }
+  const metas=CUT_META.filter(m=>(c[m.k]||'').trim());
+  if(metas.length){h+=`<div style="margin-top:14px">`+metas.map(m=>`<div class="shMeta"><b>${m.label}</b><span>${esc(c[m.k])}</span></div>`).join('')+`</div>`;}
+
+  h+=`</div></div>`;
+  h+=`<div class="shNav">
+    <button class="btn s" onclick="shootGo(-1)" ${state.shootPos<=0?'disabled style="opacity:.4;padding:14px 0;font-size:14px"':''}>‹ 前のカット</button>
+    <button class="btn p" onclick="shootGo(1)" ${state.shootPos>=l.length-1?'disabled style="opacity:.4;padding:14px 0;font-size:14px"':''}>次のカット ›</button>
+  </div>`;
+  h+=`<button class="btn s" style="width:100%;margin-top:10px;padding:10px 0;font-size:12.5px" onclick="addFreeCut()">＋ 時刻なしのフリーカットを追加</button>`;
+  h+=`<div style="height:16px"></div>`;
+  el.innerHTML=h;el.scrollTop=keepScroll;
+}
+/* フリーカット（時刻なし）の編集シート：item編集と同じカットエディタを使い回す */
+function openFreeCutEd(cid){state.fcId=cid;state.shootOpenCut=cid;renderFreeCutEd();document.getElementById('freeCutEd').classList.add('on');showBackdrop(closeFreeCutEd);}
+function closeFreeCutEd(){document.getElementById('freeCutEd').classList.remove('on');hideBackdrop();state.fcId=null;saveCuts();renderShoot();}
+function renderFreeCutEd(){const f=findCut(state.fcId);const el=document.getElementById('fcBody');if(!el)return;
+  if(!f){el.innerHTML='<div class="empty">カットが見つからなかったよ</div>';return;}
+  el.innerHTML=cutEditorHtml(f.cut);}
+
 function toast(t,ms){const el=document.getElementById('toast');el.textContent=t;el.classList.add('on');clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove('on'),ms||1700);}
 (function(){bootstrap();setScreen('list');renderShiori(true);})();
 </script>
