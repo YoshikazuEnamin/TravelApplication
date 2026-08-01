@@ -1754,6 +1754,8 @@ function addFreeCut(){const fc=dayFreeCuts(state.day);const c=newCut('フリー�
 function renderShoot(){
   const el=document.getElementById('v-shoot');if(!el)return;
   const keepScroll=el.scrollTop; /* チェックを付けるたびに先頭へ飛ばない */
+  const prevStrip=el.querySelector('.shStrip');
+  const keepStripScroll=prevStrip?prevStrip.scrollLeft:null; /* 番号ストリップも横スクロール位置を保持 */
   const di=state.day,d=state.itin[di],l=shootList(di),live=isRealToday(di);
   if(state.shootPos>=l.length)state.shootPos=Math.max(0,l.length-1);
   const totalShots=l.reduce((a,e)=>a+cutStat(e.cut).total,0);
@@ -1818,6 +1820,17 @@ function renderShoot(){
   h+=`<button class="btn s" style="width:100%;margin-top:10px;padding:10px 0;font-size:12.5px" onclick="addFreeCut()">＋ 時刻なしのフリーカットを追加</button>`;
   h+=`<div style="height:16px"></div>`;
   el.innerHTML=h;el.scrollTop=keepScroll;
+  const strip=el.querySelector('.shStrip');
+  if(strip){
+    if(keepStripScroll!=null)strip.scrollLeft=keepStripScroll; /* まずは元の位置を維持 */
+    const activeChip=strip.querySelector('.shChip.on');
+    if(activeChip){ /* 選ぶボタンが見えてなければ最小限だけ動かす（先頭には戻さない） */
+      const chipLeft=activeChip.offsetLeft,chipRight=chipLeft+activeChip.offsetWidth;
+      const viewLeft=strip.scrollLeft,viewRight=viewLeft+strip.clientWidth;
+      if(chipLeft<viewLeft)strip.scrollLeft=Math.max(0,chipLeft-8);
+      else if(chipRight>viewRight)strip.scrollLeft=chipRight-strip.clientWidth+8;
+    }
+  }
 }
 /* フリーカット（時刻なし）の編集シート：item編集と同じカットエディタを使い回す */
 function openFreeCutEd(cid){state.fcId=cid;state.shootOpenCut=cid;renderFreeCutEd();document.getElementById('freeCutEd').classList.add('on');showBackdrop(closeFreeCutEd);}
