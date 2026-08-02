@@ -859,7 +859,7 @@ function renderItemForm(){const it=curItem();if(!it)return;const mv=isMove(it);c
     h+=`<label>名前（タイトル）</label><input id="ieName" value="${esc(it.title||'')}" oninput="itemEdChange('title',this.value)">`;
     h+=`<div class="edrow"><div><label>種別（色・予算分類）</label><select id="ieKind" onchange="ieKindChange(this.value)">${kindOpts}</select></div><div><label>アイコン</label><input id="ieIcon" value="${esc(it.icon||'')}" oninput="itemEdChange('icon',this.value)" placeholder="自由入力もOK"></div></div>`;
     h+=`<div class="iconpick">${ICONS.map(ic=>`<button class="icbtn ${ic===it.icon?'on':''}" onclick="itemSetIcon('${ic}')">${ic}</button>`).join('')}</div>`;
-    h+=`<label>メモ</label><textarea id="ieMemo" oninput="itemEdChange('memo',this.value)">${esc(it.memo||'')}</textarea>`;
+    h+=`<label>メモ</label><textarea id="ieMemo" style="min-height:120px" oninput="itemEdChange('memo',this.value)">${esc(it.memo||'')}</textarea>`;
   } else if(tab==='時刻・場所'){
     const sLbl=mv?'出発時刻':'開始時刻',eLbl=mv?'到着時刻':'終了時刻';
     h+=`<div class="edrow"><div><label>${sLbl}</label><input type="time" id="ieStart" value="${it.t!=null?fmt(it.t):''}" onchange="itemSetT('t',this.value)"></div><div><label>${eLbl}</label><input type="time" id="ieEnd" value="${it.end!=null?fmt(it.end):''}" onchange="itemSetT('end',this.value)"></div></div>`;
