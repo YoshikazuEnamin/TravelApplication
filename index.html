@@ -18,7 +18,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/exif-js/2.3.0/exif.min.js"></script>
 <style>
   :root{--ink:#15213B;--inkSoft:#5A6B86;--paper:#EFF1EC;--panel:#FBFBF8;--rule:#D3D8CE;
-        --shu:#CF3F22;--shuSoft:#F6E5DF;--chip:#E6EAE0;--amber:#C98A2B;--amberSoft:#F5EAD4;--grn:#2E7D6B;--line:#2C3E6B}
+        --shu:#CF3F22;--shuSoft:#F6E5DF;--chip:#E6EAE0;--amber:#C98A2B;--amberSoft:#F5EAD4;--grn:#2E7D6B;--blu:#2C6FB0;--bluSoft:#E2ECF7;--line:#2C3E6B}
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   html,body{margin:0;height:100%;height:100dvh}
   body{font-family:'Noto Sans JP',system-ui,sans-serif;background:#DADED3;color:var(--ink);display:flex;justify-content:center;overflow:hidden}
@@ -151,7 +151,9 @@
   .shChip{flex:0 0 auto;min-width:34px;height:30px;border:1px solid var(--rule);border-radius:8px;background:#fff;font-family:inherit;font-size:11.5px;font-weight:700;color:var(--inkSoft);cursor:pointer;padding:0 8px}
   .shChip.on{border-color:var(--shu);background:var(--shuSoft);color:var(--shu)}
   .shChip.done{background:#E4F0EA;border-color:var(--grn);color:var(--grn)}
+  .shChip.partial{background:var(--bluSoft);border-color:var(--blu);color:var(--blu)}
   .shChip.on.done{border-color:var(--shu);background:var(--shuSoft);color:var(--shu)}
+  .shChip.on.partial{border-color:var(--shu);background:var(--shuSoft);color:var(--shu)}
   .shCard{background:var(--panel);border:2px solid var(--ink);border-radius:16px;overflow:hidden;margin-top:4px}
   .shTop{background:var(--ink);color:#fff;padding:10px 14px}
   .shBody{padding:13px 14px 16px}
@@ -1606,6 +1608,7 @@ function cutsOf(it){if(!it)return [];if(!Array.isArray(it.cuts))it.cuts=[];retur
 function dayFreeCuts(di){const d=state.itin[di];if(!d)return [];if(!Array.isArray(d.freeCuts))d.freeCuts=[];return d.freeCuts;}
 function cutStat(c){const s=c.shots||[];return {done:s.filter(x=>x.done).length,total:s.length};}
 function cutDone(c){const st=cutStat(c);return st.total>0&&st.done===st.total;}
+function cutPartial(c){const st=cutStat(c);return st.done>0&&st.done<st.total;}
 function itemCutStat(it){const cs=cutsOf(it);if(!cs.length)return null;let d=0,t=0;cs.forEach(c=>{const s=cutStat(c);d+=s.done;t+=s.total;});return {cuts:cs.length,doneCuts:cs.filter(cutDone).length,done:d,total:t};}
 function findCut(cid){
   for(let d=0;d<state.itin.length;d++){
@@ -1779,7 +1782,7 @@ function renderShoot(){
     el.innerHTML=h;el.scrollTop=keepScroll;return;
   }
 
-  h+=`<div class="shStrip">`+l.map((e,i)=>`<button class="shChip ${i===state.shootPos?'on':''} ${cutDone(e.cut)?'done':''}" onclick="shootJump(${i})">${e.free?'☆':i+1}</button>`).join('')+`</div>`;
+  h+=`<div class="shStrip">`+l.map((e,i)=>`<button class="shChip ${i===state.shootPos?'on':''} ${cutDone(e.cut)?'done':cutPartial(e.cut)?'partial':''}" onclick="shootJump(${i})">${e.free?'☆':i+1}</button>`).join('')+`</div>`;
 
   const e=l[state.shootPos],c=e.cut,it=e.item,st=cutStat(c);
   const timeTxt=e.free?'時刻なし（いつでも撮る）':`${fmt(e.start)}${e.end>e.start?'〜'+fmt(e.end):''}`;
