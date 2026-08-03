@@ -1447,6 +1447,7 @@ function tripToImportObj(){
     const r=revReserved(it.resv);if(r)o.reserved=r;
     const cost=itemCost(it);if(cost)o.cost=cost;
     if(it.url)o.url=it.url;if(it.phone)o.phone=it.phone;if(it.hours)o.hours=it.hours;if(it.addr)o.address=it.addr;
+    if(it.resvNo)o.resv_no=it.resvNo;if(it.resvSite)o.resv_site=it.resvSite;
     const cu=cutsToJson(it.cuts);if(cu)o.cuts=cu;
     return o;
   })};
@@ -1490,6 +1491,8 @@ function importObjToBlob(obj){
       if(raw.phone)it.phone=String(raw.phone);
       if(raw.hours)it.hours=String(raw.hours);
       if(raw.address)it.addr=stripJunk(String(raw.address));
+      if(raw.resv_no)it.resvNo=String(raw.resv_no);
+      if(raw.resv_site)it.resvSite=String(raw.resv_site);
       const cu=cutsFromJson(raw.cuts);if(cu.length)it.cuts=cu;
       return it;
     });
