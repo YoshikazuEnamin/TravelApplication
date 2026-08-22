@@ -276,6 +276,9 @@
   .pmleg span{display:inline-flex;align-items:center;gap:5px;font-size:10.5px;color:var(--inkSoft)}
   .pmleg i{width:11px;height:11px;border-radius:3px;display:inline-block;border:1px solid var(--rule)}
   .scard.selc{outline:2.5px solid var(--shu);outline-offset:-1px}
+  .scardEdit{display:block;width:100%;margin-top:8px;border:none;border-radius:8px;padding:9px 0;font-size:12.5px;font-weight:700;background:var(--shu);color:#fff;cursor:pointer}
+  .scardEdit:active{transform:scale(.97)}
+  .compact .scardEdit{margin-top:6px;padding:7px 0;font-size:11.5px}
   /* 実績 */
   .achvcard{background:var(--panel);border:1px solid var(--rule);border-radius:14px;padding:12px 13px;margin-bottom:10px}
   .achvhd{display:flex;align-items:center;justify-content:space-between;gap:8px}
@@ -860,7 +863,23 @@ function updateMapHighlight(){
       info.style.display='block';info.textContent=`「${(e&&e.title)||''}」で訪れた県：${n}`;btn.disabled=false;
     }else{info.style.display='none';btn.disabled=true;}
   }
-  document.querySelectorAll('.scard').forEach(el=>{el.classList.toggle('selc',el.dataset.id===sel);});
+  document.querySelectorAll('.scard').forEach(el=>{
+    const isSel=el.dataset.id===sel;
+    el.classList.toggle('selc',isSel);
+    let ebtn=el.querySelector('.scardEdit');
+    if(isSel){
+      if(!ebtn){
+        ebtn=document.createElement('button');
+        ebtn.className='scardEdit';
+        ebtn.textContent='✎ 編集する';
+        ebtn.onclick=(ev)=>{ev.stopPropagation();openTrip(el.dataset.id);};
+        const meta=el.querySelector('.smeta');
+        if(meta)meta.appendChild(ebtn);
+      }
+    }else if(ebtn){
+      ebtn.remove();
+    }
+  });
 }
 function selectTripOnList(id){state.selTripId=(state.selTripId===id)?null:id;updateMapHighlight();}
 function pmEditGo(){if(state.selTripId)openTrip(state.selTripId);}
