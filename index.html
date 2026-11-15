@@ -418,7 +418,7 @@
   </div>
 
   <!-- 予定の詳細（見るだけ）v1.16.0 -->
-  <div id="itemView" class="sheet">
+  <div id="itemView" class="sheet" onclick="ivTapClose(event)">
     <button class="sheetx" onclick="closeItemView()" aria-label="閉じる">✕</button>
     <div id="ivBody"></div>
     <div class="edbtns">
@@ -876,6 +876,8 @@ function addItem(){const it=makeItem();state.itin[state.day].items.push(it);norm
    カードタップで開く閲覧用シート。見どころ・歴史などを全文で読める。編集は「✎ 編集する」かカードの✎から */
 let _ivId=null;
 function openItemView(day,id){const f=findItem(id);if(!f)return;_ivId=id;renderItemView();const sh=document.getElementById('itemView');sh.classList.add('on');sh.scrollTop=0;showBackdrop(closeItemView);}
+/* 詳細シートのどこをタップしても閉じる。ボタン・リンクを押したときと、文字を選択中のときは閉じない */
+function ivTapClose(e){const t=e.target;if(t&&t.closest&&t.closest('a,button,input,textarea,select,label'))return;const sel=window.getSelection&&window.getSelection();if(sel&&String(sel).length)return;closeItemView();}
 function closeItemView(){document.getElementById('itemView').classList.remove('on');hideBackdrop();_ivId=null;}
 function ivEdit(){const f=findItem(_ivId);if(!f)return;const id=_ivId;closeItemView();openItemEd(f.day,id);}
 function ivMap(){const id=_ivId;closeItemView();gotoMapSpot(id);}
@@ -904,6 +906,7 @@ function renderItemView(){
   body+=souvHtml(it.id);
   h+=body||`<div class="empty">まだ詳しい情報がないよ。「✎ 編集する」から見どころや歴史を足せるよ</div>`;
   if(it.lat!=null)h+=`<div class="ivacts"><button class="btn s" style="flex:1;padding:10px 0;font-size:12.5px" onclick="ivMap()">📍 アプリの地図で見る</button><a class="btn s" style="flex:1;padding:10px 0;font-size:12.5px;text-decoration:none;text-align:center" href="https://www.google.com/maps/search/?api=1&query=${it.lat},${it.lng}" target="_blank" rel="noreferrer">🗺️ Googleマップ</a></div>`;
+  h+=`<div style="text-align:center;font-size:10.5px;color:var(--inkSoft);margin-top:12px">どこかをタップすると閉じるよ</div>`;
   document.getElementById('ivBody').innerHTML=h;
 }
 function openItemEd(day,id,isNew){const f=findItem(id);if(!f)return;state.edId=id;state.edDay=f.day;state.edNew=!!isNew;state.edTab='基本';state.shootPasteOpen=false;state.shootOpenCut=null;state.edSnap=JSON.parse(JSON.stringify(f.item));
